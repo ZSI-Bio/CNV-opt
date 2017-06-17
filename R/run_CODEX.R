@@ -20,19 +20,38 @@
 ###################################################
 ### code chunk number 3: bambedObj1
 ###################################################
-mapp_thresh <- 0.9
-cov_thresh_from <- 20
-cov_thresh_to <- 4000
-length_thresh_from <- 20
-length_thresh_to <- 2000
-gc_thresh_from <- 20
-gc_thresh_to <- 80
-K_from <- 1
-K_to <- 2
-lmax <- 200  # Maximum CNV length in number of exons returned.
-cov_file <- file.path("/home/wiktor/CNV-opt/data/EXAMPLE_BAMS/coverage.tsv")
-sampname <- as.matrix(read.table("/home/wiktor/CNV-opt/data/EXAMPLE_BAMS/sampname"))
-bedFile <- file.path("/home/wiktor/CNV-opt/data/EXAMPLE_BAMS/EXOME.bed")
+#mapp_thresh <- 0.9
+#cov_thresh_from <- 20
+#cov_thresh_to <- 4000
+#length_thresh_from <- 20
+#length_thresh_to <- 2000
+#gc_thresh_from <- 20
+#gc_thresh_to <- 80
+#K_from <- 1
+#K_to <- 2
+#lmax <- 200  # Maximum CNV length in number of exons returned.
+#cov_file <- file.path("/home/wiktor/CNV-opt/data/EXAMPLE_BAMS/coverage.tsv")
+#sampname <- as.matrix(read.table("/home/wiktor/CNV-opt/data/EXAMPLE_BAMS/sampname"))
+#bedFile <- file.path("/home/wiktor/CNV-opt/data/EXAMPLE_BAMS/EXOME.bed")
+
+args = commandArgs(trailingOnly=TRUE)
+if (length(args) != 13) {
+  stop("Invalid number of arguments!!!", call.=FALSE)
+}
+mapp_thresh <- as.double(args[1])
+cov_thresh_from <- strtoi(args[2])
+cov_thresh_to <- strtoi(args[3])
+length_thresh_from <- strtoi(args[4])
+length_thresh_to <- strtoi(args[5])
+gc_thresh_from <- strtoi(args[6])
+gc_thresh_to <- strtoi(args[7])
+K_from <- strtoi(args[8])
+K_to <- strtoi(args[9])
+lmax <- strtoi(args[10])  # Maximum CNV length in number of exons returned.
+cov_file <- file.path(args[11])
+sampname <- as.matrix(read.table(args[12]))
+bedFile <- file.path(args[13])
+
 
 library(CODEX)
 finalcall <- matrix(nrow=0,ncol=14)

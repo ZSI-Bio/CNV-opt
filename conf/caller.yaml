@@ -1,0 +1,22 @@
+## codex parameters
+codex:
+  mapp_thresh: 0.9
+  cov_thresh:
+    from: 20
+    to: 4000
+  length_thresh:
+    from: 20
+    to: 2000
+  gc_thresh:
+    from: 20
+    to: 80
+  k:
+    from: 1
+    to: 2
+  lmax: 200
+  cov_file: "/home/wiktor/CNV-opt/data/EXAMPLE_BAMS/coverage.tsv"
+  sample_names_file: "/home/wiktor/CNV-opt/data/EXAMPLE_BAMS/sampname"
+  bed_file: "/home/wiktor/CNV-opt/data/EXAMPLE_BAMS/EXOME.bed"
+
+## xhmm parameters
+xhmm:
