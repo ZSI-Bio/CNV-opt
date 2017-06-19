@@ -12,7 +12,7 @@ codex:
     to: 80
   k:
     from: 1
-    to: 2
+    to: 9
   lmax: 200
 
 ## xhmm parameters
