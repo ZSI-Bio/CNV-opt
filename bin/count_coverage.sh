@@ -58,6 +58,7 @@ do
 
 done
 
+mkdir ${COVERAGE_FILE%/*} && touch $COVERAGE_FILE
 
 > $COVERAGE_FILE # clear coverage file
 paste -d'\t' $TMP_DIR/*_coverage.txt  >> $COVERAGE_FILE
