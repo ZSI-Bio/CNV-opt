@@ -14,9 +14,6 @@ codex:
     from: 1
     to: 2
   lmax: 200
-  cov_file: "/home/wiktor/CNV-opt/data/EXAMPLE_BAMS/coverage.tsv"
-  sample_names_file: "/home/wiktor/CNV-opt/data/EXAMPLE_BAMS/sampname"
-  bed_file: "/home/wiktor/CNV-opt/data/EXAMPLE_BAMS/EXOME.bed"
 
 ## xhmm parameters
 xhmm:
