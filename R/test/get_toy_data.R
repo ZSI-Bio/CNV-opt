@@ -1,6 +1,8 @@
 # do these two commands only once!!!
-source("http://bioconductor.org/biocLite.R")
-biocLite("WES.1KG.WUGSC")
+if (length(which(installed.packages() == "WES.1KG.WUGSC")) ==0){
+    source("http://bioconductor.org/biocLite.R")
+    biocLite("WES.1KG.WUGSC")
+}
 
 library("WES.1KG.WUGSC")
 dirPath <- system.file("extdata", package = "WES.1KG.WUGSC")
