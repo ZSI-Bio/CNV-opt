@@ -5,8 +5,8 @@
 ### code chunk number 1: install1 (eval = FALSE)
 ###################################################
 ## ## try http:// if https:// URLs are not supported
-## source("https://bioconductor.org/biocLite.R")
-## biocLite("CODEX")
+source("https://bioconductor.org/biocLite.R")
+biocLite("CODEX")
 
 
 ###################################################
