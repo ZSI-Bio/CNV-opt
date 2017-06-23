@@ -52,10 +52,9 @@ cov_file <- file.path(args[11])
 sampname <- as.matrix(read.table(args[12]))
 bedFile <- file.path(args[13])
 
-
 library(CODEX)
 finalcall <- matrix(nrow=0,ncol=14)
-chrs <- c(1:22, "X", "Y", paste0("chr",c(1:22, "X", "Y"))
+chrs <- c(1:22, "X", "Y", paste0("chr",c(1:22, "X", "Y")))
           
 for(chr in chrs) {
   exomtarg <- read.table(bedFile, sep = '\t')
@@ -135,7 +134,7 @@ for(chr in chrs) {
   optK = K[which.max(BIC)]
   finalcallIt <- matrix(nrow=0,ncol=14)
   finalcallIt <- segment(Y_qc, Yhat, optK = optK, K = K, sampname_qc,
-                       ref_qc, chr, lmax = lmax, mode = "integer")
+                         ref_qc, chr, lmax = lmax, mode = "integer")
   finalcall <- rbind(finalcall, finalcallIt)
   
   
@@ -148,5 +147,3 @@ for(chr in chrs) {
   ##      compress='xz')
 }
 finalcall
-
-
