@@ -1,5 +1,5 @@
 # do these two commands only once!!!
-source("https://bioconductor.org/biocLite.R")
+source("http://bioconductor.org/biocLite.R")
 biocLite("WES.1KG.WUGSC")
 
 library("WES.1KG.WUGSC")
