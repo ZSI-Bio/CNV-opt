@@ -1,6 +1,6 @@
 # do these two commands only once!!!
-#source("https://bioconductor.org/biocLite.R")
-#biocLite("WES.1KG.WUGSC")
+source("https://bioconductor.org/biocLite.R")
+biocLite("WES.1KG.WUGSC")
 
 library("WES.1KG.WUGSC")
 dirPath <- system.file("extdata", package = "WES.1KG.WUGSC")
