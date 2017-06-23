@@ -5,8 +5,10 @@
 ### code chunk number 1: install1 (eval = FALSE)
 ###################################################
 ## ## try http:// if https:// URLs are not supported
-source("http://bioconductor.org/biocLite.R")
-biocLite("CODEX")
+if (length(which(installed.packages() == "CODEX")) ==0){
+    source("http://bioconductor.org/biocLite.R")
+    biocLite("CODEX")
+}
 
 
 ###################################################
