@@ -16,11 +16,11 @@ pipeline {
         stage('Test shell code') {
                     steps {
                         echo 'Testing shell code....'
-                        sh "cd bin/tests && ./shell_unit_tests.sh"
+                        sh "cd bin/test && ./shell_unit_tests.sh"
                     }
                     post {
                       always {
-                        junit '**bin/tests/results/*.xml'
+                        junit '**bin/test/results/*.xml'
                       }
                     }
          }
