@@ -16,7 +16,7 @@ pipeline {
         stage('Test shell code') {
                     steps {
                         echo 'Testing shell code....'
-                        sh "cd bin/test && ./shell_unit_tests.sh"
+                        sh "cd bin/test && ./testCODEX.sh"
                     }
                     post {
                       always {
