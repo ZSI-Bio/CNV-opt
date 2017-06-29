@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# ./count_coverage_sample_by_sample_for_codex.sh --coverage-function-file=/home/wiktor/CNV-opt/R/count_coverage_for_single_sample_by_CODEX.R --tmp-dir=/tmp --bam-dir=/home/wiktor/CNV-opt/data/EXAMPLE_BAMS --bed-file=/home/wiktor/CNV-opt/data/EXAMPLE_BAMS/EXOME.bed --mapping-quality=20 --chromosome=22 --coverage-file=/home/wiktor/CNV-opt/data/EXAMPLE_BAMS/coverage.tsv
+# ./count_coverage.sh --coverage-function-file=/home/wiktor/CNV-opt/R/count_coverage_for_single_sample_by_CODEX.R --tmp-dir=/tmp --bam-dir=/home/wiktor/CNV-opt/data/EXAMPLE_BAMS --bed-file=/home/wiktor/CNV-opt/data/EXAMPLE_BAMS/EXOME.bed --mapping-quality=20 --chromosome=22 --coverage-file=/home/wiktor/CNV-opt/data/EXAMPLE_BAMS/coverage.tsv
 
 for i in "$@"
 do
