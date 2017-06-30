@@ -44,7 +44,9 @@ libraryDependencies ++= Seq(
   "com.holdenkarau" % "spark-testing-base_2.11" % "2.1.0_0.6.0" % "test"
     exclude("org.apache.spark", "spark-core_2.11")
     exclude("org.apache.spark", "spark-sql_2.11"),
-  "pl.edu.pw.ii.zsibio" % "common-routines_2.11" % "0.1-SNAPSHOT"
+  "pl.edu.pw.ii.zsibio" % "common-routines_2.11" % "0.1-SNAPSHOT",
+  "com.typesafe" % "config" % "1.3.1",
+  "log4j" % "log4j" % "1.2.17"
 )
 
 resolvers ++= Seq(

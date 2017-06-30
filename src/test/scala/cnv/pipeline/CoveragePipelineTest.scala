@@ -6,7 +6,7 @@ import org.scalatest.FunSuite
 /**
   * Created by marek on 21/06/2017.
   */
-class CNVPipelineTest extends FunSuite with SharedSparkContext
+class CoveragePipelineTest extends FunSuite with SharedSparkContext
 {
 
   test("Sample spark Unit test"){
