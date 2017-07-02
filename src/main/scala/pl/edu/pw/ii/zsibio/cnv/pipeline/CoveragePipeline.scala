@@ -1,6 +1,6 @@
 package pl.edu.pw.ii.zsibio.cnv.pipeline
 
-import java.io.File
+import java.io.{File, FileOutputStream, PrintWriter}
 
 import com.typesafe.config.ConfigFactory
 import htsjdk.samtools.{SAMFlag, ValidationStringency}
@@ -123,37 +123,51 @@ object CoveragePipeline {
   def main(args: Array[String]): Unit = {
     samplesList match {
       case Some(sl) => {
-        sl.foreach{
+        sl.foreach {
           s => {
-            val downloadStatus = downloadSample(s)
-            if(downloadStatus == 0){
-              logger.info(s"Downloading sample ${s} was successful.")
-              getSampleFileName(s) match {
-                case Some(file) =>  {
-                  val hdfsStatus = copyFromLocal(file,confFile.getString("coverage.hdfs.dir"),false)
-                  if(hdfsStatus == 0){
-                    logger.info(s"Copying sample file ${file} to HDFS was successful.")
-                    if(runCoverage(s,s"${confFile.getString("coverage.hdfs.dir")}/${file}") == 0){
-                      val localFile = new File(s"${sampleDir}/${file}")
-                      if(localFile.exists())
-                        if(localFile.delete()) {
-                          logger.info(s"File ${file} deleted from ${sampleDir}")
-                        }
-                        else logger.error(s"Deleting of ${file} failed")
-                    }
+            val processedSamples = getSampleFileName(confFile.getString("coverage.checkpoint.file"))
+              .getOrElse("NA")
+              .split('\n')
+              .toSet
+            if (!processedSamples.contains(s)) {
+              logger.info(s"Starting processing sample ${s}")
+              val downloadStatus = downloadSample(s)
+              if (downloadStatus == 0) {
+                logger.info(s"Downloading sample ${s} was successful.")
+                getSampleFileName(s) match {
+                  case Some(file) => {
+                    val hdfsStatus = copyFromLocal(file, confFile.getString("coverage.hdfs.dir"), false)
+                    if (hdfsStatus == 0) {
+                      logger.info(s"Copying sample file ${file} to HDFS was successful.")
+                      if (runCoverage(s, s"${confFile.getString("coverage.hdfs.dir")}/${file}") == 0) {
+                        val localFile = new File(s"${sampleDir}/${file}")
+                        if (localFile.exists())
+                          if (localFile.delete()) {
+                            logger.info(s"File ${file} deleted from ${sampleDir}")
+                            val write = new PrintWriter(new FileOutputStream(new File(confFile.getString("coverage.checkpoint.file")),true))
+                            write.append(s)
+                            write.flush()
+                            write.close()
+                          }
+                          else logger.error(s"Deleting of ${file} failed")
+                      }
 
+                    }
+                    else {
+                      logger.error(s"Copying sample ${s} to HDFS failed.")
+                    }
                   }
-                  else{
-                    logger.error(s"Copying sample ${s} to HDFS failed.")
-                  }
+                  case _ => None
                 }
-                case _ => None
+
               }
+              else logger.error(s"Downloading sample ${s} failed.")
+
 
             }
-            else logger.error(s"Downloading sample ${s} failed.")
-
-
+            else {
+              logger.info(s"Sample ${s} already processed and checkpointed, skipping....")
+            }
           }
         }
       }
