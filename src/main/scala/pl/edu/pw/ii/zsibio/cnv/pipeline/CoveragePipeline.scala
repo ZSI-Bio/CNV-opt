@@ -49,13 +49,14 @@ object CoveragePipeline {
   }
 
   private def downloadSample(sampleName:String) = {
-    val file = new File(s"${sampleDir}/${getSampleFileName(sampleName).getOrElse(sampleName)}")
+    val file = new File(s"${sampleDir}/${getSampleFileName(sampleName).getOrElse(sampleName)}") //FIXME getOrElse smarter
     if (!file.exists()) {
       logger.info(s"Starting downloading sample ${sampleName}")
-      sd.downloadSample(sampleName, SampleType.WES, SampleFileFormat.BAM, sampleDir)
+      if(sd.downloadSample(sampleName, SampleType.WES, SampleFileFormat.BAM, sampleDir) == 0) 0 else -1
     }
     else{
       logger.info(s"Sample ${sampleName} already exists in ${sampleDir}. Skipping...")
+      0
     }
   }
   private def copyFromLocal(file:String, target:String, overwrite:Boolean) = {
@@ -94,7 +95,7 @@ object CoveragePipeline {
       """.stripMargin
     logger.debug(s"Running ${insertStmt}")
     ss.sqlContext.sql(insertStmt)
-    logger.info("")
+    logger.info(s"Finished processing for sample ${sampleName}")
     ss.stop()
   }
 
