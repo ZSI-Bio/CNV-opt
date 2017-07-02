@@ -15,7 +15,7 @@ import scala.io.Source
 /**
   * Created by marek on 30/06/2017.
   */
-class CoveragePipeline() {
+object CoveragePipeline {
 
 
   val logger = Logger.getLogger(getClass.getName)
