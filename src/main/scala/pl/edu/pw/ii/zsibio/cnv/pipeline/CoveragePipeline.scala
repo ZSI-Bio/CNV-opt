@@ -78,6 +78,7 @@ object CoveragePipeline {
     val ss = SparkSession
       .builder()
       .appName(s"CNV-OPT coverage sample:${sampleName}")
+      .enableHiveSupport()
       .getOrCreate()
     val seqContext = new SeqContext(ss.sparkContext)
     val coverageReadRDD = seqContext
