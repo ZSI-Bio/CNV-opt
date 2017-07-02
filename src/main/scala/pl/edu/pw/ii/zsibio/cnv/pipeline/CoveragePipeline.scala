@@ -129,7 +129,7 @@ object CoveragePipeline {
                   if(hdfsStatus == 0){
                     logger.info(s"Copying sample file ${file} to HDFS was successful.")
                     if(runCoverage(s,s"${confFile.getString("coverage.hdfs.dir")}/${file}") == 0){
-                      val localFile = new File(s"sampleDir/${file}")
+                      val localFile = new File(s"${sampleDir}/${file}")
                       if(localFile.exists())
                         if(localFile.delete()) {
                           logger.info(s"File ${file} deleted from ${sampleDir}")
