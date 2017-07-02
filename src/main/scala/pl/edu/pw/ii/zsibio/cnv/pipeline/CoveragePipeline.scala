@@ -22,6 +22,7 @@ class CoveragePipeline() {
   /*samples downloader*/
   val confFile = ConfigFactory.load()
   val sd = new Downloader1000Genomes()
+
   val samplesFile = s"${confFile.getString("coverage.conf.dir")}/samples.txt"
   val samplesList = getSamplesFromFile(samplesFile)
   val sampleDir = s"${confFile.getString("coverage.sample.dir")}/"
