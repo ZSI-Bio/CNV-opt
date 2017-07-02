@@ -80,7 +80,6 @@ object CoveragePipeline {
       .appName(s"CNV-OPT coverage sample:${sampleName}")
       .enableHiveSupport()
       .getOrCreate()
-    ss.sparkContext.setLogLevel("WARN")
     val seqContext = new SeqContext(ss.sparkContext)
     val coverageReadRDD = seqContext
       .loadSamples(samplePath,ValidationStringency.LENIENT)
