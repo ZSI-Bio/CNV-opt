@@ -4,6 +4,7 @@ import java.io.{File, FileOutputStream, PrintWriter}
 
 import com.typesafe.config.ConfigFactory
 import htsjdk.samtools.{SAMFlag, ValidationStringency}
+import it.unimi.dsi.fastutil.booleans.BooleanSets.EmptySet
 import org.apache.log4j.Logger
 import org.apache.spark.sql.SparkSession
 import pl.edu.pw.ii.zsibio.coverage.{CoverageHistParam, CoverageHistType, SeqContext}
@@ -125,10 +126,11 @@ object CoveragePipeline {
       case Some(sl) => {
         sl.foreach {
           s => {
-            val processedSamples = getSampleFileName(confFile.getString("coverage.checkpoint.file"))
-              .getOrElse("NA")
-              .split('\n')
-              .toSet
+            val processedSamples = getSamplesFromFile(confFile.getString("coverage.checkpoint.file")) match {
+              case Some(ps) => ps.toSet
+              case _ => Set.empty[String]
+            }
+
             if (!processedSamples.contains(s)) {
               logger.info(s"Starting processing sample ${s}")
               val downloadStatus = downloadSample(s)
