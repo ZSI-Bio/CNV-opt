@@ -107,12 +107,11 @@ object CoveragePipeline {
       logger.info(s"Successfully finished processing for sample ${sampleName}")
       HDFSUtils.rm(samplePath)
       logger.info(s"File ${samplePath} deleted.")
-      0
-
+      return 0
     }
     else logger.error(s"Processing of sample ${sampleName} failed.")
     ss.stop()
-    -1
+    return -1
   }
 
 
