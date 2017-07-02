@@ -48,7 +48,7 @@ object CoveragePipeline {
     }
   }
 
-  private def downloadSample(sampleName:String) = {
+  private def downloadSample(sampleName:String) : Int  = {
 
     val file = new File(s"${sampleDir}/${getSampleFileName(sampleName).getOrElse(sampleName)}") //FIXME getOrElse smarter
     if (!file.exists()) {
@@ -56,11 +56,11 @@ object CoveragePipeline {
       sd.ftp.connectWithAuth(sd.server)
       val status = sd.downloadSample(sampleName, SampleType.WES, SampleFileFormat.BAM, sampleDir)
       sd.disconnect
-      status
+      return status
     }
     else{
       logger.info(s"Sample ${sampleName} already exists in ${sampleDir}. Skipping...")
-      0
+      return 0
     }
   }
   private def copyFromLocal(file:String, target:String, overwrite:Boolean) = {
