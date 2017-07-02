@@ -74,12 +74,13 @@ object CoveragePipeline {
     }
   }
 
-  private def runCoverage(sampleName:String, samplePath:String) = {
+  private def runCoverage(sampleName:String, samplePath:String) : Int = {
     val ss = SparkSession
       .builder()
       .appName(s"CNV-OPT coverage sample:${sampleName}")
       .enableHiveSupport()
       .getOrCreate()
+    ss.sparkContext.setLogLevel("WARN")
     val seqContext = new SeqContext(ss.sparkContext)
     val coverageReadRDD = seqContext
       .loadSamples(samplePath,ValidationStringency.LENIENT)
@@ -97,8 +98,21 @@ object CoveragePipeline {
       """.stripMargin
     logger.debug(s"Running ${insertStmt}")
     ss.sqlContext.sql(insertStmt)
-    logger.info(s"Finished processing for sample ${sampleName}")
+    val sanityCheckStmt =
+      s"""
+         | SELECT COUNT(*) AS CNT FROM  ${confFile.getString("coverage.hive.raw.table")} WHERE sample_name='${sampleName}
+       """.stripMargin
+    val samplePartCount = ss.sqlContext.sql(sanityCheckStmt).first().getAs[Long]("CNT")
+    if(samplePartCount > 0) {
+      logger.info(s"Successfully finished processing for sample ${sampleName}")
+      HDFSUtils.rm(samplePath)
+      logger.info(s"File ${samplePath} deleted.")
+      0
+
+    }
+    else logger.error(s"Processing of sample ${sampleName} failed.")
     ss.stop()
+    -1
   }
 
 
@@ -116,7 +130,14 @@ object CoveragePipeline {
                   val hdfsStatus = copyFromLocal(file,confFile.getString("coverage.hdfs.dir"),false)
                   if(hdfsStatus == 0){
                     logger.info(s"Copying sample file ${file} to HDFS was successful.")
-                    runCoverage(s,s"${confFile.getString("coverage.hdfs.dir")}/${file}")
+                    if(runCoverage(s,s"${confFile.getString("coverage.hdfs.dir")}/${file}") == 0){
+                      val localFile = new File(s"sampleDir/${file}")
+                      if(localFile.exists())
+                        if(localFile.delete()) {
+                          logger.info(s"File ${file} deleted from ${sampleDir}")
+                        }
+                        else logger.error(s"Deleting of ${file} failed")
+                    }
 
                   }
                   else{
