@@ -88,6 +88,7 @@ object CoveragePipeline {
       .filter(r=> (r.samFlags & SAMFlag.READ_UNMAPPED.intValue) == 0 )
       .filter(r=>r.mapq != 255)
       .baseCoverageHist(None,Some(512),CoverageHistParam(CoverageHistType.MAPQ,Array(10,20,30,40)))
+    ss.sqlContext.sql("set parquet.compression=GZIP")
     val df = ss.sqlContext.createDataFrame(coverageRDD)
     df.createOrReplaceTempView("cov")
     val insertStmt =  s"""

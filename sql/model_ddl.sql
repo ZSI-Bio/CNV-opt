@@ -4,4 +4,4 @@ chr STRING,
 pos INT,
 coverage_hist ARRAY<INT> COMMENT 'BY DEFAULT [10,20,30,40]',
 coverage_total INT
-) PARTITIONED BY (sample_name STRING) STORED AS ORC;
+) PARTITIONED BY (sample_name STRING) STORED AS PARQUET;
