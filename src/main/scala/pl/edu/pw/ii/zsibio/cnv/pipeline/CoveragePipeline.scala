@@ -100,7 +100,7 @@ object CoveragePipeline {
     ss.sqlContext.sql(insertStmt)
     val sanityCheckStmt =
       s"""
-         | SELECT COUNT(*) AS CNT FROM  ${confFile.getString("coverage.hive.raw.table")} WHERE sample_name='${sampleName}
+         | SELECT COUNT(*) AS CNT FROM  ${confFile.getString("coverage.hive.raw.table")} WHERE sample_name='${sampleName}'
        """.stripMargin
     val samplePartCount = ss.sqlContext.sql(sanityCheckStmt).first().getAs[Long]("CNT")
     if(samplePartCount > 0) {
