@@ -1,5 +1,7 @@
 package pl.edu.pw.ii.zsibio.cnv.pipeline
 
+import java.io.File
+
 import com.typesafe.config.ConfigFactory
 import htsjdk.samtools.{SAMFlag, ValidationStringency}
 import org.apache.log4j.Logger
@@ -47,11 +49,24 @@ object CoveragePipeline {
   }
 
   private def downloadSample(sampleName:String) = {
-
-    sd.downloadSample(sampleName, SampleType.WES, SampleFileFormat.BAM, sampleDir)
+    val file = new File(s"${sampleDir}/${sampleName}")
+    if (!file.exists()) {
+      logger.info(s"Starting downloading sample ${sampleName}")
+      sd.downloadSample(sampleName, SampleType.WES, SampleFileFormat.BAM, sampleDir)
+    }
+    else{
+      logger.info(s"Sample ${sampleName} already exists in ${sampleDir}. Skipping...")
+    }
   }
   private def copyFromLocal(file:String, target:String, overwrite:Boolean) = {
-    HDFSUtils.copyFromLocal(s"${sampleDir}${file}",target, overwrite)
+
+    if(HDFSUtils.ls(target,false).filter(_.getPath.getName.matches(file)).length == 1 && !overwrite){
+      logger.info(s"${file} exists on HDFS and overwrite flag is set to false so skipping...")
+    }
+    else {
+      logger.info(s"Copying ${file} to HDFS path ${target}")
+      HDFSUtils.copyFromLocal(s"${sampleDir}${file}", target, overwrite)
+    }
     HDFSUtils.ls(target,false).filter(_.getPath.getName.matches(file)).length match {
       case 1 => 0
       case _ => -1
@@ -95,7 +110,7 @@ object CoveragePipeline {
               logger.info(s"Downloading sample ${s} was successful.")
               getSampleFileName(s) match {
                 case Some(file) =>  {
-                  val hdfsStatus = copyFromLocal(file,confFile.getString("coverage.hdfs.dir"),true)
+                  val hdfsStatus = copyFromLocal(file,confFile.getString("coverage.hdfs.dir"),false)
                   if(hdfsStatus == 0){
                     logger.info(s"Copying sample file ${file} to HDFS was successful.")
                     runCoverage(s,s"${confFile.getString("coverage.hdfs.dir")}/${file}")
