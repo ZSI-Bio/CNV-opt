@@ -49,10 +49,14 @@ object CoveragePipeline {
   }
 
   private def downloadSample(sampleName:String) = {
+
     val file = new File(s"${sampleDir}/${getSampleFileName(sampleName).getOrElse(sampleName)}") //FIXME getOrElse smarter
     if (!file.exists()) {
       logger.info(s"Starting downloading sample ${sampleName}")
-      if(sd.downloadSample(sampleName, SampleType.WES, SampleFileFormat.BAM, sampleDir) == 0) 0 else -1
+      sd.ftp.connectWithAuth(sd.server)
+      val status = sd.downloadSample(sampleName, SampleType.WES, SampleFileFormat.BAM, sampleDir)
+      sd.disconnect
+      if(status == 0) 0 else -1
     }
     else{
       logger.info(s"Sample ${sampleName} already exists in ${sampleDir}. Skipping...")
