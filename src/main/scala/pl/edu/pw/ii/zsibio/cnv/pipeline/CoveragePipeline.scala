@@ -42,6 +42,7 @@ object CoveragePipeline {
   }
 
   private def getSampleFileName(sampleName:String) = {
+    sd.ftp.connectWithAuth(sd.server)
     sd.getSampleFTPPath(sampleName,SampleType.WES,SampleFileFormat.BAM) match{
       case Some(f) => Some(f.reverse.split("/").head.reverse)
       case _ => None
