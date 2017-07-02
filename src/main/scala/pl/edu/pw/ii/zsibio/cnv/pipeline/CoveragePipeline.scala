@@ -49,7 +49,7 @@ object CoveragePipeline {
   }
 
   private def downloadSample(sampleName:String) = {
-    val file = new File(s"${sampleDir}/${sampleName}")
+    val file = new File(s"${sampleDir}/${getSampleFileName(sampleName).getOrElse(sampleName)}")
     if (!file.exists()) {
       logger.info(s"Starting downloading sample ${sampleName}")
       sd.downloadSample(sampleName, SampleType.WES, SampleFileFormat.BAM, sampleDir)
