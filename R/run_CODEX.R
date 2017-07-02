@@ -62,7 +62,6 @@ chrs <- c(1:22, "X", "Y", paste0("chr",c(1:22, "X", "Y")))
 exom_targets <- read.table(bedFile, sep = '\t')
 
 for(chr in chrs) {
-  chr <- "22"
   exom_targets_for_chr <- exom_targets[exom_targets[,1] == chr,]
   ref <- IRanges(start = exom_targets_for_chr[,2], end = exom_targets_for_chr[,3])
   print(ref)
@@ -132,7 +131,7 @@ for(chr in chrs) {
   ###################################################
   ### code chunk number 11: segment1
   ###################################################
-  finalcallIt <- segment1(BIC, Y_qc, Yhat, K, sampname_qc,
+  finalcallIt <- segment1(Y_qc, Yhat, K[which.max(BIC)], K, sampname_qc,
                           ref_qc, chr, lmax, mode = "integer")$finalcall
   finalcall <- rbind(finalcall, finalcallIt)
 

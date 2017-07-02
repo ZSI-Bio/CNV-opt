@@ -42,9 +42,8 @@ normObj2 <- function(Y_qc, gc_qc, K, normal_index){
   return(list(Yhat=Yhat, AIC=AIC, BIC=BIC, RSS=RSS, K=K))
 }
 
-segment1 <- function(BIC, Y_qc, Yhat, K, sampname_qc,
+segment1 <- function(Y_qc, Yhat, optK, K, sampname_qc,
                      ref_qc, chr, lmax, mode){
-  optK = K[which.max(BIC)]
   finalcall <- matrix(nrow=0,ncol=14)
   finalcall <- segment(Y_qc, Yhat, optK, K, sampname_qc,
                          ref_qc, chr, lmax, mode)
