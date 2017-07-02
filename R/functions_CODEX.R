@@ -1,7 +1,3 @@
-calc_func <- function(a, b){
-  return (a + b)
-}
-
 library(CODEX)
 
 coverageObj1 <- function(cov_file, sampname){

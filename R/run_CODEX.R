@@ -18,8 +18,8 @@ if (length(which(installed.packages() == "CODEX")) == 0){
 ## library(devtools)
 ## install_github("yuchaojiang/CODEX/package")
 
-source("./functions_CODEX.R")   #  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-#source("/home/wiktor/CNV-opt/R/functions_CODEX.R")
+#source("./functions_CODEX.R")   #  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+source("/home/wiktor/CNV-opt/R/functions_CODEX.R")
 
 ###################################################
 ### code chunk number 3: bambedObj1
@@ -62,8 +62,10 @@ chrs <- c(1:22, "X", "Y", paste0("chr",c(1:22, "X", "Y")))
 exom_targets <- read.table(bedFile, sep = '\t')
 
 for(chr in chrs) {
+  chr <- "22"
   exom_targets_for_chr <- exom_targets[exom_targets[,1] == chr,]
   ref <- IRanges(start = exom_targets_for_chr[,2], end = exom_targets_for_chr[,3])
+  print(ref)
   if (length(ref) == 0) {    # 0 elements for specified chromosome in bed file
     next()
   }
