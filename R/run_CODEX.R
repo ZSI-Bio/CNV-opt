@@ -2,6 +2,14 @@
 ### Encoding: UTF-8
 
 ###################################################
+### code chunk number 0: install0 
+###################################################
+## install.packages("RSQLite")
+## library(RSQLite)
+## library(DBI)
+
+
+###################################################
 ### code chunk number 1: install1 (eval = FALSE)
 ###################################################
 ## ## try http:// if https:// URLs are not supported
@@ -35,7 +43,7 @@ K_from <- 1
 K_to <- 9
 lmax <- 200  # Maximum CNV length in number of exons returned.
 cov_file <- file.path("/home/wiktor/CNV-opt/data/EXAMPLE_BAMS/coverage.txt")
-sampname <- as.matrix(read.table("/home/wiktor/CNV-opt/data/EXAMPLE_BAMS/sampname"))
+sampname_file <- "/home/wiktor/CNV-opt/data/EXAMPLE_BAMS/sampname"
 bedFile <- file.path("/home/wiktor/CNV-opt/data/EXAMPLE_BAMS/EXOME.bed")
 
 #args = commandArgs(trailingOnly=TRUE)
@@ -53,13 +61,17 @@ bedFile <- file.path("/home/wiktor/CNV-opt/data/EXAMPLE_BAMS/EXOME.bed")
 #K_to <- strtoi(args[9])
 #lmax <- strtoi(args[10])  # Maximum CNV length in number of exons returned.
 #cov_file <- file.path(args[11])
-#sampname <- as.matrix(read.table(args[12]))
+#sampname_file <- args[12]
 #bedFile <- file.path(args[13])
+
+parameters <- data.frame(mapp_thresh, cov_thresh_from, cov_thresh_to, length_thresh_from, length_thresh_to, 
+                         gc_thresh_from, gc_thresh_to, K_from, K_to, lmax, cov_file, sampname_file, bedFile)
 
 library(CODEX)
 finalcall <- matrix(nrow=0,ncol=14)
 chrs <- c(1:22, "X", "Y", paste0("chr",c(1:22, "X", "Y")))
 exom_targets <- read.table(bedFile, sep = '\t')
+sampname <- as.matrix(read.table(sampname_file))
 
 for(chr in chrs) {
   exom_targets_for_chr <- exom_targets[exom_targets[,1] == chr,]
@@ -138,4 +150,66 @@ for(chr in chrs) {
 }
 finalcall
 
+
+
+
+
+
+
+library(DBI)
+db <- dbConnect(drv=RSQLite::SQLite(), dbname="db.sqlite")
+
+if (!dbExistsTable(db, name="parameters")) {
+  dbSendQuery(db,
+              "CREATE TABLE parameters(
+              id INTEGER PRIMARY KEY,
+              mapp_thresh TEXT,
+              cov_thresh_from TEXT,
+              cov_thresh_to TEXT,
+              length_thresh_from TEXT,
+              length_thresh_to TEXT,
+              gc_thresh_from TEXT,
+              gc_thresh_to TEXT,
+              K_from TEXT,
+              K_to TEXT,
+              lmax TEXT,
+              cov_file TEXT,
+              sampname_file TEXT,
+              bedFile TEXT
+  );"
+  )
+}
+dbWriteTable(db, name="parameters", value=data.frame(parameters), append=TRUE)
+dbGetQuery(db, 'SELECT * FROM parameters')
+parameters_id <- nrow(dbReadTable(db,'parameters'))
+
+if (!dbExistsTable(db, name="calls")) {
+  dbSendQuery(db,
+      "CREATE TABLE calls(
+      id INTEGER PRIMARY KEY,
+      parameters_id INTEGER,
+      sample_name TEXT,
+      chr TEXT,
+      cnv TEXT,
+      st_bp TEXT,
+      ed_bp TEXT,
+      length_kb TEXT,
+      st_exon TEXT,
+      ed_exon TEXT,
+      raw_cov TEXT,
+      norm_cov TEXT,
+      copy_no TEXT,
+      lratio TEXT,
+      mBIC TEXT,
+      pvalue TEXT,
+      FOREIGN KEY(parameters_id) REFERENCES parameters(id)
+      );"
+  )
+}
+dbWriteTable(db, name="calls", value=data.frame(cbind(finalcall, parameters_id=parameters_id)), append=TRUE)
+dbGetQuery(db, 'SELECT * FROM calls')
+
+
+dbDisconnect(db)
+#unlink("db.sqlite")
 
