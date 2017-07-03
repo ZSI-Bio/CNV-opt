@@ -7,6 +7,7 @@ import htsjdk.samtools.{SAMFlag, ValidationStringency}
 import it.unimi.dsi.fastutil.booleans.BooleanSets.EmptySet
 import org.apache.log4j.Logger
 import org.apache.spark.sql.SparkSession
+import org.rogach.scallop.ScallopConf
 import pl.edu.pw.ii.zsibio.coverage.{CoverageHistParam, CoverageHistType, SeqContext}
 import pl.edu.pw.ii.zsibio.utils.hdfs.HDFSUtils
 import pl.edu.pw.ii.zsibio.utils.samples.{SampleFileFormat, SampleType}
@@ -19,7 +20,12 @@ import scala.io.Source
   * Created by marek on 30/06/2017.
   */
 object CoveragePipeline {
+  class RunConf(args:Array[String]) extends ScallopConf(args){
 
+    val sampleName =opt[String]("sampleName",required = true, descr = "Sample to process" )
+
+    verify()
+  }
 
   val logger = Logger.getLogger(getClass.getName)
   /*samples downloader*/
@@ -122,7 +128,8 @@ object CoveragePipeline {
 
 
   def main(args: Array[String]): Unit = {
-    samplesList match {
+    val runConf = new RunConf(args)
+    Some(Array(runConf.sampleName())) match {
       case Some(sl) => {
         sl.foreach {
           s => {
