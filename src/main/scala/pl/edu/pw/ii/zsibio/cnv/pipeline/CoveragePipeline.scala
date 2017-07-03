@@ -147,7 +147,7 @@ object CoveragePipeline {
                           if (localFile.delete()) {
                             logger.info(s"File ${file} deleted from ${sampleDir}")
                             val write = new PrintWriter(new FileOutputStream(new File(confFile.getString("coverage.checkpoint.file")),true))
-                            write.append(s)
+                            write.append(s"${s}\n")
                             write.flush()
                             write.close()
                           }
