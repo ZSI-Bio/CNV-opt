@@ -27,42 +27,45 @@ if (length(which(installed.packages() == "CODEX")) == 0){
 ## install_github("yuchaojiang/CODEX/package")
 
 #source("./functions_CODEX.R")   #  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-source("/home/wiktor/CNV-opt/R/functions_CODEX.R")
+source("./R/functions_CODEX.R")   #  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+#source("/home/wiktor/CNV-opt/R/functions_CODEX.R")
 
 ###################################################
 ### code chunk number 3: bambedObj1
 ###################################################
-mapp_thresh <- 0.9
-cov_thresh_from <- 20
-cov_thresh_to <- 4000
-length_thresh_from <- 20
-length_thresh_to <- 2000
-gc_thresh_from <- 20
-gc_thresh_to <- 80
-K_from <- 1
-K_to <- 9
-lmax <- 200  # Maximum CNV length in number of exons returned.
-cov_file <- file.path("/home/wiktor/CNV-opt/data/EXAMPLE_BAMS/coverage.txt")
-sampname_file <- "/home/wiktor/CNV-opt/data/EXAMPLE_BAMS/sampname"
-bedFile <- file.path("/home/wiktor/CNV-opt/data/EXAMPLE_BAMS/EXOME.bed")
+#mapp_thresh <- 0.9
+#cov_thresh_from <- 20
+#cov_thresh_to <- 4000
+#length_thresh_from <- 20
+#length_thresh_to <- 2000
+#gc_thresh_from <- 20
+#gc_thresh_to <- 80
+#K_from <- 1
+#K_to <- 9
+#lmax <- 200  # Maximum CNV length in number of exons returned.
+#cov_file <- file.path("/home/wiktor/CNV-opt/data/EXAMPLE_BAMS/coverage.txt")
+#sampname_file <- "/home/wiktor/CNV-opt/data/EXAMPLE_BAMS/sampname"
+#bedFile <- file.path("/home/wiktor/CNV-opt/data/EXAMPLE_BAMS/EXOME.bed")
 
-#args = commandArgs(trailingOnly=TRUE)
-#if (length(args) != 13) {
-#  stop("Invalid number of arguments!!!", call.=FALSE)
-#}
-#mapp_thresh <- as.double(args[1])
-#cov_thresh_from <- strtoi(args[2])
-#cov_thresh_to <- strtoi(args[3])
-#length_thresh_from <- strtoi(args[4])
-#length_thresh_to <- strtoi(args[5])
-#gc_thresh_from <- strtoi(args[6])
-#gc_thresh_to <- strtoi(args[7])
-#K_from <- strtoi(args[8])
-#K_to <- strtoi(args[9])
-#lmax <- strtoi(args[10])  # Maximum CNV length in number of exons returned.
-#cov_file <- file.path(args[11])
-#sampname_file <- args[12]
-#bedFile <- file.path(args[13])
+#  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+args = commandArgs(trailingOnly=TRUE)
+if (length(args) != 13) {
+  stop("Invalid number of arguments!!!", call.=FALSE)
+}
+mapp_thresh <- as.double(args[1])
+cov_thresh_from <- strtoi(args[2])
+cov_thresh_to <- strtoi(args[3])
+length_thresh_from <- strtoi(args[4])
+length_thresh_to <- strtoi(args[5])
+gc_thresh_from <- strtoi(args[6])
+gc_thresh_to <- strtoi(args[7])
+K_from <- strtoi(args[8])
+K_to <- strtoi(args[9])
+lmax <- strtoi(args[10])  # Maximum CNV length in number of exons returned.
+cov_file <- file.path(args[11])
+sampname_file <- args[12]
+bedFile <- file.path(args[13])
 
 parameters <- data.frame(mapp_thresh, cov_thresh_from, cov_thresh_to, length_thresh_from, length_thresh_to, 
                          gc_thresh_from, gc_thresh_to, K_from, K_to, lmax, cov_file, sampname_file, bedFile)
@@ -180,7 +183,7 @@ if (!dbExistsTable(db, name="parameters")) {
   )
 }
 dbWriteTable(db, name="parameters", value=data.frame(parameters), append=TRUE)
-dbGetQuery(db, 'SELECT * FROM parameters')
+#dbGetQuery(db, 'SELECT * FROM parameters')
 parameters_id <- nrow(dbReadTable(db,'parameters'))
 
 if (!dbExistsTable(db, name="calls")) {
@@ -207,7 +210,7 @@ if (!dbExistsTable(db, name="calls")) {
   )
 }
 dbWriteTable(db, name="calls", value=data.frame(cbind(finalcall, parameters_id=parameters_id)), append=TRUE)
-dbGetQuery(db, 'SELECT * FROM calls')
+#dbGetQuery(db, 'SELECT * FROM calls')
 
 
 dbDisconnect(db)
