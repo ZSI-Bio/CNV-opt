@@ -148,6 +148,7 @@ for(chr in chrs) {
   ###################################################
   finalcallIt <- segment1(Y_qc, Yhat, K[which.max(BIC)], K, sampname_qc,
                           ref_qc, chr, lmax, mode = "integer")$finalcall
+ if (nrow(finalcall)==0){finalcall <- matrix(nrow=0, ncol=ncol(finalcallIt))} 
   finalcall <- rbind(finalcall, finalcallIt)
 
 }

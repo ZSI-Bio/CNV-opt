@@ -1,5 +1,5 @@
 # do these two commands only once!!!
-if (length(which(installed.packages() == "WES.1KG.WUGSC")) ==0){
+if (length(which(installed.packages()[,1] == "WES.1KG.WUGSC")) ==0){
     source("http://bioconductor.org/biocLite.R")
     biocLite("WES.1KG.WUGSC")
 }
