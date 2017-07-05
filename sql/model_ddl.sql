@@ -5,3 +5,11 @@ pos INT,
 coverage_hist ARRAY<INT> COMMENT 'BY DEFAULT [10,20,30,40]',
 coverage_total INT
 ) PARTITIONED BY (sample_name STRING) STORED AS PARQUET;
+
+
+--targets table
+CREATE TABLE IF NOT EXISTS CNV.EXOME_TARGETS_DEFAULT (
+chr STRING,
+pos INT,
+target_id INT
+)  STORED AS PARQUET;
