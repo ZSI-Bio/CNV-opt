@@ -1,65 +1,62 @@
 import scala.util.Properties
 
-name := """zsi-bio-template"""
+name := """cnv-opt"""
 
 version := "0.1"
 
-scalaVersion := "2.11.5"
 
-val DEFAULT_SPARK_VERSION = "2.1.1"
-val DEFAULT_HADOOP_VERSION = "2.6.1"
+organization := "pl.edu.pw.ii.zsibio"
 
-lazy val sparkVersion = Properties.envOrElse("SPARK_VERSION", DEFAULT_SPARK_VERSION)
+scalaVersion := "2.11.8"
+
+val DEFAULT_SPARK_2_VERSION = "2.1.0.cloudera1"
+val DEFAULT_HADOOP_VERSION = "2.6.0-cdh5.11.0"
+val ZSI_BIO_SPARK_1_VERSION= "1.6.4-SNAPSHOT"
+
+
+lazy val sparkVersion = Properties.envOrElse("SPARK_VERSION", DEFAULT_SPARK_2_VERSION)
 lazy val hadoopVersion = Properties.envOrElse("SPARK_HADOOP_VERSION", DEFAULT_HADOOP_VERSION)
 
 fork := true
-javaOptions ++= Seq("-Xms512M", "-Xmx2048M", "-XX:MaxPermSize=2048M", "-XX:+CMSClassUnloadingEnabled")
 
 javaOptions in run ++= Seq(
   "-Dlog4j.debug=true",
   "-Dlog4j.configuration=log4j.properties")
 
+
+updateOptions := updateOptions.value.withLatestSnapshots(false)
+
 outputStrategy := Some(StdoutOutput)
 
 libraryDependencies ++= Seq(
-  "org.scalatest" % "scalatest_2.11" % "3.0.3" % "test",
-  // "org.apache.parquet" % "parquet-hadoop" % "1.8.1",
-  //"org.apache.hive" % "hive-common" % "1.2.1" excludeAll ExclusionRule(organization = "com.sun.jersey"),
-  "org.apache.spark" % "spark-core_2.11" % sparkVersion % "provided",
-    //excludeAll ExclusionRule(organization = "javax.servlet"),
-  "org.apache.spark" %% "spark-sql" % sparkVersion  % "provided"  excludeAll ExclusionRule(organization = "javax.servlet")
+  "org.scalatest" % "scalatest_2.11" % "3.0.0" % "test",
+  "org.apache.spark" % "spark-core_2.11" % sparkVersion % "provided"
+  /*excludeAll ExclusionRule(organization = "javax.servlet")*/,
+  "org.apache.spark" % "spark-sql_2.11" % sparkVersion  % "provided"  excludeAll ExclusionRule(organization = "javax.servlet")
     excludeAll ExclusionRule(organization = "org.apache.parquet.schema"),
-  "org.apache.spark" %% "spark-hive" % sparkVersion % "provided"  excludeAll ExclusionRule(organization = "javax.servlet")
+  "org.apache.spark" % "spark-hive_2.11" % sparkVersion % "provided"  excludeAll ExclusionRule(organization = "javax.servlet")
     excludeAll ExclusionRule(organization = "org.apache.parquet.schema"),
-  "org.apache.spark" %% "spark-mllib" % sparkVersion  % "provided"  excludeAll ExclusionRule(organization = "javax.servlet"),
+  "org.apache.spark" % "spark-mllib_2.11" % sparkVersion  % "provided"  excludeAll ExclusionRule(organization = "javax.servlet"),
+  "org.apache.hadoop" % "hadoop-common" % hadoopVersion % "provided",
   "org.apache.hadoop" % "hadoop-client" % hadoopVersion % "provided"
     excludeAll ExclusionRule(organization = "javax.servlet"),
-  "org.bdgenomics.adam" % "adam-core_2.11" % "0.22.0"
+  "org.rogach" %% "scallop" % "3.0.3",
+  "com.holdenkarau" % "spark-testing-base_2.11" % "2.1.0_0.6.0" % "test"
     exclude("org.apache.spark", "spark-core_2.11")
-    exclude("org.apache.hadoop", "hadoop-client")
-    excludeAll ExclusionRule(organization = "org.apache.parquet")
-    // exclude("org.bdgenomics.utils", "utils-metrics_2.10")
-    excludeAll ExclusionRule(organization = "javax.servlet"),
-  "org.bdgenomics.utils" % "utils-misc_2.11" % "0.2.13"
-    exclude("org.apache.spark", "spark-core_2.11")
-    exclude("org.apache.hadoop", "hadoop-client")
-    excludeAll ExclusionRule(organization = "javax.servlet"),
-  "org.seqdoop" % "hadoop-bam" % "7.8.0"
-    exclude("org.apache.hadoop", "hadoop-client")
-    excludeAll ExclusionRule(organization = "javax.servlet"),
-  "com.holdenkarau" %% "spark-testing-base" % s"2.1.0_0.6.0",
-  "de.lmu.ifi.dbs.elki" % "elki" % "0.7.1",
-  "org.hammerlab" % "magic-rdds_2.11" % "1.4.2"
+    exclude("org.apache.spark", "spark-sql_2.11"),
+  "pl.edu.pw.ii.zsibio" % "common-routines_2.11" % "0.1-SNAPSHOT",
+  "com.typesafe" % "config" % "1.3.1",
+  "log4j" % "log4j" % "1.2.17"
 )
 
 resolvers ++= Seq(
-  "Job Server Bintray" at "https://dl.bintray.com/spark-jobserver/maven"
+  "Job Server Bintray" at "https://dl.bintray.com/spark-jobserver/maven",
+  "zsibio-snapshots" at "http://zsibio.ii.pw.edu.pl:50007/repository/maven-snapshots/",
+  "spring" at "http://repo.spring.io/libs-milestone/"
 )
 
 parallelExecution in Test := false
 
-//assemblyJarName in assembly := "santo.jar"
-//mainClass in assembly := Some("pl.edu.pw.elka.cnv.Main")
 assemblyMergeStrategy in assembly := {
   case PathList("org", "apache", "commons", xs@_*) => MergeStrategy.first
   /*case PathList("scala", xs@_*) => MergeStrategy.first
@@ -115,14 +112,14 @@ assemblyMergeStrategy in assembly := {
     oldStrategy(x)
 }
 
-lazy val copyDocAssetsTask = taskKey[Unit]("Copy doc assets")
 
-copyDocAssetsTask := {
-  val sourceDir = file("resources/doc-resources")
-  val targetDir = (target in(Compile, doc)).value
-  IO.copyDirectory(sourceDir, targetDir)
+
+
+credentials += Credentials(Path.userHome / ".ivy2" / ".credentials")
+publishTo := {
+  val nexus = "http://zsibio.ii.pw.edu.pl:50007/repository/"
+  if (isSnapshot.value)
+    Some("snapshots" at nexus + "maven-snapshots")
+  else
+    Some("releases" at nexus + "maven-releases")
 }
-
-copyDocAssetsTask <<= copyDocAssetsTask triggeredBy (doc in Compile)
-
-net.virtualvoid.sbt.graph.Plugin.graphSettings
