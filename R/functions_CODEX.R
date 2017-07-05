@@ -44,7 +44,6 @@ normObj2 <- function(Y_qc, gc_qc, K, normal_index){
 
 segment1 <- function(Y_qc, Yhat, optK, K, sampname_qc,
                      ref_qc, chr, lmax, mode){
-  finalcall <- matrix(nrow=0,ncol=14)
   finalcall <- segment(Y_qc, Yhat, optK, K, sampname_qc,
                          ref_qc, chr, lmax, mode)
   return(list(finalcall=finalcall))

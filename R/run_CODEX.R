@@ -26,7 +26,6 @@ if (length(which(installed.packages() == "CODEX")) == 0){
 ## library(devtools)
 ## install_github("yuchaojiang/CODEX/package")
 
-#source("./functions_CODEX.R")   #  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 source("./R/functions_CODEX.R")   #  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 #source("/home/wiktor/CNV-opt/R/functions_CODEX.R")
 
