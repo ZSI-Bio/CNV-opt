@@ -2,17 +2,6 @@ pipeline {
     agent any
        stages {
 
-        stage('Test shell code') {
-                    steps {
-                        echo 'Testing shell code....'
-                        sh "bin/test/test_CODEX.sh"
-                    }
-                    post {
-                      always {
-                        junit '**bin/test/results/*.xml'
-                      }
-                    }
-         }
         stage('Test R code') {
                     steps {
                         echo 'Testing R code....'
