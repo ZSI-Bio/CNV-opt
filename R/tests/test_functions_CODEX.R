@@ -1,5 +1,6 @@
 library(testthat)
-source("../functions_CODEX.R")
+#source("../functions_CODEX.R")
+library(CODEXCOV)
 
 context("Testing gcmapp1 function")
 
