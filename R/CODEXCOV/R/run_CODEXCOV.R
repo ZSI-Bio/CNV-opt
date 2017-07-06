@@ -7,7 +7,7 @@
 #' @export
 #' @examples
 #' run_codexcov
-run_codexcov <- function(cov_file, sampname){
+run_CODEXCOV <- function(cov_file, sampname){
 
   ###################################################
   ### code chunk number 0: install0 
