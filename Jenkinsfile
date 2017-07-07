@@ -14,6 +14,14 @@ pipeline {
                     }
          }
 
+         stage('Build R package') {
+                             steps {
+                                 echo 'Building R package....'
+                                 sh "cd R && R CMD build CODEXCOV/ && curl -v --user 'user:pass' --upload-file CODEXCOV_0.0.1.tar.gz http://zsibio.ii.pw.edu.pl:50007/repository/r-zsibio/src/contrib/CODEXCOV_0.0.1.tar.gz"
+                             }
+
+                  }
+
         stage('Test Scala code') {
                     steps {
                         slackSend botUser: true, channel: '#development', message: 'started ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)', teamDomain: 'zsibio.slack.com'
