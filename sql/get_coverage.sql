@@ -1,0 +1,1 @@
+hive -S -e "use cnv; select et.target_id,min(et.chr), min(et.pos), max(et.pos), avg(cr.coverage_total)  from coverage_raw as cr join exome_targets_default as et  on cr.chr=et.chr and cr.pos=et.pos where cr.sample_name='NA06985' group by et.target_id;" > /data/local/projects/data/sample_output/out.txt
