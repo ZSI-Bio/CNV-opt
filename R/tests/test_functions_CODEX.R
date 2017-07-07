@@ -1,5 +1,7 @@
 library(testthat)
-source("../functions_CODEX.R")
+if (length(which(installed.packages()[,1] == "devtools")) == 0){install.packages("devtools",repos="https://cloud.r-project.org/")}
+if (length(which(installed.packages()[,1] == "CODEXCOV")) == 0){devtools::install("../CODEXCOV")}
+library(CODEXCOV)
 
 context("Testing gcmapp1 function")
 

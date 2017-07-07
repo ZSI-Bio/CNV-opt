@@ -1,5 +1,14 @@
 library(CODEX)
 
+#' Function Dexcription
+#'
+#' Function description.
+#' @param cov_file
+#' @param sampname
+#' @keywords 
+#' @export
+#' @examples
+#' coverageObj1
 coverageObj1 <- function(cov_file, sampname){
   # [TODO] dodac filtr wartosci (wierszy) dla odpowiedniego chromosomu, ale to chyba jest, ale trzeba przetestowac !!!
   Y <- scan(cov_file)
@@ -7,12 +16,38 @@ coverageObj1 <- function(cov_file, sampname){
   return(list(Y=Y))
 }
 
+#' Function Dexcription
+#'
+#' Function description.
+#' @param chr
+#' @param ref
+#' @keywords 
+#' @export
+#' @examples
+#' coverageObj1
 gcmapp1 <- function(chr, ref){
   gc <- getgc(chr, ref)
   mapp <- getmapp(chr, ref)
   return(list(gc=gc, mapp=mapp))
 }
 
+#' Function Dexcription
+#'
+#' Function description.
+#' @param Y
+#' @param sampname
+#' @param chr
+#' @param ref
+#' @param mapp
+#' @param gc
+#' @param cov_thresh
+#' @param length_thresh
+#' @param mapp_thresh
+#' @param gc_thresh
+#' @keywords 
+#' @export
+#' @examples
+#' coverageObj1
 qcObj1 <- function(Y, sampname, chr, ref, mapp, gc, cov_thresh, length_thresh, mapp_thresh, gc_thresh){
   qcObj1_result <- qc(Y, sampname, chr, ref, mapp, gc, cov_thresh, length_thresh, mapp_thresh, gc_thresh)
   Y_qc <- qcObj1_result$Y_qc
@@ -22,6 +57,16 @@ qcObj1 <- function(Y, sampname, chr, ref, mapp, gc, cov_thresh, length_thresh, m
   return(list(Y_qc=Y_qc, sampname_qc=sampname_qc, gc_qc=gc_qc, ref_qc=ref_qc))
 }
 
+#' Function Dexcription
+#'
+#' Function description.
+#' @param Y_qc
+#' @param gc_qc
+#' @param K
+#' @keywords 
+#' @export
+#' @examples
+#' coverageObj1
 normObj1 <- function(Y_qc, gc_qc, K){
   normObj_result <- normalize(Y_qc, gc_qc, K)
   Yhat <- normObj_result$Yhat
@@ -32,6 +77,17 @@ normObj1 <- function(Y_qc, gc_qc, K){
   return(list(Yhat=Yhat, AIC=AIC, BIC=BIC, RSS=RSS, K=K))
 }
 
+#' Function Dexcription
+#'
+#' Function description.
+#' @param Y_qc
+#' @param gc_qc
+#' @param K
+#' @param normal_index
+#' @keywords 
+#' @export
+#' @examples
+#' coverageObj1
 normObj2 <- function(Y_qc, gc_qc, K, normal_index){
   normObj_result <- normalize2(Y_qc, gc_qc, K, normal_index)
   Yhat <- normObj_result$Yhat
@@ -42,6 +98,18 @@ normObj2 <- function(Y_qc, gc_qc, K, normal_index){
   return(list(Yhat=Yhat, AIC=AIC, BIC=BIC, RSS=RSS, K=K))
 }
 
+#' Function Dexcription
+#'
+#' Function description.
+#' @param Y_qc
+#' @param Yhat
+#' @param optK
+#' @param K
+#' @param sampname_qc
+#' @keywords 
+#' @export
+#' @examples
+#' coverageObj1
 segment1 <- function(Y_qc, Yhat, optK, K, sampname_qc,
                      ref_qc, chr, lmax, mode){
   finalcall <- segment(Y_qc, Yhat, optK, K, sampname_qc,
