@@ -2,7 +2,7 @@ import scala.util.Properties
 
 name := """cnv-opt"""
 
-version := "0.1"
+version := "0.1-SNAPSHOT"
 
 
 organization := "pl.edu.pw.ii.zsibio"
