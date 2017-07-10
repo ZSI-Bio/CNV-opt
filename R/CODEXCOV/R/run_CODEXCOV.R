@@ -39,17 +39,17 @@ run_CODEXCOV <- function(mapp_thresh,
                            gc_thresh_from, gc_thresh_to, K_from, K_to, lmax)
 
   
-  sampname <- unique(cov_table[,1])
-  targets <- cov_table[,c(2,3,4,5)]
-  targets <- targets[!duplicated(targets[,1]),]
+  sampname <- unique(cov_table[,"sample_name"])
+  targets <- cov_table[,c("target_id", "chr", "pos_min", "pos_max")]
+  targets <- targets[!duplicated(targets[,"target_id"]),]
   targets <- targets[with(targets, order(target_id)), ]
-
+  
   finalcall <- matrix(nrow=0, ncol=13)
-  chrs <- c("Y")#c(1:22, "X", "Y", paste0("chr",c(1:22, "X", "Y")))
+  chrs <- c(1:22, "X", "Y", paste0("chr",c(1:22, "X", "Y")))
   
   for(chr in chrs) {
-    targets_for_chr <- targets[targets[,2] == chr,]
-    ref <- IRanges(start = targets_for_chr[,3], end = targets_for_chr[,4])
+    targets_for_chr <- targets[targets[,"chr"] == chr,]
+    ref <- IRanges(start = targets_for_chr[,"pos_min"], end = targets_for_chr[,"pos_max"])
     if (length(ref) == 0) {    # 0 elements for specified chromosome in bed
       next()
     }

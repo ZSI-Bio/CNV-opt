@@ -12,11 +12,11 @@ library(CODEX)
 coverageObj1 <- function(cov_table, sampname, targets_for_chr, chr){
   Y <- matrix(data=as.integer(0), nrow = nrow(targets_for_chr), ncol = length(sampname))
   colnames(Y) <- sampname
-  rownames(Y) <- targets_for_chr[,1]
-  cov_targets_for_chr <- cov_table[cov_table[,3] == chr,]
+  rownames(Y) <- targets_for_chr[,"target_id"]
+  cov_targets_for_chr <- cov_table[cov_table[,"chr"] == chr,]
   for(i in 1:nrow(cov_targets_for_chr)) {
     cov_row <- cov_targets_for_chr[i,]
-    Y[toString(cov_row[,2]),toString(cov_row[,1])] = as.integer(cov_row[,6])
+    Y[toString(cov_row[,"target_id"]),toString(cov_row[,"sample_name"])] = as.integer(cov_row[,"cov_avg"])
   }
   return(list(Y=Y))
 }
