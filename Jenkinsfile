@@ -58,6 +58,9 @@ pipeline {
                             echo "Copying assembly to the edge server cdh00:/data/local/projects/jars folder"
                             sh "${tool name: 'sbt-0.13.15', type: 'org.jvnet.hudson.plugins.SbtPluginBuilder$SbtInstallation'}/bin/sbt assembly"
                             sh "find target/ -name *assembly*.jar | xargs -i scp {} zsibio-jenkins@cdh00:/data/local/projects/jars"
+
+                             echo "Triggering zsi-bio-docker-image build proceses"
+                             build job: 'ZSI-Bio/zsi-bio-docker-image/master', wait: false
                     }
                 }
     }
