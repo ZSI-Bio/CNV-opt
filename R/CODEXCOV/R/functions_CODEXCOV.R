@@ -9,10 +9,15 @@ library(CODEX)
 #' @export
 #' @examples
 #' coverageObj1
-coverageObj1 <- function(cov_file, sampname){
-  # [TODO] dodac filtr wartosci (wierszy) dla odpowiedniego chromosomu, ale to chyba jest, ale trzeba przetestowac !!!
-  Y <- scan(cov_file)
-  Y <- matrix(Y, ncol = length(sampname), byrow = TRUE)
+coverageObj1 <- function(cov_table, sampname, targets_for_chr, chr){
+  Y <- matrix(data=as.integer(0), nrow = nrow(targets_for_chr), ncol = length(sampname))
+  colnames(Y) <- sampname
+  rownames(Y) <- targets_for_chr[,1]
+  cov_targets_for_chr <- cov_table[cov_table[,3] == chr,]
+  for(i in 1:nrow(cov_targets_for_chr)) {
+    cov_row <- cov_targets_for_chr[i,]
+    Y[toString(cov_row[,2]),toString(cov_row[,1])] = as.integer(cov_row[,6])
+  }
   return(list(Y=Y))
 }
 
