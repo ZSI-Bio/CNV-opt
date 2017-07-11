@@ -128,56 +128,13 @@ run_CODEXCOV <- function(mapp_thresh,
   if (FALSE) {
     library(DBI)
     db <- dbConnect(drv=RSQLite::SQLite(), dbname="db.sqlite")
-    
-    if (!dbExistsTable(db, name="parameters")) {
-      dbSendQuery(db,
-            "CREATE TABLE parameters(
-            id INTEGER PRIMARY KEY,
-            mapp_thresh TEXT,
-            cov_thresh_from TEXT,
-            cov_thresh_to TEXT,
-            length_thresh_from TEXT,
-            length_thresh_to TEXT,
-            gc_thresh_from TEXT,
-            gc_thresh_to TEXT,
-            K_from TEXT,
-            K_to TEXT,
-            lmax TEXT,
-            cov_file TEXT,
-            sampname_file TEXT,
-            bedFile TEXT
-          );"
-      )
-    }
+
     dbWriteTable(db, name="parameters", value=data.frame(parameters), append=TRUE)
     #dbGetQuery(db, 'SELECT * FROM parameters')
     parameters_id <- nrow(dbReadTable(db,'parameters'))
-    
-    if (!dbExistsTable(db, name="calls")) {
-      dbSendQuery(db,
-            "CREATE TABLE calls(
-            id INTEGER PRIMARY KEY,
-            parameters_id INTEGER,
-            sample_name TEXT,
-            chr TEXT,
-            cnv TEXT,
-            st_bp TEXT,
-            ed_bp TEXT,
-            length_kb TEXT,
-            st_exon TEXT,
-            ed_exon TEXT,
-            raw_cov TEXT,
-            norm_cov TEXT,
-            copy_no TEXT,
-            lratio TEXT,
-            mBIC TEXT,
-            FOREIGN KEY(parameters_id) REFERENCES parameters(id)
-          );"
-      )
-    }
+
     dbWriteTable(db, name="calls", value=data.frame(cbind(finalcall, parameters_id=parameters_id)), append=TRUE)
     #dbGetQuery(db, 'SELECT * FROM calls')
-    
     
     dbDisconnect(db)
     #unlink("db.sqlite")
