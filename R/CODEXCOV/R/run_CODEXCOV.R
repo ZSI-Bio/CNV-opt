@@ -33,11 +33,10 @@ run_CODEXCOV <- function(mapp_thresh,
   #lmax <- 200  # Maximum CNV length in number of exons returned.
   #cov_table <- file.path("/home/wiktor/CNV-opt/data/EXAMPLE_BAMS/coverage.txt")
 
-  parameters <- data.frame(mapp_thresh, cov_thresh_from, cov_thresh_to, length_thresh_from, length_thresh_to, 
-                           gc_thresh_from, gc_thresh_to, K_from, K_to, lmax)
-  print(parameters)
+  #parameters <- data.frame(mapp_thresh, cov_thresh_from, cov_thresh_to, length_thresh_from, length_thresh_to, 
+  #                         gc_thresh_from, gc_thresh_to, K_from, K_to, lmax)
+  #print(parameters)
 
-  
   sampname <- unique(cov_table[,"sample_name"])
   targets <- cov_table[,c("target_id", "chr", "pos_min", "pos_max")]
   targets <- targets[!duplicated(targets[,"target_id"]),]
@@ -116,26 +115,5 @@ run_CODEXCOV <- function(mapp_thresh,
     finalcall <- rbind(finalcall, finalcallIt)
   
   }
-  print(finalcall)
-  print(nrow(finalcall))
-  
-  
-  
-  
-  
-  
-  if (FALSE) {
-    library(DBI)
-    db <- dbConnect(drv=RSQLite::SQLite(), dbname="db.sqlite")
-
-    dbWriteTable(db, name="parameters", value=data.frame(parameters), append=TRUE)
-    #dbGetQuery(db, 'SELECT * FROM parameters')
-    parameters_id <- nrow(dbReadTable(db,'parameters'))
-
-    dbWriteTable(db, name="calls", value=data.frame(cbind(finalcall, parameters_id=parameters_id)), append=TRUE)
-    #dbGetQuery(db, 'SELECT * FROM calls')
-    
-    dbDisconnect(db)
-    #unlink("db.sqlite")
-  }
+  finalcall
 }
