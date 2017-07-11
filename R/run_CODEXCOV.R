@@ -1,6 +1,6 @@
 #!/usr/bin/env Rscript
 library(devtools)
-install('CODEXCOV')
+#install('CODEXCOV')
 library('CODEXCOV')
 library(optparse)
 
