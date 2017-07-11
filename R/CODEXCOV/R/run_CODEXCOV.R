@@ -31,12 +31,11 @@ run_CODEXCOV <- function(mapp_thresh,
   #K_from <- 1
   #K_to <- 9
   #lmax <- 200  # Maximum CNV length in number of exons returned.
-  #cov_file <- file.path("/home/wiktor/CNV-opt/data/EXAMPLE_BAMS/coverage.txt")
-  #sampname_file <- "/home/wiktor/CNV-opt/data/EXAMPLE_BAMS/sampname"
-  #bedFile <- file.path("/home/wiktor/CNV-opt/data/EXAMPLE_BAMS/EXOME.bed")
-  
+  #cov_table <- file.path("/home/wiktor/CNV-opt/data/EXAMPLE_BAMS/coverage.txt")
+
   parameters <- data.frame(mapp_thresh, cov_thresh_from, cov_thresh_to, length_thresh_from, length_thresh_to, 
                            gc_thresh_from, gc_thresh_to, K_from, K_to, lmax)
+  print(parameters)
 
   
   sampname <- unique(cov_table[,"sample_name"])
