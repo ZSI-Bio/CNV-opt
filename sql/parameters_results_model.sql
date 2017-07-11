@@ -1,9 +1,9 @@
 CREATE DATABASE CNV;
-\CONNECT CNV
-
+\connect cnv
 CREATE SCHEMA IF NOT EXISTS CNV;
+
 CREATE TABLE IF NOT EXISTS CNV.PARAMETERS (
-    id INT PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     mapp_thresh TEXT,
     cov_thresh_from TEXT,
     cov_thresh_to TEXT,
@@ -17,7 +17,7 @@ CREATE TABLE IF NOT EXISTS CNV.PARAMETERS (
 );
 
 CREATE TABLE IF NOT EXISTS CNV.CALLS (
-    id INT PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     parameters_id INT,
     sample_name TEXT,
     chr TEXT,
@@ -34,7 +34,3 @@ CREATE TABLE IF NOT EXISTS CNV.CALLS (
     mBIC TEXT,
     FOREIGN KEY(parameters_id) REFERENCES CNV.PARAMETERS(id)
 );
-
-
-
-
