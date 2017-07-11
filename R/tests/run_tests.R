@@ -7,4 +7,6 @@ if (length(which(installed.packages()[,1] == "CODEX")) == 0){
 
 library(testthat)
 source("test_functions_CODEX.R")
+source("test_functions_HMZDelFinder.R")
+
 capture.output(test_dir(".", reporter="junit"),file="results.xml")
