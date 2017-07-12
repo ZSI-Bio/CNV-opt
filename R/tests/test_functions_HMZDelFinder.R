@@ -1,5 +1,6 @@
 library(testthat)
 
+test_that("test for data from HMZDelFinder demo object",{
 
 # define working directory:
 workDir <- getwd()
@@ -132,9 +133,9 @@ write.csv(results$filteredCalls, paste0(outputDir,"hmzCalls.csv"), row.names=F )
 
 context("Testing HMZDelFinder results")
 
-test_that("test for data from HMZDelFinder demo object",{
+
 expect_equal(nrow(results$filteredCalls), 10)
-})
+
 
 # plotting deletions
 lapply(1:nrow(results$filteredCalls),function(i){
@@ -154,3 +155,4 @@ lapply(1:nrow(results$filteredCalls),function(i){
 #					10:  16  55866915  55866967    CES1     64208 NA18553
 ## NOTE: Deletions of CES1, CFHR1 and OR13C9 are located within segmental duplications, and thus they were not reported in the manuscript
 
+})
