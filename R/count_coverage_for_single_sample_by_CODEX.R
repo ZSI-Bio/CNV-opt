@@ -44,9 +44,21 @@ bedFile <- args[2] # "/home/wiktor/CNV/applications/CODEX/CODEX/data/20/chr22_40
 mapqthres <- strtoi(args[3]) # 20
 chr <- args[4] # 20
 outputFile <- args[5] # /home/wiktor/CNV/coverage/NA12830_coverage.txt
+
+#library("WES.1KG.WUGSC")
+#dirPath <- system.file("extdata", package = "WES.1KG.WUGSC")
+#bamFile <- list.files(dirPath, pattern = '*.bam$')
+#bamdir <- file.path(dirPath, bamFile)
+#bedFile <- file.path(dirPath, "chr22_400_to_500.bed")
+#sampname <- file.path(dirPath, "sampname")
+#bamFile <-  bamdir[1]
+#chr <- "22"
+#mapqthres <- 20
+
 bambedObj <- getbambed(bamdir = bamFile, bedFile = bedFile, sampname = NULL, projectname = NULL, chr)
 coverageObj <- count_coverage_for_single_sample_by_CODEX(bambedObj, mapqthres = mapqthres)
-write(coverageObj$Y, file = outputFile, ncolumns = 1)
+finalDf <- data.frame(chrom=chr, start=start(bambedObj$ref), end=end(bambedObj$ref), readCount=coverageObj$Y )
+write.table(finalDf, sep="\t", col.names=F, row.names=F, quote="",  file = outputFile)
 
 
 
