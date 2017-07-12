@@ -5,8 +5,7 @@ pipeline {
         stage('Test R code') {
                     steps {
                         echo 'Testing R code....'
-                        sh "cd R/tests && Rscript run_tests.R"
-                    }
+                        sh 'docker run -i --rm --network="host" -w="/tmp" -v $(pwd | sed "s|/var/jenkins_home|/data/home/jenkins|g")/R/tests:/tmp zsibio.ii.pw.edu.pl:50009/zsi-bio-toolset Rscript run_tests.R'                    }
                     post {
                       always {
                         junit '**R/tests/*.xml'
