@@ -6,5 +6,8 @@ if (length(which(installed.packages()[,1] == "CODEX")) == 0){
 }
 
 library(testthat)
-source("test_functions_CODEX.R")
-capture.output(test_dir(".", reporter="junit"),file="results.xml")
+#source("test_functions_CODEX.R")
+#source("test_functions_HMZDelFinder.R")
+#capture.output(test_dir(".", reporter="junit"),file="results.xml")
+out <- capture.output(test_dir(".", reporter="junit"))
+writeLines(out[grep("<?xml version=", out):length(out)], "results.xml")
