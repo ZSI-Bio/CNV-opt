@@ -28,7 +28,7 @@ run_wrapper_CODEXCOV <- function(mapp_thresh,
                     K_from,
                     K_to,
                     lmax,
-                    ds){
+                    cov_table){
   calls <- run_CODEXCOV(mapp_thresh,
                         cov_thresh_from,
                         cov_thresh_to,
@@ -39,7 +39,7 @@ run_wrapper_CODEXCOV <- function(mapp_thresh,
                         K_from,
                         K_to,
                         lmax,
-                        ds
+                        cov_table
   )
   calls
 }
