@@ -16,7 +16,9 @@ opt <- parse_args(OptionParser(option_list=option_list))
 
 
 read_parameters <- function(tabName, id){
-  #download.file("http://zsibio.ii.pw.edu.pl:50007/repository/zsi-bio-raw/common/jdbc/postgresql-42.1.1.jar",destfile="postgresql-42.1.1.jar")
+  if (!file.exists("postgresql-42.1.1.jar")) {
+    download.file("http://zsibio.ii.pw.edu.pl:50007/repository/zsi-bio-raw/common/jdbc/postgresql-42.1.1.jar",destfile="postgresql-42.1.1.jar")
+  }
   drv <- JDBC("org.postgresql.Driver", "./postgresql-42.1.1.jar",identifier.quote="`")
   conn <- dbConnect(drv, "jdbc:postgresql://cdh00.ii.pw.edu.pl:15432/cnv-opt", "cnv-opt", "zsibio321")
   query <- paste("Select * from ", tabName, " where id = ", id, ";", sep="")
@@ -49,77 +51,64 @@ read_parameters <- function(tabName, id){
 }
 
 save_calls <- function(calls){
-  #download.file("http://zsibio.ii.pw.edu.pl:50007/repository/zsi-bio-raw/common/jdbc/postgresql-42.1.1.jar",destfile="postgresql-42.1.1.jar")
+  if (!file.exists("postgresql-42.1.1.jar")) {
+    download.file("http://zsibio.ii.pw.edu.pl:50007/repository/zsi-bio-raw/common/jdbc/postgresql-42.1.1.jar",destfile="postgresql-42.1.1.jar")
+  }
   drv <- JDBC("org.postgresql.Driver", "./postgresql-42.1.1.jar",identifier.quote="`")
   conn <- dbConnect(drv, "jdbc:postgresql://cdh00.ii.pw.edu.pl:15432/cnv-opt", "cnv-opt", "zsibio321")
-  
   for(i in 1:nrow(calls)) {
     call <- calls[i,]
     query <- paste("INSERT INTO TEST_CALLS (parameters_id, sample_name, chr, cnv, st_bp, ed_bp, length_kb, st_exon, ed_exon, raw_cov, norm_cov, copy_no, lratio, mBIC) VALUES ('", opt$id, "','", call[1], "','", call[2], "','", call[3], "','", call[4], "','", call[5], "','", call[6], "','", call[7], "','", call[8], "','", call[9], "','", call[10], "','", call[11], "','", call[12], "','", call[13], "');", sep="")
-    print(query)
     dbSendUpdate(conn, query)
   }
-  dbGetQuery(conn, "Select * from test_calls;")
   dbDisconnect(conn)
 }
 
 read_coverage_table <- function(){
+  if (!file.exists("zsi-bio-cdh-hive-jdbc_2.11-0.1-assembly.jar")) {
+    download.file("http://zsibio.ii.pw.edu.pl:50007/repository/maven-releases/pl/edu/pw/ii/zsibio/zsi-bio-cdh-hive-jdbc_2.11/0.1/zsi-bio-cdh-hive-jdbc_2.11-0.1-assembly.jar",destfile="zsi-bio-cdh-hive-jdbc_2.11-0.1-assembly.jar")
+  }
   drv <- JDBC("com.cloudera.hiveserver2.hive.core.Hive2JDBCDriver", "./zsi-bio-cdh-hive-jdbc_2.11-0.1-assembly.jar",identifier.quote="`")
   conn <- dbConnect(drv, "jdbc:hive2://cdh01.ii.pw.edu.pl:10000", "mwiewior", "")
-  ds <-dbGetQuery(conn, "select * from cnv.coverage_target limit 10")
+  ds <- dbGetQuery(conn, "select * from cnv.coverage_target")
+  dbDisconnect(conn)
   colnames(ds) <- c("sample_name", "target_id", "chr", "pos_min", "pos_max", "cov_avg")
+  ds
 }
 
 run_caller <- function(parameters, cov_table){
-  #calls <- run_wrapper_CODEXCOV(opt$mapp_thresh,
-  #                              opt$cov_thresh_from,
-  #                              opt$cov_thresh_to,
-  #                              opt$length_thresh_from,
-  #                              opt$length_thresh_to,
-  #                              opt$gc_thresh_from,
-  #                              opt$gc_thresh_to,
-  #                              opt$K_from,
-  #                              opt$K_to,
-  #                              opt$lmax,
-  #                              cov_table
-  #)
-  #print(calls)
-  
-  calls <- matrix(nrow=1, ncol=13)
-  calls[1,1] = 'asd'
-  calls[1,2] = 13
-  print(calls)
-  calls
+  if (parameters$caller == "codex"){
+    calls <- run_wrapper_CODEXCOV(parameters$mapp_thresh,
+                                  parameters$cov_thresh_from,
+                                  parameters$cov_thresh_to,
+                                  parameters$length_thresh_from,
+                                  parameters$length_thresh_to,
+                                  parameters$gc_thresh_from,
+                                  parameters$gc_thresh_to,
+                                  parameters$K_from,
+                                  parameters$K_to,
+                                  parameters$lmax,
+                                  cov_table
+    )
+    print(calls)
+    #calls <- matrix(nrow=1, ncol=13)
+    #calls[1,1] = 'asd'
+    #calls[1,2] = 13
+    calls
+  } else if(parameters$caller == "xhmm") {
+  }
 }
-  
+
+
+# without it error!
+drv <- JDBC("com.cloudera.hiveserver2.hive.core.Hive2JDBCDriver", "./zsi-bio-cdh-hive-jdbc_2.11-0.1-assembly.jar",identifier.quote="`")
+
 parameters <- read_parameters(opt$tabName, opt$id)
-print(parameters)
+#print(parameters)
 cov_table <- read_coverage_table()
 #print(cov_table)
-#calls <- run_caller(parameters, cov_table)
+calls <- run_caller(parameters, cov_table)
 #print(calls)
-#save_calls(calls)
+save_calls(calls)
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-if(FALSE){
-
-
-
-
-}
