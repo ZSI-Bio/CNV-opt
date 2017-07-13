@@ -14,16 +14,9 @@ option_list <- list(
 )
 opt <- parse_args(OptionParser(option_list=option_list))
 
-
-read_parameters <- function(tabName, id){
-  if (!file.exists("postgresql-42.1.1.jar")) {
-    download.file("http://zsibio.ii.pw.edu.pl:50007/repository/zsi-bio-raw/common/jdbc/postgresql-42.1.1.jar",destfile="postgresql-42.1.1.jar")
-  }
-  drv <- JDBC("org.postgresql.Driver", "./postgresql-42.1.1.jar",identifier.quote="`")
-  conn <- dbConnect(drv, "jdbc:postgresql://cdh00.ii.pw.edu.pl:15432/cnv-opt", "cnv-opt", "zsibio321")
+read_parameters <- function(tabName, id, conn){
   query <- paste("Select * from ", tabName, " where id = ", id, ";", sep="")
   parameters <- dbGetQuery(conn, query)
-  dbDisconnect(conn)
   caller <- parameters[1,'caller']
   cov_table <- parameters[1,'cov_table']
   mapp_thresh <- parameters[1,'mapp_thresh']
@@ -50,28 +43,16 @@ read_parameters <- function(tabName, id){
               lmax=lmax))
 }
 
-save_calls <- function(calls){
-  if (!file.exists("postgresql-42.1.1.jar")) {
-    download.file("http://zsibio.ii.pw.edu.pl:50007/repository/zsi-bio-raw/common/jdbc/postgresql-42.1.1.jar",destfile="postgresql-42.1.1.jar")
-  }
-  drv <- JDBC("org.postgresql.Driver", "./postgresql-42.1.1.jar",identifier.quote="`")
-  conn <- dbConnect(drv, "jdbc:postgresql://cdh00.ii.pw.edu.pl:15432/cnv-opt", "cnv-opt", "zsibio321")
+save_calls <- function(calls, conn){
   for(i in 1:nrow(calls)) {
     call <- calls[i,]
     query <- paste("INSERT INTO TEST_CALLS (parameters_id, sample_name, chr, cnv, st_bp, ed_bp, length_kb, st_exon, ed_exon, raw_cov, norm_cov, copy_no, lratio, mBIC) VALUES ('", opt$id, "','", call[1], "','", call[2], "','", call[3], "','", call[4], "','", call[5], "','", call[6], "','", call[7], "','", call[8], "','", call[9], "','", call[10], "','", call[11], "','", call[12], "','", call[13], "');", sep="")
     dbSendUpdate(conn, query)
   }
-  dbDisconnect(conn)
 }
 
-read_coverage_table <- function(){
-  if (!file.exists("zsi-bio-cdh-hive-jdbc_2.11-0.1-assembly.jar")) {
-    download.file("http://zsibio.ii.pw.edu.pl:50007/repository/maven-releases/pl/edu/pw/ii/zsibio/zsi-bio-cdh-hive-jdbc_2.11/0.1/zsi-bio-cdh-hive-jdbc_2.11-0.1-assembly.jar",destfile="zsi-bio-cdh-hive-jdbc_2.11-0.1-assembly.jar")
-  }
-  drv <- JDBC("com.cloudera.hiveserver2.hive.core.Hive2JDBCDriver", "./zsi-bio-cdh-hive-jdbc_2.11-0.1-assembly.jar",identifier.quote="`")
-  conn <- dbConnect(drv, "jdbc:hive2://cdh01.ii.pw.edu.pl:10000", "mwiewior", "")
+read_coverage_table <- function(conn){
   ds <- dbGetQuery(conn, "select * from cnv.coverage_target")
-  dbDisconnect(conn)
   colnames(ds) <- c("sample_name", "target_id", "chr", "pos_min", "pos_max", "cov_avg")
   ds
 }
@@ -99,16 +80,28 @@ run_caller <- function(parameters, cov_table){
   }
 }
 
+if (!file.exists("zsi-bio-cdh-hive-jdbc_2.11-0.1-assembly.jar")) {
+  download.file("http://zsibio.ii.pw.edu.pl:50007/repository/maven-releases/pl/edu/pw/ii/zsibio/zsi-bio-cdh-hive-jdbc_2.11/0.1/zsi-bio-cdh-hive-jdbc_2.11-0.1-assembly.jar",destfile="zsi-bio-cdh-hive-jdbc_2.11-0.1-assembly.jar")
+}
+drv_hive <- JDBC("com.cloudera.hiveserver2.hive.core.Hive2JDBCDriver", "./zsi-bio-cdh-hive-jdbc_2.11-0.1-assembly.jar",identifier.quote="`")
+conn_hive <- dbConnect(drv_hive, "jdbc:hive2://cdh01.ii.pw.edu.pl:10000", "mwiewior", "")
 
-# without it error!
-drv <- JDBC("com.cloudera.hiveserver2.hive.core.Hive2JDBCDriver", "./zsi-bio-cdh-hive-jdbc_2.11-0.1-assembly.jar",identifier.quote="`")
+if (!file.exists("postgresql-42.1.1.jar")) {
+  download.file("http://zsibio.ii.pw.edu.pl:50007/repository/zsi-bio-raw/common/jdbc/postgresql-42.1.1.jar",destfile="postgresql-42.1.1.jar")
+}
+drv_psql <- JDBC("org.postgresql.Driver", "./postgresql-42.1.1.jar",identifier.quote="`")
+conn_psql <- dbConnect(drv_psql, "jdbc:postgresql://cdh00.ii.pw.edu.pl:15432/cnv-opt", "cnv-opt", "zsibio321")
 
-parameters <- read_parameters(opt$tabName, opt$id)
+parameters <- read_parameters(opt$tabName, opt$id, conn_psql)
 #print(parameters)
-cov_table <- read_coverage_table()
+cov_table <- read_coverage_table(conn_hive)
 #print(cov_table)
 calls <- run_caller(parameters, cov_table)
 #print(calls)
-save_calls(calls)
+save_calls(calls, conn_psql)
 
+dbDisconnect(conn_hive)
+dbUnloadDriver(drv_hive)
 
+dbDisconnect(conn_psql)
+dbUnloadDriver(drv_psql)
