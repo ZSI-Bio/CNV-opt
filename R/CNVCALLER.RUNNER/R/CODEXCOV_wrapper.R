@@ -29,21 +29,17 @@ run_wrapper_CODEXCOV <- function(mapp_thresh,
                     K_to,
                     lmax,
                     ds){
-#  calls <- run_CODEXCOV(mapp_thresh,
-#                        cov_thresh_from,
-#                        cov_thresh_to,
-#                        length_thresh_from,
-#                        length_thresh_to,
-#                        gc_thresh_from,
-#                        gc_thresh_to,
-#                        K_from,
-#                        K_to,
-#                        lmax,
-#                        ds
-#  )
-  calls <- matrix(nrow=1, ncol=13)
-  calls[1,1] = 'asd'
-  calls[1,2] = 13
-  print(calls)
+  calls <- run_CODEXCOV(mapp_thresh,
+                        cov_thresh_from,
+                        cov_thresh_to,
+                        length_thresh_from,
+                        length_thresh_to,
+                        gc_thresh_from,
+                        gc_thresh_to,
+                        K_from,
+                        K_to,
+                        lmax,
+                        ds
+  )
   calls
 }

@@ -46,20 +46,25 @@ colnames(ds) <- c("sample_name", "target_id", "chr", "pos_min", "pos_max", "cov_
 
 
 
-calls <- run_wrapper_CODEXCOV(opt$mapp_thresh,
-                              opt$cov_thresh_from,
-                              opt$cov_thresh_to,
-                              opt$length_thresh_from,
-                              opt$length_thresh_to,
-                              opt$gc_thresh_from,
-                              opt$gc_thresh_to,
-                              opt$K_from,
-                              opt$K_to,
-                              opt$lmax,
-                              ds
-)
-print(calls)
+#calls <- run_wrapper_CODEXCOV(opt$mapp_thresh,
+#                              opt$cov_thresh_from,
+#                              opt$cov_thresh_to,
+#                              opt$length_thresh_from,
+#                              opt$length_thresh_to,
+#                              opt$gc_thresh_from,
+#                              opt$gc_thresh_to,
+#                              opt$K_from,
+#                              opt$K_to,
+#                              opt$lmax,
+#                              ds
+#)
+#print(calls)
 
+calls <- matrix(nrow=1, ncol=13)
+calls[1,1] = 'asd'
+calls[1,2] = 13
+print(calls)
+calls
 
 #install.packages("RJDBC",dep=TRUE)
 library(RJDBC)
