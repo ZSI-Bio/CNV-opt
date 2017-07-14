@@ -4,6 +4,8 @@ CREATE SCHEMA IF NOT EXISTS CNV;
 
 CREATE TABLE IF NOT EXISTS CNV.PARAMETERS (
     id SERIAL PRIMARY KEY,
+    caller TEXT,
+    cov_table TEXT,
     mapp_thresh TEXT,
     cov_thresh_from TEXT,
     cov_thresh_to TEXT,
