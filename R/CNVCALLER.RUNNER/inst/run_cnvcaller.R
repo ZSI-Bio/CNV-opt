@@ -1,6 +1,6 @@
 #!/usr/bin/env Rscript
 library(devtools)
-install('CNVCALLER.RUNNER')      ### zakomentować!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+#install('CNVCALLER.RUNNER')      ### zakomentować!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 library('CNVCALLER.RUNNER')
 library(optparse)
 #install.packages("RJDBC",dep=TRUE)
