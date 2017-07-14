@@ -44,16 +44,18 @@ read_parameters <- function(tabName, id, conn){
 }
 
 save_calls <- function(calls, conn){
-  for(i in 1:nrow(calls)) {
-    call <- calls[i,]
-    query <- paste("INSERT INTO TEST_CALLS (parameters_id, sample_name, chr, cnv, st_bp, ed_bp, length_kb, st_exon, ed_exon, raw_cov, norm_cov, copy_no, lratio, mBIC) VALUES ('", opt$id, "','", call[1], "','", call[2], "','", call[3], "','", call[4], "','", call[5], "','", call[6], "','", call[7], "','", call[8], "','", call[9], "','", call[10], "','", call[11], "','", call[12], "','", call[13], "');", sep="")
-    dbSendUpdate(conn, query)
+  if (nrow(calls) != 0) {
+    for(i in 1:nrow(calls)) {
+      call <- calls[i,]
+      query <- paste("INSERT INTO TEST_CALLS (parameters_id, sample_name, chr, cnv, st_bp, ed_bp, length_kb, st_exon, ed_exon, raw_cov, norm_cov, copy_no, lratio, mBIC) VALUES ('", opt$id, "','", call[1], "','", call[2], "','", call[3], "','", call[4], "','", call[5], "','", call[6], "','", call[7], "','", call[8], "','", call[9], "','", call[10], "','", call[11], "','", call[12], "','", call[13], "');", sep="")
+      dbSendUpdate(conn, query)
+    }
   }
 }
 
 read_coverage_table <- function(cov_table, conn){
-  query <- paste("select * from ", cov_table, sep="")
-  #query <- paste("select * from ", cov_table, " where chr='Y'", sep="")
+  #query <- paste("select * from ", cov_table, sep="")
+  query <- paste("select * from ", cov_table, " where chr='Y'", sep="")
   ds <- dbGetQuery(conn, query)
   colnames(ds) <- c("sample_name", "target_id", "chr", "pos_min", "pos_max", "cov_avg")
   ds
