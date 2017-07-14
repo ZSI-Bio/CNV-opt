@@ -51,8 +51,10 @@ save_calls <- function(calls, conn){
   }
 }
 
-read_coverage_table <- function(conn){
-  ds <- dbGetQuery(conn, "select * from cnv.coverage_target")
+read_coverage_table <- function(cov_table, conn){
+  #query <- paste("select * from ", cov_table, sep="")
+  query <- paste("select * from ", cov_table, " where chr='Y'", sep="")
+  ds <- dbGetQuery(conn, query)
   colnames(ds) <- c("sample_name", "target_id", "chr", "pos_min", "pos_max", "cov_avg")
   ds
 }
@@ -71,10 +73,6 @@ run_caller <- function(parameters, cov_table){
                                   parameters$lmax,
                                   cov_table
     )
-    print(calls)
-    #calls <- matrix(nrow=1, ncol=13)
-    #calls[1,1] = 'asd'
-    #calls[1,2] = 13
     calls
   } else if(parameters$caller == "xhmm") {
   }
@@ -94,7 +92,7 @@ conn_psql <- dbConnect(drv_psql, "jdbc:postgresql://cdh00.ii.pw.edu.pl:15432/cnv
 
 parameters <- read_parameters(opt$tabName, opt$id, conn_psql)
 #print(parameters)
-cov_table <- read_coverage_table(conn_hive)
+cov_table <- read_coverage_table(parameters$cov_table, conn_hive)
 #print(cov_table)
 calls <- run_caller(parameters, cov_table)
 #print(calls)
