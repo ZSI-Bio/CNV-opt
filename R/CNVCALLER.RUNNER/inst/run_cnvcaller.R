@@ -80,17 +80,17 @@ run_caller <- function(parameters, cov_table){
   }
 }
 
-if (!file.exists("zsi-bio-cdh-hive-jdbc_2.11-0.1-assembly.jar")) {
-  download.file("http://zsibio.ii.pw.edu.pl:50007/repository/maven-releases/pl/edu/pw/ii/zsibio/zsi-bio-cdh-hive-jdbc_2.11/0.1/zsi-bio-cdh-hive-jdbc_2.11-0.1-assembly.jar",destfile="zsi-bio-cdh-hive-jdbc_2.11-0.1-assembly.jar")
+if (!file.exists(basename(Sys.getenv('CNV_OPT_HIVE_DRV_URL')))) {
+  download.file(Sys.getenv('CNV_OPT_HIVE_DRV_URL'), destfile=basename(Sys.getenv('CNV_OPT_HIVE_DRV_URL')))
 }
-drv_hive <- JDBC("com.cloudera.hiveserver2.hive.core.Hive2JDBCDriver", "./zsi-bio-cdh-hive-jdbc_2.11-0.1-assembly.jar",identifier.quote="`")
-conn_hive <- dbConnect(drv_hive, "jdbc:hive2://cdh01.ii.pw.edu.pl:10000", "mwiewior", "")
+drv_hive <- JDBC("com.cloudera.hiveserver2.hive.core.Hive2JDBCDriver", paste("./",basename(Sys.getenv('CNV_OPT_HIVE_DRV_URL')),sep=""), identifier.quote="`")
+conn_hive <- dbConnect(drv_hive, Sys.getenv('CNV_OPT_HIVE_CONN_URL'), Sys.getenv('CNV_OPT_HIVE_USER'), Sys.getenv('CNV_OPT_HIVE_PASSWORD'))
 
-if (!file.exists("postgresql-42.1.1.jar")) {
-  download.file("http://zsibio.ii.pw.edu.pl:50007/repository/zsi-bio-raw/common/jdbc/postgresql-42.1.1.jar",destfile="postgresql-42.1.1.jar")
+if (!file.exists(basename(Sys.getenv('CNV_OPT_PSQL_DRV_URL')))) {
+  download.file(Sys.getenv('CNV_OPT_PSQL_DRV_URL'), destfile=basename(Sys.getenv('CNV_OPT_PSQL_DRV_URL')))
 }
-drv_psql <- JDBC("org.postgresql.Driver", "./postgresql-42.1.1.jar",identifier.quote="`")
-conn_psql <- dbConnect(drv_psql, "jdbc:postgresql://cdh00.ii.pw.edu.pl:15432/cnv-opt", "cnv-opt", "zsibio321")
+drv_psql <- JDBC("org.postgresql.Driver", paste("./", basename(Sys.getenv('CNV_OPT_PSQL_DRV_URL')),sep=""), identifier.quote="`")
+conn_psql <- dbConnect(drv_psql, Sys.getenv('CNV_OPT_PSQL_CONN_URL'), Sys.getenv('CNV_OPT_PSQL_USER'), Sys.getenv('CNV_OPT_PSQL_PASSWORD'))
 
 parameters <- read_parameters(opt$tabName, opt$id, conn_psql)
 #print(parameters)
