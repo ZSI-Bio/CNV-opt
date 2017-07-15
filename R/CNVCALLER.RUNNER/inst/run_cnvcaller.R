@@ -29,6 +29,7 @@ read_parameters <- function(tabName, id, conn){
   K_from <- parameters[1,'k_from']
   K_to <- parameters[1,'k_to']
   lmax <- parameters[1,'lmax']
+  chr <- parameters[1,'chr']
   return(list(caller=caller, 
               cov_table=cov_table, 
               mapp_thresh=mapp_thresh, 
@@ -40,7 +41,8 @@ read_parameters <- function(tabName, id, conn){
               gc_thresh_to=gc_thresh_to, 
               K_from=K_from, 
               K_to=K_to, 
-              lmax=lmax))
+              lmax=lmax,
+              chr=chr))
 }
 
 save_calls <- function(calls, conn){
@@ -53,9 +55,9 @@ save_calls <- function(calls, conn){
   }
 }
 
-read_coverage_table <- function(cov_table, conn){
+read_coverage_table <- function(cov_table, conn,chr){
   #query <- paste("select * from ", cov_table, sep="")
-  query <- paste("select * from ", cov_table, sep="")
+  query <- paste("select * from ", cov_table," where chr='",chr,"'", sep="")
   ds <- dbGetQuery(conn, query)
   colnames(ds) <- c("sample_name", "target_id", "chr", "pos_min", "pos_max", "cov_avg")
   ds
@@ -94,7 +96,7 @@ conn_psql <- dbConnect(drv_psql, "jdbc:postgresql://cdh00.ii.pw.edu.pl:15432/cnv
 
 parameters <- read_parameters(opt$tabName, opt$id, conn_psql)
 #print(parameters)
-cov_table <- read_coverage_table(parameters$cov_table, conn_hive)
+cov_table <- read_coverage_table(parameters$cov_table, conn_hive,parameters$chr)
 #print(cov_table)
 calls <- run_caller(parameters, cov_table)
 #print(calls)
