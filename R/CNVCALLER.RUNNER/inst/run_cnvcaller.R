@@ -54,8 +54,8 @@ save_calls <- function(calls, table_name, parameters_id, conn){
 }
 
 read_coverage_table <- function(cov_table, conn){
+  #query <- paste("select * from ", cov_table, sep="")
   query <- paste("select * from ", cov_table, sep="")
-  #query <- paste("select * from ", cov_table, " where chr='Y'", sep="")
   ds <- dbGetQuery(conn, query)
   colnames(ds) <- c("sample_name", "target_id", "chr", "pos_min", "pos_max", "cov_avg")
   ds
