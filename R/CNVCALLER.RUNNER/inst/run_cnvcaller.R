@@ -43,19 +43,19 @@ read_parameters <- function(tabName, id, conn){
               lmax=lmax))
 }
 
-save_calls <- function(calls, conn){
+save_calls <- function(calls, table_name, parameters_id, conn){
   if (nrow(calls) != 0) {
     for(i in 1:nrow(calls)) {
       call <- calls[i,]
-      query <- paste("INSERT INTO TEST_CALLS (parameters_id, sample_name, chr, cnv, st_bp, ed_bp, length_kb, st_exon, ed_exon, raw_cov, norm_cov, copy_no, lratio, mBIC) VALUES ('", opt$id, "','", call[1], "','", call[2], "','", call[3], "','", call[4], "','", call[5], "','", call[6], "','", call[7], "','", call[8], "','", call[9], "','", call[10], "','", call[11], "','", call[12], "','", call[13], "');", sep="")
+      query <- paste("INSERT INTO ", table_name, " (parameters_id, sample_name, chr, cnv, st_bp, ed_bp, length_kb, st_exon, ed_exon, raw_cov, norm_cov, copy_no, lratio, mBIC) VALUES ('", parameters_id, "','", call[1], "','", call[2], "','", call[3], "','", call[4], "','", call[5], "','", call[6], "','", call[7], "','", call[8], "','", call[9], "','", call[10], "','", call[11], "','", call[12], "','", call[13], "');", sep="")
       dbSendUpdate(conn, query)
     }
   }
 }
 
 read_coverage_table <- function(cov_table, conn){
-  #query <- paste("select * from ", cov_table, sep="")
-  query <- paste("select * from ", cov_table, " where chr='Y'", sep="")
+  query <- paste("select * from ", cov_table, sep="")
+  #query <- paste("select * from ", cov_table, " where chr='Y'", sep="")
   ds <- dbGetQuery(conn, query)
   colnames(ds) <- c("sample_name", "target_id", "chr", "pos_min", "pos_max", "cov_avg")
   ds
@@ -98,7 +98,7 @@ cov_table <- read_coverage_table(parameters$cov_table, conn_hive)
 #print(cov_table)
 calls <- run_caller(parameters, cov_table)
 #print(calls)
-save_calls(calls, conn_psql)
+save_calls(calls, "TEST_CALLS", opt$id, conn_psql)
 
 dbDisconnect(conn_hive)
 dbUnloadDriver(drv_hive)
