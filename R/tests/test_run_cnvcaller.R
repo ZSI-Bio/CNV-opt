@@ -71,7 +71,7 @@ test_that("basic test for reading coverage table from database",{
   expect_equal(read_coverage_table_result[2,"pos_max"], coverage_table[2,"pos_max"])
   expect_equal(read_coverage_table_result[2,"cov_avg"], coverage_table[2,"cov_avg"])
 })
-if(FALSE){
+
 context("Testing run_caller function")
 
 test_that("basic test for run_callerfunction, without calls",{
@@ -146,9 +146,6 @@ test_that("basic test for run_callerfunction, without calls",{
   calls <- run_caller(parameters, cov_table)
   expect_equal(length(calls), 0)
 })
-
-}
-
 
 
 context("Testing save_calls function")
