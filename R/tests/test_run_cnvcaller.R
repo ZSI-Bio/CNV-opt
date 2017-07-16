@@ -19,7 +19,7 @@ conn_psql <- dbConnect(drv_psql, "jdbc:postgresql://cdh00.ii.pw.edu.pl:15432/cnv
 
 
 # load only functions from R file
-cmds <- parse("../CNVCALLER.RUNNER/inst/run_cnvcaller.R")
+cmds <- parse(system.file("run_cnvcaller.R", package="CNVCALLER.RUNNER"))
 assign.funs <- sapply(cmds, function(x) {
   if(x[[1]]=="<-") {
     if(x[[3]][[1]]=="function") {
