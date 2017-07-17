@@ -1,6 +1,6 @@
 if (length(which(installed.packages()[,1] == "devtools")) == 0){install.packages("devtools",repos="https://cloud.r-project.org/")}
 if (length(which(installed.packages()[,1] == "testthat")) == 0){devtools::install_github("hadley/testthat")}
-devtools::install("../CNVCALLER.RUNNER") # every time to refresh CNVCALLER.RUNNER in Jenkins
+devtools::install(system.file(package="CNVCALLER.RUNNER")) # every time to refresh CNVCALLER.RUNNER in Jenkins
 if (length(which(installed.packages()[,1] == "CODEX")) == 0){
     source("http://bioconductor.org/biocLite.R")
     biocLite("CODEX")
