@@ -1,6 +1,4 @@
 library(testthat)
-if (length(which(installed.packages()[,1] == "devtools")) == 0){install.packages("devtools",repos="https://cloud.r-project.org/")}
-if (length(which(installed.packages()[,1] == "CNVCALLER.RUNNER")) == 0){devtools::install("../CNVCALLER.RUNNER")}
 library(CNVCALLER.RUNNER)
 
 context("Testing run_wrapper_CODEXCOV function")

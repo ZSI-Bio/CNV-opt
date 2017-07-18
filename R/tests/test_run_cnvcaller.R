@@ -1,9 +1,5 @@
 library(testthat)
-if (length(which(installed.packages()[,1] == "devtools")) == 0){install.packages("devtools",repos="https://cloud.r-project.org/")}
-if (length(which(installed.packages()[,1] == "CNVCALLER.RUNNER")) == 0){devtools::install("../CNVCALLER.RUNNER")}
 detach(package:DNAcopy) # without it error, because HMZDelFinder load also this library in another version
-devtools::install('../CNVCALLER.RUNNER')
-devtools::install('../CODEXCOV')
 library(CNVCALLER.RUNNER)
 if (length(which(installed.packages()[,1] == "RJDBC")) == 0){install.packages("RJDBC",dep=TRUE)}
 library(RJDBC)
