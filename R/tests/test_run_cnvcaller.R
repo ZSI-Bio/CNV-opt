@@ -1,6 +1,9 @@
 library(testthat)
 if (length(which(installed.packages()[,1] == "devtools")) == 0){install.packages("devtools",repos="https://cloud.r-project.org/")}
 if (length(which(installed.packages()[,1] == "CNVCALLER.RUNNER")) == 0){devtools::install("../CNVCALLER.RUNNER")}
+detach(package:DNAcopy) # without it error, because HMZDelFinder load also this library in another version
+devtools::install('../CNVCALLER.RUNNER')
+devtools::install('../CODEXCOV')
 library(CNVCALLER.RUNNER)
 if (length(which(installed.packages()[,1] == "RJDBC")) == 0){install.packages("RJDBC",dep=TRUE)}
 library(RJDBC)
@@ -77,7 +80,7 @@ test_that("basic test for reading coverage table from database",{
 
 context("Testing run_caller function")
 
-test_that("basic test for run_callerfunction, without calls",{
+test_that("basic test for run_caller function, without calls",{
   parameters <- list(caller="codex",
                      mapp_thresh="0.9",
                      cov_thresh_from="20",
