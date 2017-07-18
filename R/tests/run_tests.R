@@ -5,6 +5,7 @@ if (length(which(installed.packages()[,1] == "CODEX")) == 0){
     biocLite("CODEX")
 }
 
+setwd('tests/')
 devtools::install('../CNVCALLER.RUNNER')
 
 library(testthat)
