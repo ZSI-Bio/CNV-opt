@@ -5,6 +5,8 @@ if (length(which(installed.packages()[,1] == "CODEX")) == 0){
     biocLite("CODEX")
 }
 
+devtools::install('../CNVCALLER.RUNNER')
+
 library(testthat)
 out <- capture.output(test_dir(".", reporter="junit"))
 writeLines(out[grep("<?xml version=", out):length(out)], "results.xml")
