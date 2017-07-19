@@ -1,4 +1,5 @@
 #!/usr/bin/env Rscript
+options(java.parameters = "-Xmx1512m")
 library(devtools)
 #install('CNVCALLER.RUNNER')      ### zakomentować!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 library('CNVCALLER.RUNNER')
