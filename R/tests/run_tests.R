@@ -6,8 +6,9 @@ if (length(which(installed.packages()[,1] == "CODEX")) == 0){
 }
 
 setwd('tests/')
-devtools::install('../CNVCALLER.RUNNER')
 devtools::install('../CODEXCOV')
+devtools::install('../CNVCALLER.RUNNER')
+
 
 library(testthat)
 out <- capture.output(test_dir(".", reporter="junit"))

@@ -44,15 +44,19 @@ read_parameters <- function(tabName, id, conn){
               K_from=K_from, 
               K_to=K_to, 
               lmax=lmax,
-              chr=chr))
+              chr=chr,
+              scenario_id=scenario_id))
 }
 
 save_calls <- function(calls, table_name,scenario_id, parameters_id, conn){
   if (nrow(calls) != 0) {
     for(i in 1:nrow(calls)) {
       call <- calls[i,]
-      query <- paste("INSERT INTO ", table_name, " (scenario_id, parameters_id, sample_name, chr, cnv, st_bp, ed_bp, length_kb, st_exon, ed_exon, raw_cov, norm_cov, copy_no, lratio, mBIC) VALUES ('",scenario_id,",", parameters_id, "','", call[1], "','", call[2], "','", call[3], "','", call[4], "','", call[5], "','", call[6], "','", call[7], "','", call[8], "','", call[9], "','", call[10], "','", call[11], "','", call[12], "','", call[13], "');", sep="")
-      dbSendUpdate(conn, query)
+      query <- paste("INSERT INTO ",
+      table_name, " (scenario_id, parameters_id, sample_name, chr, cnv, st_bp, ed_bp, length_kb, st_exon, ed_exon, raw_cov, norm_cov, copy_no, lratio, mBIC) VALUES (",scenario_id,",'", parameters_id, "','", call[1], "','", call[2], "','", call[3], "','", call[4], "','", call[5], "','", call[6], "','", call[7], "','", call[8], "','", call[9], "','", call[10], "','", call[11], "','", call[12], "','", call[13], "');", sep="")
+      writeLines(query,"query.txt")
+        dbSendUpdate(conn, query)
+
     }
   }
 }
