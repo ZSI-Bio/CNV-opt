@@ -16,7 +16,7 @@ coverageObj1 <- function(cov_table, sampname, targets_for_chr, chr){
   cov_targets_for_chr <- cov_table[cov_table[,"chr"] == chr,]
   for(i in 1:nrow(cov_targets_for_chr)) {
     cov_row <- cov_targets_for_chr[i,]
-    Y[toString(cov_row[,"target_id"]),toString(cov_row[,"sample_name"])] = as.integer(cov_row[,"cov_avg"])
+    Y[toString(cov_row[,"target_id"]),toString(cov_row[,"sample_name"])] = as.integer(cov_row[,"read_count"])
   }
   return(list(Y=Y))
 }

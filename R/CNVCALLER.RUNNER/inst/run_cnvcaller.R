@@ -1,7 +1,6 @@
 #!/usr/bin/env Rscript
 options(java.parameters = "-Xmx1512m")
 library(devtools)
-#install('CNVCALLER.RUNNER')      ### zakomentować!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 library('CNVCALLER.RUNNER')
 library(optparse)
 #install.packages("RJDBC",dep=TRUE)
@@ -67,7 +66,7 @@ read_coverage_table <- function(cov_table, conn,chr){
   query <- paste("select sample_name,target_id,chr,pos_min,pos_max,read_count from ", cov_table," where chr='",chr,"'", sep="")
   print(query)
   ds <- dbGetQuery(conn, query)
-  colnames(ds) <- c("sample_name", "target_id", "chr", "pos_min", "pos_max", "cov_avg") #hardcoded column order!!!
+  colnames(ds) <- c("sample_name", "target_id", "chr", "pos_min", "pos_max", "read_count") #hardcoded column order!!!
   ds
 }
 
