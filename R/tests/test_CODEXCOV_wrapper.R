@@ -64,13 +64,13 @@ test_that("basic test for run_wrapper_CODEXCOV function, without calls",{
                                            "NA11829",3,"2",15751,159900,130.2958333333333,
                                            "NA12044",1,"2",14642,148820,111.020746887967,
                                            "NA18504",4,"2",16599,167170,300.58823529411765), nrow=50, ncol=6, byrow=TRUE))
-  colnames(cov_table) <- c("sample_name", "target_id", "chr", "pos_min", "pos_max", "cov_avg")
+  colnames(cov_table) <- c("sample_name", "target_id", "chr", "pos_min", "pos_max", "read_count")
   cov_table[,"sample_name"] <- sapply(cov_table[,"sample_name"], toString)
   cov_table[,"target_id"] <- as.integer(cov_table[,"target_id"])
   cov_table[,"chr"] <- sapply(cov_table[,"chr"], toString)
   cov_table[,"pos_min"] <- as.integer(as.character(cov_table[,"pos_min"]))
   cov_table[,"pos_max"] <- as.integer(as.character(cov_table[,"pos_max"]))
-  cov_table[,"cov_avg"] <- as.numeric(as.character(cov_table[,"cov_avg"]))
+  cov_table[,"read_count"] <- as.numeric(as.character(cov_table[,"read_count"]))
   calls <- run_wrapper_CODEXCOV(mapp_thresh,
                                 cov_thresh_from,
                                 cov_thresh_to,
