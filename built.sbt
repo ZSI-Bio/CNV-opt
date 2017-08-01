@@ -51,7 +51,7 @@ libraryDependencies ++= Seq(
 
 resolvers ++= Seq(
   "Job Server Bintray" at "https://dl.bintray.com/spark-jobserver/maven",
-  "zsibio-snapshots" at "http://zsibio.ii.pw.edu.pl:50007/repository/maven-snapshots/",
+  "zsibio-snapshots" at "http://zsibio.ii.pw.edu.pl/nexus/repository/maven-snapshots/",
   "spring" at "http://repo.spring.io/libs-milestone/"
 )
 
@@ -117,7 +117,7 @@ assemblyMergeStrategy in assembly := {
 
 credentials += Credentials(Path.userHome / ".ivy2" / ".credentials")
 publishTo := {
-  val nexus = "http://zsibio.ii.pw.edu.pl:50007/repository/"
+  val nexus = "http://zsibio.ii.pw.edu.pl/nexus/repository/"
   if (isSnapshot.value)
     Some("snapshots" at nexus + "maven-snapshots")
   else
