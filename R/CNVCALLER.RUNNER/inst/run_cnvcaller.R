@@ -1,7 +1,6 @@
 #!/usr/bin/env Rscript
 options(java.parameters = "-Xmx1512m")
 library(devtools)
-#install('CNVCALLER.RUNNER')      ### zakomentować!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 library('CNVCALLER.RUNNER')
 library(optparse)
 #install.packages("RJDBC",dep=TRUE)
@@ -63,11 +62,16 @@ save_calls <- function(calls, table_name,scenario_id, parameters_id, conn){
 }
 
 read_coverage_table <- function(cov_table, conn,chr){
-  #query <- paste("select * from ", cov_table, sep="")
   query <- paste("select sample_name,target_id,chr,pos_min,pos_max,read_count from ", cov_table," where chr='",chr,"'", sep="")
   print(query)
   ds <- dbGetQuery(conn, query)
-  colnames(ds) <- c("sample_name", "target_id", "chr", "pos_min", "pos_max", "cov_avg") #hardcoded column order!!!
+  # map names of columns: from coverage table to CODEXCOV package
+  colnames(ds)[colnames(ds) == 'sample_name'] <- 'sample_name'
+  colnames(ds)[colnames(ds) == 'target_id'] <- 'target_id'
+  colnames(ds)[colnames(ds) == 'chr'] <- 'chr'
+  colnames(ds)[colnames(ds) == 'pos_min'] <- 'pos_min'
+  colnames(ds)[colnames(ds) == 'pos_max'] <- 'pos_max'
+  colnames(ds)[colnames(ds) == 'read_count'] <- 'read_count'
   ds
 }
 
