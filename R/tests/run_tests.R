@@ -8,6 +8,7 @@ if (length(which(installed.packages()[,1] == "CODEX")) == 0){
 setwd('tests/')
 devtools::install('../CODEXCOV')
 devtools::install('../CNVCALLER.RUNNER')
+devtools::install('../CNVCALLER.EVALUATOR')
 
 
 library(testthat)
