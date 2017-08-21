@@ -5,6 +5,8 @@ library('CNVCALLER.RUNNER')
 library(optparse)
 #install.packages("RJDBC",dep=TRUE)
 library(RJDBC)
+if (length(which(installed.packages()[,1] == "stringr")) == 0){install.packages("stringr",repos="https://cloud.r-project.org/")}
+library(stringr)
 
 option_list <- list(
   make_option("--tabName", default="public.test_parameters",
@@ -94,10 +96,18 @@ run_caller <- function(parameters, cov_table){
   }
 }
 
-if (!file.exists("postgresql-42.1.1.jar")) {
-  download.file("http://zsibio.ii.pw.edu.pl/nexus/repository/zsi-bio-raw/common/jdbc/postgresql-42.1.1.jar",destfile="postgresql-42.1.1.jar")
+# connect to psql database
+if(str_detect(Sys.getenv('CNV_OPT_PSQL_DRV_URL'), "^http://") || str_detect(Sys.getenv('CNV_OPT_PSQL_DRV_URL'), "^https://")) {
+  if (!file.exists(basename(Sys.getenv('CNV_OPT_PSQL_DRV_URL')))) {
+    download.file(Sys.getenv('CNV_OPT_PSQL_DRV_URL'), destfile=basename(Sys.getenv('CNV_OPT_PSQL_DRV_URL')))
+  }
+  drv_psql <- JDBC("org.postgresql.Driver", paste("./", basename(Sys.getenv('CNV_OPT_PSQL_DRV_URL')),sep=""), identifier.quote="`")
+} else {
+  if (!file.exists(Sys.getenv('CNV_OPT_PSQL_DRV_URL'))) {
+    stop("Driver not exists...")
+  }
+  drv_psql <- JDBC("org.postgresql.Driver", Sys.getenv('CNV_OPT_PSQL_DRV_URL'), identifier.quote="`")
 }
-drv_psql <- JDBC("org.postgresql.Driver", Sys.getenv('CNV_OPT_PSQL_DRV_URL'), identifier.quote="`")
 conn_psql <- dbConnect(drv_psql, Sys.getenv('CNV_OPT_PSQL_CONN_URL'), Sys.getenv('CNV_OPT_PSQL_USER'), Sys.getenv('CNV_OPT_PSQL_PASSWORD'))
 
 parameters <- read_parameters(opt$tabName, opt$id, conn_psql)
