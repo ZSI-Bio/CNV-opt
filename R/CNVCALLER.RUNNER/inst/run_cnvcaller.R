@@ -97,8 +97,8 @@ run_caller <- function(parameters, cov_table){
 if (!file.exists("postgresql-42.1.1.jar")) {
   download.file("http://zsibio.ii.pw.edu.pl/nexus/repository/zsi-bio-raw/common/jdbc/postgresql-42.1.1.jar",destfile="postgresql-42.1.1.jar")
 }
-drv_psql <- JDBC("org.postgresql.Driver", "./postgresql-42.1.1.jar",identifier.quote="`")
-conn_psql <- dbConnect(drv_psql, "jdbc:postgresql://cdh00.ii.pw.edu.pl:15432/cnv-opt", "cnv-opt", "zsibio321")
+drv_psql <- JDBC("org.postgresql.Driver", Sys.getenv('CNV_OPT_PSQL_DRV_URL'), identifier.quote="`")
+conn_psql <- dbConnect(drv_psql, Sys.getenv('CNV_OPT_PSQL_CONN_URL'), Sys.getenv('CNV_OPT_PSQL_USER'), Sys.getenv('CNV_OPT_PSQL_PASSWORD'))
 
 parameters <- read_parameters(opt$tabName, opt$id, conn_psql)
 print(parameters)
