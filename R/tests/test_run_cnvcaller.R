@@ -4,12 +4,7 @@ library(CNVCALLER.RUNNER)
 if (length(which(installed.packages()[,1] == "RJDBC")) == 0){install.packages("RJDBC",dep=TRUE)}
 library(RJDBC)
 
-# make connections to database
-if (!file.exists("zsi-bio-cdh-hive-jdbc_2.11-0.1-assembly.jar")) {
-  download.file("http://zsibio.ii.pw.edu.pl/nexus/repository/maven-releases/pl/edu/pw/ii/zsibio/zsi-bio-cdh-hive-jdbc_2.11/0.1/zsi-bio-cdh-hive-jdbc_2.11-0.1-assembly.jar",destfile="zsi-bio-cdh-hive-jdbc_2.11-0.1-assembly.jar")
-}
-drv_hive <- JDBC("com.cloudera.hiveserver2.hive.core.Hive2JDBCDriver", "./zsi-bio-cdh-hive-jdbc_2.11-0.1-assembly.jar",identifier.quote="`")
-conn_hive <- dbConnect(drv_hive, "jdbc:hive2://cdh01.ii.pw.edu.pl:10000", "mwiewior", "")
+# make connection to database
 if (!file.exists("postgresql-42.1.1.jar")) {
   download.file("http://zsibio.ii.pw.edu.pl/nexus/repository/zsi-bio-raw/common/jdbc/postgresql-42.1.1.jar",destfile="postgresql-42.1.1.jar")
 }
@@ -194,9 +189,6 @@ test_that("basic test for saving calls to database",{
   expect_equal(saved_calls[2,"mbic"], '46.444')
   dbSendUpdate(conn_psql, "delete from test_calls where sample_name='cnv_test_sample'")
 })
-
-dbDisconnect(conn_hive)
-dbUnloadDriver(drv_hive)
 
 dbDisconnect(conn_psql)
 dbUnloadDriver(drv_psql)
