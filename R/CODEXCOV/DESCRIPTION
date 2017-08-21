@@ -11,7 +11,7 @@ Description: An extended implementation of the CODEX package in R. It extends
     parameters.
 Depends:
     R (>= 3.2.3),
-    CODEX (== 1.8.0),
+    CODEX (== 1.9.0),
     testthat (== 1.0.2.9000),
     devtools (>= 1.13.2),
     DBI (== 0.7),
