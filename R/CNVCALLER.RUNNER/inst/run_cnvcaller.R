@@ -10,8 +10,8 @@ library(stringr)
 option_list <- list(
   make_option("--paramsTabName", default="public.test_parameters",
               help="Parameters table. [default %default]"),
-  make_option("--callsTabName", default="public.test_calls",
-              help="Resultant calls table. [default %default]"),
+  make_option("--resultsTabName", default="public.test_calls",
+              help="Calls table. [default %default]"),
   make_option("--id", default="1",
               help="Parameters id. [default %default]")
 )
@@ -117,7 +117,7 @@ cov_table <- read_coverage_table(parameters$cov_table, conn_psql,parameters$chr)
 #print(cov_table)
 calls <- run_caller(parameters, cov_table)
 #print(calls)
-save_calls(calls, opt$callsTabName, parameters$scenario_id ,opt$id, conn_psql)
+save_calls(calls, opt$resultsTabName, parameters$scenario_id ,opt$id, conn_psql)
 
 dbDisconnect(conn_psql)
 dbUnloadDriver(drv_psql)
