@@ -8,9 +8,9 @@ if (length(which(installed.packages()[,1] == "stringr")) == 0){install.packages(
 library(stringr)
 
 option_list <- list(
-  make_option("--paramsTabName", default="public.test_parameters",
+  make_option("--paramsTabName", default="public.runner_parameters",
               help="Parameters table. [default %default]"),
-  make_option("--resultsTabName", default="public.test_calls",
+  make_option("--resultsTabName", default="public.runner_calls",
               help="Calls table. [default %default]"),
   make_option("--id", default="1",
               help="Parameters id. [default %default]")
