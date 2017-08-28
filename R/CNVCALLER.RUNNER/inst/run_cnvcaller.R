@@ -3,14 +3,15 @@ options(java.parameters = "-Xmx1512m")
 library(devtools)
 library('CNVCALLER.RUNNER')
 library(optparse)
-#install.packages("RJDBC",dep=TRUE)
 library(RJDBC)
 if (length(which(installed.packages()[,1] == "stringr")) == 0){install.packages("stringr",repos="https://cloud.r-project.org/")}
 library(stringr)
 
 option_list <- list(
-  make_option("--tabName", default="public.test_parameters",
+  make_option("--paramsTabName", default="public.runner_parameters",
               help="Parameters table. [default %default]"),
+  make_option("--resultsTabName", default="public.runner_calls",
+              help="Calls table. [default %default]"),
   make_option("--id", default="1",
               help="Parameters id. [default %default]")
 )
@@ -110,13 +111,13 @@ if(str_detect(Sys.getenv('CNV_OPT_PSQL_DRV_URL'), "^http://") || str_detect(Sys.
 }
 conn_psql <- dbConnect(drv_psql, Sys.getenv('CNV_OPT_PSQL_CONN_URL'), Sys.getenv('CNV_OPT_PSQL_USER'), Sys.getenv('CNV_OPT_PSQL_PASSWORD'))
 
-parameters <- read_parameters(opt$tabName, opt$id, conn_psql)
-print(parameters)
+parameters <- read_parameters(opt$paramsTabName, opt$id, conn_psql)
+#print(parameters)
 cov_table <- read_coverage_table(parameters$cov_table, conn_psql,parameters$chr)
 #print(cov_table)
 calls <- run_caller(parameters, cov_table)
 #print(calls)
-save_calls(calls, "TEST_CALLS", parameters$scenario_id ,opt$id, conn_psql)
+save_calls(calls, opt$resultsTabName, parameters$scenario_id ,opt$id, conn_psql)
 
 dbDisconnect(conn_psql)
 dbUnloadDriver(drv_psql)
