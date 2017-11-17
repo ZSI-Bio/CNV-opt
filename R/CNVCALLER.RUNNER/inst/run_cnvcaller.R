@@ -68,7 +68,7 @@ read_coverage_table <- function(cov_table, conn,chr){
   query <- paste("select sample_name,target_id,chr,pos_min,pos_max,read_count from ", cov_table," where chr='",chr,"'", sep="")
   print(query)
   ds <- dbGetQuery(conn, query)
-  # map names of columns: from coverage table to CODEXCOV package
+  # map names of columns: from coverage table to CODEXCOV and EXOMEDEPTHCOV packages
   colnames(ds)[colnames(ds) == 'sample_name'] <- 'sample_name'
   colnames(ds)[colnames(ds) == 'target_id'] <- 'target_id'
   colnames(ds)[colnames(ds) == 'chr'] <- 'chr'
@@ -91,6 +91,20 @@ run_caller <- function(parameters, cov_table){
                                   parameters$K_to,
                                   parameters$lmax,
                                   cov_table
+    )
+    calls
+  } else if (parameters$caller == "exomedepth"){
+    calls <- run_wrapper_EXOMEDEPTHCOV(parameters$mapp_thresh,
+                                       parameters$cov_thresh_from,
+                                       parameters$cov_thresh_to,
+                                       parameters$length_thresh_from,
+                                       parameters$length_thresh_to,
+                                       parameters$gc_thresh_from,
+                                       parameters$gc_thresh_to,
+                                       parameters$K_from,
+                                       parameters$K_to,
+                                       parameters$lmax,
+                                       cov_table
     )
     calls
   } else if(parameters$caller == "xhmm") {
