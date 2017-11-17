@@ -9,7 +9,7 @@ Description: A wrapper package to run CNV callers.
 Depends:
     R (>= 3.2.3),
     CODEXCOV (>= 0.0.1),
-    testthat (== 1.0.2.9000),
+    EXOMEDEPTHCOV (>= 0.0.1),
     devtools (>= 1.13.2),
     DBI (== 0.7),
     optparse (== 1.4.4)
@@ -17,5 +17,3 @@ License: GPL-3
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 6.0.1.9000
-Remotes:
-    hadley/testthat

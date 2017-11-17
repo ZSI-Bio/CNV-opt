@@ -17,6 +17,10 @@ devtools::install('../EXOMEDEPTHCOV')
 devtools::install('../CNVCALLER.RUNNER')
 devtools::install('../CNVCALLER.EVALUATOR')
 
+# withr package with version greater than 2.0.0 is not compatible with testhat (so far)
+if (length(which(installed.packages()[,1] == "withr")) > 0){remove.packages("withr")}
+devtools::install_version("withr", version = "2.0.0", repos = "http://cran.us.r-project.org")
+
 library(testthat)
 out <- capture.output(test_dir(".", reporter="junit"))
 writeLines(out[grep("<?xml version=", out):length(out)], "results.xml")
