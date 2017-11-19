@@ -34,6 +34,16 @@ INSERT INTO TEST_PARAMETERS VALUES (17, 'xhmm', 'cnv.coverage_target', 18, 19, 2
 INSERT INTO TEST_PARAMETERS VALUES (18, 'xhmm', 'cnv.coverage_target', 19, 20, 21, 22, 23, 24, 25, 26, 27, 28);
 INSERT INTO TEST_PARAMETERS VALUES (19, 'xhmm', 'cnv.coverage_target', 20, 21, 22, 23, 24, 25, 26, 27, 28, 29);
 INSERT INTO TEST_PARAMETERS VALUES (20, 'xhmm', 'cnv.coverage_target', 21, 22, 23, 24, 25, 26, 27, 28, 29, 30);
+INSERT INTO TEST_PARAMETERS VALUES (21, 'exomedepth', 'cnv.coverage_target', 22, 23, 24, 25, 26, 27, 28, 29, 30, 31);
+INSERT INTO TEST_PARAMETERS VALUES (22, 'exomedepth', 'cnv.coverage_target', 23, 24, 25, 26, 27, 28, 29, 30, 31, 32);
+INSERT INTO TEST_PARAMETERS VALUES (23, 'exomedepth', 'cnv.coverage_target', 24, 25, 26, 27, 28, 29, 30, 31, 32, 33);
+INSERT INTO TEST_PARAMETERS VALUES (24, 'exomedepth', 'cnv.coverage_target', 25, 26, 27, 28, 29, 30, 31, 32, 33, 34);
+INSERT INTO TEST_PARAMETERS VALUES (25, 'exomedepth', 'cnv.coverage_target', 26, 27, 28, 29, 30, 31, 32, 33, 34, 35);
+INSERT INTO TEST_PARAMETERS VALUES (26, 'exomedepth', 'cnv.coverage_target', 27, 28, 29, 30, 31, 32, 33, 34, 35, 36);
+INSERT INTO TEST_PARAMETERS VALUES (27, 'exomedepth', 'cnv.coverage_target', 28, 29, 30, 31, 32, 33, 34, 35, 36, 37);
+INSERT INTO TEST_PARAMETERS VALUES (28, 'exomedepth', 'cnv.coverage_target', 29, 30, 31, 32, 33, 34, 35, 36, 37, 38);
+INSERT INTO TEST_PARAMETERS VALUES (29, 'exomedepth', 'cnv.coverage_target', 30, 31, 32, 33, 34, 35, 36, 37, 38, 39);
+INSERT INTO TEST_PARAMETERS VALUES (30, 'exomedepth', 'cnv.coverage_target', 31, 32, 33, 34, 35, 36, 37, 38, 39, 40);
 
 CREATE TABLE IF NOT EXISTS TEST_CALLS (
     id SERIAL PRIMARY KEY,
@@ -43,14 +53,14 @@ CREATE TABLE IF NOT EXISTS TEST_CALLS (
     cnv TEXT,
     st_bp TEXT,
     ed_bp TEXT,
-    length_kb TEXT,
     st_exon TEXT,
     ed_exon TEXT,
     raw_cov TEXT,
     norm_cov TEXT,
     copy_no TEXT,
-    lratio TEXT,
-    mBIC TEXT,
+    codex_lratio TEXT,
+    codex_mBIC TEXT,
+    exomedepth_BF TEXT,
     FOREIGN KEY(parameters_id) REFERENCES TEST_PARAMETERS(id)
 );
 
