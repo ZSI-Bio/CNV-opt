@@ -21,6 +21,7 @@ CREATE TABLE IF NOT EXISTS CNV.PARAMETERS (
 CREATE TABLE IF NOT EXISTS CNV.CALLS (
     id SERIAL PRIMARY KEY,
     parameters_id INT,
+    scenario_id INT,
     sample_name TEXT,
     chr TEXT,
     cnv TEXT,

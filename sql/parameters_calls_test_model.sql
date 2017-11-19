@@ -48,6 +48,7 @@ INSERT INTO TEST_PARAMETERS VALUES (30, 'exomedepth', 'cnv.coverage_target', 31,
 CREATE TABLE IF NOT EXISTS TEST_CALLS (
     id SERIAL PRIMARY KEY,
     parameters_id INT,
+    scenario_id INT,
     sample_name TEXT,
     chr TEXT,
     cnv TEXT,
@@ -64,4 +65,4 @@ CREATE TABLE IF NOT EXISTS TEST_CALLS (
     FOREIGN KEY(parameters_id) REFERENCES TEST_PARAMETERS(id)
 );
 
-INSERT INTO TEST_CALLS VALUES (1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15);
+INSERT INTO TEST_CALLS VALUES (1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16);
