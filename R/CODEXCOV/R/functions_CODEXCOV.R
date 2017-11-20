@@ -121,3 +121,9 @@ segment1 <- function(Y_qc, Yhat, optK, K, sampname_qc,
                          ref_qc, chr, lmax, mode)
   return(list(finalcall=finalcall))
 }
+
+unify_calls_format <- function(finalcall){
+  colnames(finalcall)[colnames(finalcall) == 'lratio'] <- 'codex_lratio'
+  colnames(finalcall)[colnames(finalcall) == 'mBIC'] <- 'codex_mBIC'
+  return(list(finalcall=finalcall))
+}

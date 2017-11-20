@@ -51,15 +51,25 @@ read_parameters <- function(tabName, id, conn){
               scenario_id=scenario_id))
 }
 
-save_calls <- function(calls, table_name,scenario_id, parameters_id, conn){
+save_calls <- function(calls, table_name, caller, scenario_id, parameters_id, conn){
   if (nrow(calls) != 0) {
-    for(i in 1:nrow(calls)) {
-      call <- calls[i,]
-      query <- paste("INSERT INTO ",
-      table_name, " (scenario_id, parameters_id, sample_name, chr, cnv, st_bp, ed_bp, length_kb, st_exon, ed_exon, raw_cov, norm_cov, copy_no, lratio, mBIC) VALUES (",scenario_id,",'", parameters_id, "','", call[1], "','", call[2], "','", call[3], "','", call[4], "','", call[5], "','", call[6], "','", call[7], "','", call[8], "','", call[9], "','", call[10], "','", call[11], "','", call[12], "','", call[13], "');", sep="")
-      writeLines(query,"query.txt")
+    if (caller == "codex"){
+      for(i in 1:nrow(calls)) {
+        call <- calls[i,]
+        query <- paste("INSERT INTO ",
+        table_name, " (scenario_id, parameters_id, sample_name, chr, cnv, st_bp, ed_bp, st_exon, ed_exon, raw_cov, norm_cov, copy_no, codex_lratio, codex_mBIC, exomedepth_BF) VALUES (",scenario_id,",'", parameters_id, "','", call['sample_name'], "','", call['chr'], "','", call['cnv'], "','", call['st_bp'], "','", call['ed_bp'], "','", call['st_exon'], "','", call['ed_exon'], "','", call['raw_cov'], "','", call['norm_cov'], "','", call['copy_no'], "','", call['codex_lratio'], "','", call['codex_mBIC'], "','0.00');", sep="")
+        writeLines(query,"query.txt")
         dbSendUpdate(conn, query)
-
+      }
+    } else if (caller == "exomedepth"){
+      for(i in 1:nrow(calls)) {
+        call <- calls[i,]
+        query <- paste("INSERT INTO ",
+        table_name, " (scenario_id, parameters_id, sample_name, chr, cnv, st_bp, ed_bp, st_exon, ed_exon, raw_cov, norm_cov, copy_no, codex_lratio, codex_mBIC, exomedepth_BF) VALUES (",scenario_id,",'", parameters_id, "','", call[1], "','", call['chr'], "','", call['cnv'], "','", call['st_bp'], "','", call['ed_bp'], "','", call['st_exon'], "','", call['ed_exon'], "','", call['raw_cov'], "','", call['norm_cov'], "','", call['copy_no'], "','0.00','0.00','", call['exomedepth_BF'], "');", sep="")
+        writeLines(query,"query.txt")
+        dbSendUpdate(conn, query)
+    }
+    } else if(caller == "xhmm") {
     }
   }
 }
@@ -131,7 +141,7 @@ cov_table <- read_coverage_table(parameters$cov_table, conn_psql,parameters$chr)
 #print(cov_table)
 calls <- run_caller(parameters, cov_table)
 #print(calls)
-save_calls(calls, opt$resultsTabName, parameters$scenario_id ,opt$id, conn_psql)
+save_calls(calls, opt$resultsTabName, parameters$caller, parameters$scenario_id ,opt$id, conn_psql)
 
 dbDisconnect(conn_psql)
 dbUnloadDriver(drv_psql)

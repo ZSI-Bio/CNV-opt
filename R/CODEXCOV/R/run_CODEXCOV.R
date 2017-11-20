@@ -115,5 +115,6 @@ run_CODEXCOV <- function(mapp_thresh,
     finalcall <- rbind(finalcall, finalcallIt)
   
   }
+  finalcall <- unify_calls_format(finalcall)$finalcall
   finalcall
 }
