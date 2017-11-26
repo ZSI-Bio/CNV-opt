@@ -1,19 +1,15 @@
-Package: CNVCALLER.RUNNER
-Title: CNVCALLER.RUNNER  A Wrapper Package To Run CNV Callers
+Package: TARGET.QC
+Title: Package With Interface To CODEX Package Quality Control Module
 Version: 0.0.1
 Authors@R: c(
     person("Tomasz", "Gambin", email = "tgambin@gmail.com", role = c("aut", "cre")),
     person("Marek", "Wiewiórka", email = "marek.wiewiorka@gmail.com", role = c("aut")),
     person("Wiktor", "Kuśmirek", email = "kusmirekwiktor@gmail.com", role = c("aut")))
-Description: A wrapper package to run CNV callers.
+Description: An extended implementation of the CODEX package 
+    (only quality control module) in R.
 Depends:
     R (>= 3.2.3),
-    TARGET.QC (>= 0.0.1),
-    CODEXCOV (>= 0.0.1),
-    EXOMEDEPTHCOV (>= 0.0.1),
-    devtools (>= 1.13.2),
-    DBI (== 0.7),
-    optparse (== 1.4.4)
+    CODEX (>= 1.8.0)
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
