@@ -1,18 +1,7 @@
 library(ExomeDepth)
 library(methods)
-library(CODEX)
 
-run_EXOMEDEPTHCOV <- function(mapp_thresh,
-                           cov_thresh_from,
-                           cov_thresh_to,
-                           length_thresh_from,
-                           length_thresh_to,
-                           gc_thresh_from,
-                           gc_thresh_to,
-                           K_from,
-                           K_to,
-                           lmax,
-                           cov_table){
+run_EXOMEDEPTHCOV <- function(cov_table){
   
   sampname <- unique(cov_table[,"sample_name"])
   targets <- cov_table[,c("target_id", "chr", "pos_min", "pos_max")]
@@ -30,44 +19,37 @@ run_EXOMEDEPTHCOV <- function(mapp_thresh,
     }
     Y <- coverageObj1(cov_table, sampname, targets_for_chr, chr)$Y
 
-    gc <- getgc(chr, ref)
-    mapp <- getmapp(chr, ref)
-    qcObj <- qc(Y, sampname, chr, ref, mapp, gc, cov_thresh = c(20, 4000), 
-                length_thresh = c(20, 2000), mapp_thresh = 0.9, gc_thresh = c(20, 80))
-    Y_qc <- qcObj$Y_qc; sampname_qc <- qcObj$sampname_qc; gc_qc <- qcObj$gc_qc
-    mapp_qc <- qcObj$mapp_qc; ref_qc <- qcObj$ref_qc; qcmat <- qcObj$qcmat
-
-    for (actual_sample_id in 1:length(sampname_qc)) {
-      actual_sample <- sampname_qc[actual_sample_id]
+    for (actual_sample_id in 1:length(sampname)) {
+      actual_sample <- sampname[actual_sample_id]
       ## ----reference.selection-------------------------------------------------
       target_length <- c()
-      for (i in 1:nrow(Y_qc)) {
-        target_length <- c(target_length, width(ref_qc[i]))
+      for (i in 1:nrow(Y)) {
+        target_length <- c(target_length, width(ref[i]))
       }
-      reference_set <- select.reference.set (test.counts = Y_qc[,actual_sample_id],
-                                             reference.counts = Y_qc[,-actual_sample_id],
+      reference_set <- select.reference.set (test.counts = Y[,actual_sample_id],
+                                             reference.counts = Y[,-actual_sample_id],
                                              bin.length = target_length,
                                              n.bins.reduced = 10000)
 
       ## ----construct.ref-------------------------------------------------------
-      my.matrix <- as.matrix(Y_qc[,reference_set$reference.choice])
+      my.matrix <- as.matrix(Y[,reference_set$reference.choice])
       my.reference.selected <- apply(X = my.matrix, 
                                      MAR = 1, 
                                      FUN = sum)
 
       ## ----build.complete------------------------------------------------------
       all.exons <- new('ExomeDepth',
-                       test = Y_qc[,actual_sample_id],
+                       test = Y[,actual_sample_id],
                        reference = my.reference.selected,
                        formula = 'cbind(test, reference) ~ 1')
 
       ## ----call.CNVs-----------------------------------------------------------
       all.exons <- CallCNVs(x = all.exons, 
                             transition.probability = 10^-4, 
-                            chromosome = rep(chr, nrow(Y_qc)), 
-                            start = start(ref_qc), 
-                            end = end(ref_qc), 
-                            name = rep('name', nrow(Y_qc)))
+                            chromosome = rep(chr, nrow(Y)), 
+                            start = start(ref), 
+                            end = end(ref), 
+                            name = rep('name', nrow(Y)))
       print(all.exons@CNV.calls)
       if (nrow(all.exons@CNV.calls) > 0) {
         actual_sample_column <- data.frame(matrix(rep(actual_sample, nrow(all.exons@CNV.calls)), nrow=nrow(all.exons@CNV.calls))) 

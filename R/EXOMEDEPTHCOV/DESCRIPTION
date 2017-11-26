@@ -14,7 +14,7 @@ Depends:
     devtools (>= 1.13.2),
     DBI (== 0.7),
     optparse (== 1.4.4),
-    CODEX (>= 1.8.0),
+    IRanges (>= 2.0.0),
     ExomeDepth (>= 1.1.10)
 License: GPL-3
 Encoding: UTF-8

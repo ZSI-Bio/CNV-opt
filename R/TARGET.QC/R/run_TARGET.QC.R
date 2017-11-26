@@ -1,0 +1,64 @@
+run_TARGET.QC <- function(mapp_thresh,
+                          cov_thresh_from,
+                          cov_thresh_to,
+                          length_thresh_from,
+                          length_thresh_to,
+                          gc_thresh_from,
+                          gc_thresh_to,
+                          cov_table){
+  
+  sampname <- unique(cov_table[,"sample_name"])
+  targets <- cov_table[,c("target_id", "chr", "pos_min", "pos_max")]
+  targets <- targets[!duplicated(targets[,"target_id"]),]
+  targets <- targets[with(targets, order(target_id)), ]
+  cov_table_qc <- matrix(nrow=0, ncol=6)
+  colnames(cov_table_qc) <- colnames(cov_table)
+
+  chrs <- c(1:22, "X", "Y", paste0("chr",c(1:22, "X", "Y")))
+  for(chr in chrs) {
+    targets_for_chr <- targets[targets[,"chr"] == chr,]
+    ref <- IRanges(start = targets_for_chr[,"pos_min"], end = targets_for_chr[,"pos_max"])
+    if (length(ref) == 0) {    # 0 elements for specified chromosome in bed
+      next()
+    }
+    Y <- coverageObj1(cov_table, sampname, targets_for_chr, chr)$Y
+
+    gcmapp1_result <- gcmapp1(chr, ref)
+    gc <- gcmapp1_result$gc
+    mapp <- gcmapp1_result$mapp
+
+    qcObj1_result <- qcObj1(Y, sampname, chr, ref, mapp, gc, cov_thresh = c(cov_thresh_from, cov_thresh_to), 
+                        length_thresh = c(length_thresh_from, length_thresh_to), mapp_thresh, 
+                        gc_thresh = c(gc_thresh_from, gc_thresh_to))
+    Y_qc <- qcObj1_result$Y_qc
+    sampname_qc <- qcObj1_result$sampname_qc
+    ref_qc <- qcObj1_result$ref_qc
+    for(i in 1:nrow(Y_qc)) {
+      for (j in 1:ncol(Y_qc)) {
+        new_cov_table_qc_row <- c(colnames(Y_qc)[j], rownames(Y_qc)[i], chr, start(ref_qc)[i], end(ref_qc)[i], Y_qc[i,j])
+        cov_table_qc <- rbind(cov_table_qc, new_cov_table_qc_row)
+      }
+    }
+  }
+  #cov_table_qc[,"target_id"] <- strtoi(cov_table_qc[,"target_id"])
+  #cov_table_qc[,"pos_min"] <- sapply(cov_table_qc[,"pos_min"], as.integer)
+  #cov_table_qc[1,"target_id"] <- 1 # as.integer(as.character(cov_table_qc[1,"target_id"]))
+  cov_table_qc <- as.data.frame(cov_table_qc)
+  cov_table_qc[,"pos_min"] <- strtoi(cov_table_qc[,"pos_min"])
+  cov_table_qc[,"pos_max"] <- strtoi(cov_table_qc[,"pos_max"])
+  cov_table_qc[,"target_id"] <- strtoi(cov_table_qc[,"target_id"])
+  cov_table_qc[,"read_count"] <- strtoi(cov_table_qc[,"read_count"])
+  cov_table_qc
+}
+
+
+
+
+
+
+#  sample_name target_id chr  pos_min  pos_max read_count
+#1     NA19012    193524   Y 25426932 25427053          0
+#2     NA19012    193525   Y 25431556 25431676          0
+#3     NA19012    193526   Y 25535089 25535239          0
+#4     NA19012    193527   Y 25537286 25537526          0
+#5     NA19012    193528   Y 25538793 25538913          0

@@ -4,13 +4,6 @@ library(CNVCALLER.RUNNER)
 context("Testing run_wrapper_CODEXCOV function")
 
 test_that("basic test for run_wrapper_CODEXCOV function, without calls",{
-  mapp_thresh <- "0.9"
-  cov_thresh_from <- "20"
-  cov_thresh_to <- "4000"
-  length_thresh_from <- "0"
-  length_thresh_to <- "200000"
-  gc_thresh_from <- "5"
-  gc_thresh_to <- "100"
   K_from <- "1"
   K_to <- "3"
   lmax <- "200"
@@ -71,14 +64,7 @@ test_that("basic test for run_wrapper_CODEXCOV function, without calls",{
   cov_table[,"pos_min"] <- as.integer(as.character(cov_table[,"pos_min"]))
   cov_table[,"pos_max"] <- as.integer(as.character(cov_table[,"pos_max"]))
   cov_table[,"read_count"] <- as.numeric(as.character(cov_table[,"read_count"]))
-  calls <- run_wrapper_CODEXCOV(mapp_thresh,
-                                cov_thresh_from,
-                                cov_thresh_to,
-                                length_thresh_from,
-                                length_thresh_to,
-                                gc_thresh_from,
-                                gc_thresh_to,
-                                K_from,
+  calls <- run_wrapper_CODEXCOV(K_from,
                                 K_to,
                                 lmax,
                                 cov_table)

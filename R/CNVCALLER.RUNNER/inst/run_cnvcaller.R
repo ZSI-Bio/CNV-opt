@@ -88,33 +88,29 @@ read_coverage_table <- function(cov_table, conn,chr){
   ds
 }
 
+target_qc <- function(cov_table, parameters){
+  cov_table <- run_wrapper_TARGET.QC(parameters$mapp_thresh,
+                                     parameters$cov_thresh_from,
+                                     parameters$cov_thresh_to,
+                                     parameters$length_thresh_from,
+                                     parameters$length_thresh_to,
+                                     parameters$gc_thresh_from,
+                                     parameters$gc_thresh_to,
+                                     cov_table
+  )
+  cov_table
+}
+
 run_caller <- function(parameters, cov_table){
   if (parameters$caller == "codex"){
-    calls <- run_wrapper_CODEXCOV(parameters$mapp_thresh,
-                                  parameters$cov_thresh_from,
-                                  parameters$cov_thresh_to,
-                                  parameters$length_thresh_from,
-                                  parameters$length_thresh_to,
-                                  parameters$gc_thresh_from,
-                                  parameters$gc_thresh_to,
-                                  parameters$K_from,
+    calls <- run_wrapper_CODEXCOV(parameters$K_from,
                                   parameters$K_to,
                                   parameters$lmax,
                                   cov_table
     )
     calls
   } else if (parameters$caller == "exomedepth"){
-    calls <- run_wrapper_EXOMEDEPTHCOV(parameters$mapp_thresh,
-                                       parameters$cov_thresh_from,
-                                       parameters$cov_thresh_to,
-                                       parameters$length_thresh_from,
-                                       parameters$length_thresh_to,
-                                       parameters$gc_thresh_from,
-                                       parameters$gc_thresh_to,
-                                       parameters$K_from,
-                                       parameters$K_to,
-                                       parameters$lmax,
-                                       cov_table
+    calls <- run_wrapper_EXOMEDEPTHCOV(cov_table
     )
     calls
   } else if(parameters$caller == "xhmm") {
@@ -137,10 +133,12 @@ conn_psql <- dbConnect(drv_psql, Sys.getenv('CNV_OPT_PSQL_CONN_URL'), Sys.getenv
 
 parameters <- read_parameters(opt$paramsTabName, opt$id, conn_psql)
 #print(parameters)
-cov_table <- read_coverage_table(parameters$cov_table, conn_psql,parameters$chr)
-#print(cov_table)
+cov_table <- read_coverage_table(parameters$cov_table, conn_psql, parameters$chr)
+#print(cov_table[1:5,])
+cov_table <- target_qc(cov_table, parameters)
+#print(cov_table[1:5,])
 calls <- run_caller(parameters, cov_table)
-#print(calls)
+print(calls)
 save_calls(calls, opt$resultsTabName, parameters$caller, parameters$scenario_id ,opt$id, conn_psql)
 
 dbDisconnect(conn_psql)
