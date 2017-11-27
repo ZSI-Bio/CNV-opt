@@ -40,9 +40,6 @@ run_TARGET.QC <- function(mapp_thresh,
       }
     }
   }
-  #cov_table_qc[,"target_id"] <- strtoi(cov_table_qc[,"target_id"])
-  #cov_table_qc[,"pos_min"] <- sapply(cov_table_qc[,"pos_min"], as.integer)
-  #cov_table_qc[1,"target_id"] <- 1 # as.integer(as.character(cov_table_qc[1,"target_id"]))
   cov_table_qc <- as.data.frame(cov_table_qc)
   cov_table_qc[,"pos_min"] <- strtoi(cov_table_qc[,"pos_min"])
   cov_table_qc[,"pos_max"] <- strtoi(cov_table_qc[,"pos_max"])
@@ -50,11 +47,6 @@ run_TARGET.QC <- function(mapp_thresh,
   cov_table_qc[,"read_count"] <- strtoi(cov_table_qc[,"read_count"])
   cov_table_qc
 }
-
-
-
-
-
 
 #  sample_name target_id chr  pos_min  pos_max read_count
 #1     NA19012    193524   Y 25426932 25427053          0

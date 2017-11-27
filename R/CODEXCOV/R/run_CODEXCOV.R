@@ -12,6 +12,7 @@ run_CODEXCOV <- function(K_from,
                          cov_table){
   
   sampname <- unique(cov_table[,"sample_name"])
+  sampname <- as.character(sampname)
   targets <- cov_table[,c("target_id", "chr", "pos_min", "pos_max")]
   targets <- targets[!duplicated(targets[,"target_id"]),]
   targets <- targets[with(targets, order(target_id)), ]

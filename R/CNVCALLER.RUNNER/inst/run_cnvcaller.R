@@ -138,7 +138,7 @@ cov_table <- read_coverage_table(parameters$cov_table, conn_psql, parameters$chr
 cov_table <- target_qc(cov_table, parameters)
 #print(cov_table[1:5,])
 calls <- run_caller(parameters, cov_table)
-print(calls)
+#print(calls)
 save_calls(calls, opt$resultsTabName, parameters$caller, parameters$scenario_id ,opt$id, conn_psql)
 
 dbDisconnect(conn_psql)
