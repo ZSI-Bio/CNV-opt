@@ -64,6 +64,12 @@ run_EXOMEDEPTHCOV <- function(cov_table){
   # deletion -> del
   # duplication -> dup
   # generate copy_no
+  if (nrow(calls) != 0) {
+    calls[calls == 'deletion'] <- 'del'
+    calls[calls == 'duplication'] <- 'dup'
+    calls[,1] <- as.character(calls[,1])
+    colnames(calls)[1] <- 'sample_name'
+  }
   colnames(calls)[colnames(calls) == 'sample_name'] <- 'sample_name'
   colnames(calls)[colnames(calls) == 'start.p'] <- 'st_exon'
   colnames(calls)[colnames(calls) == 'end.p'] <- 'ed_exon'
@@ -77,9 +83,5 @@ run_EXOMEDEPTHCOV <- function(cov_table){
   colnames(calls)[colnames(calls) == 'reads.observed'] <- 'raw_cov'
   colnames(calls)[colnames(calls) == 'reads.ratio'] <- 'copy_no'
   calls[colnames(calls) == 'copy_no'] <- round(calls[colnames(calls) == 'raw_cov'] / (calls[colnames(calls) == 'norm_cov'] / 2))
-  calls[calls == 'deletion'] <- 'del'
-  calls[calls == 'duplication'] <- 'dup'
-  calls[,1] <- as.character(calls[,1])
-  colnames(calls)[1] <- 'sample_name'
   calls
 }

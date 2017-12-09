@@ -6,7 +6,17 @@ run_TARGET.QC <- function(mapp_thresh,
                           gc_thresh_from,
                           gc_thresh_to,
                           cov_table){
-  
+  #mapp_thresh <- 0.9
+  #cov_thresh_from <- 20
+  #cov_thresh_to <- 4000
+  #length_thresh_from <- 20
+  #length_thresh_to <- 2000
+  #gc_thresh_from <- 20
+  #gc_thresh_to <- 80
+  #K_from <- 1
+  #K_to <- 9
+  #lmax <- 200
+
   sampname <- unique(cov_table[,"sample_name"])
   targets <- cov_table[,c("target_id", "chr", "pos_min", "pos_max")]
   targets <- targets[!duplicated(targets[,"target_id"]),]
