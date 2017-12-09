@@ -4,12 +4,24 @@ if (length(which(installed.packages()[,1] == "CODEX")) == 0){
     source("http://bioconductor.org/biocLite.R")
     biocLite("CODEX")
 }
+if (length(which(installed.packages()[,1] == "ExomeDepth")) == 0){install.packages("ExomeDepth",repos="https://cloud.r-project.org/")}
+
+if (length(which(installed.packages()[,1] == "TARGET.QC")) > 0){remove.packages("TARGET.QC")}
+if (length(which(installed.packages()[,1] == "CODEXCOV")) > 0){remove.packages("CODEXCOV")}
+if (length(which(installed.packages()[,1] == "EXOMEDEPTHCOV")) > 0){remove.packages("EXOMEDEPTHCOV")}
+if (length(which(installed.packages()[,1] == "CNVCALLER.RUNNER")) > 0){remove.packages("CNVCALLER.RUNNER")}
+if (length(which(installed.packages()[,1] == "CNVCALLER.EVALUATOR")) > 0){remove.packages("CNVCALLER.EVALUATOR")}
 
 setwd('tests/')
+devtools::install('../TARGET.QC')
 devtools::install('../CODEXCOV')
+devtools::install('../EXOMEDEPTHCOV')
 devtools::install('../CNVCALLER.RUNNER')
 devtools::install('../CNVCALLER.EVALUATOR')
 
+# withr package with version greater than 2.0.0 is not compatible with testhat (so far)
+if (length(which(installed.packages()[,1] == "withr")) > 0){remove.packages("withr")}
+devtools::install_version("withr", version = "2.0.0", repos = "http://cran.us.r-project.org")
 
 library(testthat)
 out <- capture.output(test_dir(".", reporter="junit"))

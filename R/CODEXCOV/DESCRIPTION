@@ -11,15 +11,11 @@ Description: An extended implementation of the CODEX package in R. It extends
     parameters.
 Depends:
     R (>= 3.2.3),
-    CODEX (== 1.9.0),
-    testthat (== 1.0.2.9000),
     devtools (>= 1.13.2),
     DBI (== 0.7),
-    optparse (== 1.4.4)
+    optparse (== 1.4.4),
+    CODEX (>= 1.8.0)
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 6.0.1.9000
-Remotes: 
-    hadley/testthat,
-    Bioconductor-mirror/CODEX

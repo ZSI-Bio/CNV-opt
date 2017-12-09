@@ -39,32 +39,6 @@ gcmapp1 <- function(chr, ref){
 #' Function Dexcription
 #'
 #' Function description.
-#' @param Y
-#' @param sampname
-#' @param chr
-#' @param ref
-#' @param mapp
-#' @param gc
-#' @param cov_thresh
-#' @param length_thresh
-#' @param mapp_thresh
-#' @param gc_thresh
-#' @keywords 
-#' @export
-#' @examples
-#' coverageObj1
-qcObj1 <- function(Y, sampname, chr, ref, mapp, gc, cov_thresh, length_thresh, mapp_thresh, gc_thresh){
-  qcObj1_result <- qc(Y, sampname, chr, ref, mapp, gc, cov_thresh, length_thresh, mapp_thresh, gc_thresh)
-  Y_qc <- qcObj1_result$Y_qc
-  sampname_qc <- qcObj1_result$sampname_qc
-  gc_qc <- qcObj1_result$gc_qc
-  ref_qc <- qcObj1_result$ref_qc
-  return(list(Y_qc=Y_qc, sampname_qc=sampname_qc, gc_qc=gc_qc, ref_qc=ref_qc))
-}
-
-#' Function Dexcription
-#'
-#' Function description.
 #' @param Y_qc
 #' @param gc_qc
 #' @param K
@@ -119,5 +93,11 @@ segment1 <- function(Y_qc, Yhat, optK, K, sampname_qc,
                      ref_qc, chr, lmax, mode){
   finalcall <- segment(Y_qc, Yhat, optK, K, sampname_qc,
                          ref_qc, chr, lmax, mode)
+  return(list(finalcall=finalcall))
+}
+
+unify_calls_format <- function(finalcall){
+  colnames(finalcall)[colnames(finalcall) == 'lratio'] <- 'codex_lratio'
+  colnames(finalcall)[colnames(finalcall) == 'mBIC'] <- 'codex_mBIC'
   return(list(finalcall=finalcall))
 }

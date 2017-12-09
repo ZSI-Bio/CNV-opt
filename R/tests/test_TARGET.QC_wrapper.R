@@ -1,12 +1,16 @@
 library(testthat)
 library(CNVCALLER.RUNNER)
 
-context("Testing run_wrapper_CODEXCOV function")
+context("Testing run_wrapper_TARGET.QC function")
 
-test_that("basic test for run_wrapper_CODEXCOV function, without calls",{
-  K_from <- "1"
-  K_to <- "3"
-  lmax <- "200"
+test_that("basic test for run_wrapper_TARGET.QC function",{
+  mapp_thresh <- "0.9"
+  cov_thresh_from <- "20"
+  cov_thresh_to <- "4000"
+  length_thresh_from <- "0"
+  length_thresh_to <- "200000"
+  gc_thresh_from <- "5"
+  gc_thresh_to <- "100"
   cov_table <- as.data.frame(matrix(data=c("NA12044",6,"2",17211,173310,151.636363636364,
                                            "NA11829",4,"2",16712,167190,100,
                                            "NA07051",7,"2",30275,304310,155.929936305732,
@@ -64,12 +68,14 @@ test_that("basic test for run_wrapper_CODEXCOV function, without calls",{
   cov_table[,"pos_min"] <- as.integer(as.character(cov_table[,"pos_min"]))
   cov_table[,"pos_max"] <- as.integer(as.character(cov_table[,"pos_max"]))
   cov_table[,"read_count"] <- as.numeric(as.character(cov_table[,"read_count"]))
-  calls <- run_wrapper_CODEXCOV(K_from,
-                                K_to,
-                                lmax,
-                                cov_table)
-  expect_equal(length(calls), 0)
+  cov_table <- run_wrapper_TARGET.QC(mapp_thresh,
+                                     cov_thresh_from,
+                                     cov_thresh_to,
+                                     length_thresh_from,
+                                     length_thresh_to,
+                                     gc_thresh_from,
+                                     gc_thresh_to,
+                                     cov_table)
+  expect_equal(ncol(cov_table), 6)
+  expect_equal(nrow(cov_table), 18)
 })
-
-
-

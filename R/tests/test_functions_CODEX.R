@@ -196,6 +196,28 @@ test_that("eight samples from CODEX demo object, last sample modified",{
 })
 
 
+context("Testing unify_calls_format function")
+
+test_that("single call",{
+  finalcall = matrix(as.character(c("sample_1", "22", "dup", "21351471", "21354771", "3.301", "7", "8", "229", "134", "3", "25.848", "23.912")), nrow=1, ncol=13, byrow = TRUE)
+  colnames(finalcall) <- c("sample_name", "chr", "cnv", "st_bp", "ed_bp", "length_kb", "st_exon", "ed_exon", "raw_cov", "norm_cov", "copy_no", "lratio", "mbic")
+  unify_calls_format_result <- unify_calls_format(finalcall)
+  expect_equal(length(unify_calls_format_result), 1)
+  expect_equal(unify_calls_format_result[1]$finalcall[1], "sample_1")
+  expect_equal(unify_calls_format_result[1]$finalcall[2], "22")
+  expect_equal(unify_calls_format_result[1]$finalcall[3], "dup")
+  expect_equal(unify_calls_format_result[1]$finalcall[4], "21351471")
+  expect_equal(unify_calls_format_result[1]$finalcall[5], "21354771")
+  expect_equal(unify_calls_format_result[1]$finalcall[6], "3.301")
+  expect_equal(unify_calls_format_result[1]$finalcall[7], "7")
+  expect_equal(unify_calls_format_result[1]$finalcall[8], "8")
+  expect_equal(unify_calls_format_result[1]$finalcall[9], "229")
+  expect_equal(unify_calls_format_result[1]$finalcall[10], "134")
+  expect_equal(unify_calls_format_result[1]$finalcall[11], "3")
+  expect_equal(unify_calls_format_result[1]$finalcall[12], "25.848")
+  expect_equal(unify_calls_format_result[1]$finalcall[13], "23.912")
+})
+
 
 
 
