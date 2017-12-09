@@ -78,5 +78,4 @@ test_that("basic test for run_wrapper_TARGET.QC function",{
                                      cov_table)
   expect_equal(ncol(cov_table), 6)
   expect_equal(nrow(cov_table), 18)
-  write.csv(cov_table, 'cov_table.csv')
 })
