@@ -16,7 +16,6 @@ run_TARGET.QC <- function(mapp_thresh,
   #K_from <- 1
   #K_to <- 9
   #lmax <- 200
-
   sampname <- unique(cov_table[,"sample_name"])
   targets <- cov_table[,c("target_id", "chr", "pos_min", "pos_max")]
   targets <- targets[!duplicated(targets[,"target_id"]),]
@@ -32,7 +31,6 @@ run_TARGET.QC <- function(mapp_thresh,
       next()
     }
     Y <- coverageObj1(cov_table, sampname, targets_for_chr, chr)$Y
-
     gcmapp1_result <- gcmapp1(chr, ref)
     gc <- gcmapp1_result$gc
     mapp <- gcmapp1_result$mapp
@@ -43,11 +41,10 @@ run_TARGET.QC <- function(mapp_thresh,
     Y_qc <- qcObj1_result$Y_qc
     sampname_qc <- qcObj1_result$sampname_qc
     ref_qc <- qcObj1_result$ref_qc
-    for(i in 1:nrow(Y_qc)) {
-      for (j in 1:ncol(Y_qc)) {
-        new_cov_table_qc_row <- c(colnames(Y_qc)[j], rownames(Y_qc)[i], chr, start(ref_qc)[i], end(ref_qc)[i], Y_qc[i,j])
-        cov_table_qc <- rbind(cov_table_qc, new_cov_table_qc_row)
-      }
+    colnames(Y_qc) <- sampname_qc
+    for(sample in colnames(Y_qc)) {
+      new_cov_table_qc_rows <- cbind(sample, rownames(Y_qc), chr, start(ref_qc), end(ref_qc), Y_qc[,sample])
+      cov_table_qc <- rbind(cov_table_qc, new_cov_table_qc_rows)
     }
   }
   cov_table_qc <- as.data.frame(cov_table_qc)
