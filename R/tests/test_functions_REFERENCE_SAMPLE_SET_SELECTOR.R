@@ -1,65 +1,29 @@
 library(testthat)
-library(TARGET.QC)
+library(REFERENCE.SAMPLE.SET.SELECTOR)
 
-context("Testing gcmapp1 function")
+context("Testing canoes_method function")
 
-test_that("the same chromosome value",{
-  chr <- "22"
-  exom_targets <- data.frame(V1 = numeric(0), V2 = numeric(0), V3 = numeric(0));
-  exom_targets <- rbind(exom_targets, data.frame(V1=22, V2=16448825, V3=16449023))
-  exom_targets <- rbind(exom_targets, data.frame(V1=22, V2=16449025, V3=16449223))
-  exom_targets <- rbind(exom_targets, data.frame(V1=22, V2=16449225, V3=16449423))
-  ref <- IRanges(start = exom_targets[,2], end = exom_targets[,3])
-  gcmapp1_result <- gcmapp1(chr, ref)
-  expect_equal(length(gcmapp1_result$gc), 3)
-  expect_equal(round(gcmapp1_result$gc[1], digits=2), 44.72)
-  expect_equal(round(gcmapp1_result$gc[2], digits=2), 43.22)
-  expect_equal(round(gcmapp1_result$gc[3], digits=2), 46.23)
-  expect_equal(length(gcmapp1_result$mapp), 3)
-  expect_equal(round(gcmapp1_result$mapp[1], digits=7), 0.5187138)
-  expect_equal(round(gcmapp1_result$mapp[2], digits=7), 0.5187138)
-  expect_equal(round(gcmapp1_result$mapp[3], digits=7), 0.5187138)
+test_that("basic test for canoes_method function",{
+  investigated_sample <- "sample_1"
+  num_refs <- 5
+  Y = matrix(as.integer(c(52, 53, 54, 56, 70, 147, 58, 51,
+                          25, 22, 39, 31, 27, 217, 17, 27,
+                          57, 61, 66, 65, 64, 177, 67, 59, 
+                          101, 100, 90, 85, 98, 182, 92, 103, 
+                          149, 154, 140, 160, 165, 213, 149, 162, 
+                          95, 90, 90, 98, 88, 262, 93, 103, 
+                          50, 55, 45, 52, 59, 135, 65, 55, 
+                          79, 57, 63, 90, 71, 216, 69, 66)), nrow=8, ncol=8, byrow = TRUE)
+  colnames(Y) <- c("sample_1", "sample_2", "sample_3", "sample_4", "sample_5", "sample_6", "sample_7", "sample_8")
+  reference_samples <- canoes_method(investigated_sample, 
+                                     Y,
+                                     num_refs)
+  expect_equal(length(reference_samples), 1)
+  expect_equal(length(reference_samples$reference_samples), num_refs)
+  expect_equal(reference_samples$reference_samples[1], 'sample_8')
+  expect_equal(reference_samples$reference_samples[2], 'sample_4')
+  expect_equal(reference_samples$reference_samples[3], 'sample_2')
+  expect_equal(reference_samples$reference_samples[4], 'sample_3')
+  expect_equal(reference_samples$reference_samples[5], 'sample_7')
 })
-
-test_that("different chromosome value",{
-  chr <- "22"
-  exom_targets <- data.frame(V1 = numeric(0), V2 = numeric(0), V3 = numeric(0));
-  exom_targets <- rbind(exom_targets, data.frame(V1=21, V2=16448825, V3=16449023))
-  exom_targets <- rbind(exom_targets, data.frame(V1=21, V2=16449025, V3=16449223))
-  exom_targets <- rbind(exom_targets, data.frame(V1=21, V2=16449225, V3=16449423))
-  ref <- IRanges(start = exom_targets[,2], end = exom_targets[,3])
-  gcmapp1_result <- gcmapp1(chr, ref)
-  expect_equal(length(gcmapp1_result$gc), 3)
-  expect_equal(round(gcmapp1_result$gc[1], digits=2), 44.72)
-  expect_equal(round(gcmapp1_result$gc[2], digits=2), 43.22)
-  expect_equal(round(gcmapp1_result$gc[3], digits=2), 46.23)
-  expect_equal(length(gcmapp1_result$mapp), 3)
-  expect_equal(round(gcmapp1_result$mapp[1], digits=7), 0.5187138)
-  expect_equal(round(gcmapp1_result$mapp[2], digits=7), 0.5187138)
-  expect_equal(round(gcmapp1_result$mapp[3], digits=7), 0.5187138)
-})
-
-
-context("Testing qcObj1 function")
-
-test_that("test for data drom CODEX demo object",{
-  Y <- coverageObjDemo$Y
-  sampname <- bambedObjDemo$sampname
-  chr <- bambedObjDemo$chr
-  ref <- bambedObjDemo$ref
-  gc <- gcDemo
-  mapp <- mappDemo
-  cov_thresh <- c(20, 4000)
-  length_thresh <- c(20, 2000)
-  mapp_thresh <- 0.9
-  gc_thresh <- c(20, 80)
-  qcObj1_result <- qcObj1(Y, sampname, chr, ref, mapp, gc, cov_thresh, length_thresh, 
-              mapp_thresh, gc_thresh)
-  # checks only length of resultant data
-  expect_equal(length(qcObj1_result$Y_qc), 46*77)
-  expect_equal(length(qcObj1_result$sampname_qc), 46)
-  expect_equal(length(qcObj1_result$gc_qc), 77)
-  expect_equal(length(qcObj1_result$ref_qc), 77)
-})
-
 
