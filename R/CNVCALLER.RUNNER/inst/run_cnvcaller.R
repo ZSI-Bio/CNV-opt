@@ -33,6 +33,8 @@ read_parameters <- function(tabName, id, conn){
   K_to <- parameters[1,'k_to']
   lmax <- parameters[1,'lmax']
   chr <- parameters[1,'chr']
+  reference_set_select_method <- parameters[1,'reference_set_select_method']
+  num_of_samples_in_reference_set <- parameters[1,'num_of_samples_in_reference_set']
   scenario_id  <- parameters[1,'scenario_id']
 
   return(list(caller=caller, 
@@ -48,6 +50,8 @@ read_parameters <- function(tabName, id, conn){
               K_to=K_to, 
               lmax=lmax,
               chr=chr,
+              reference_set_select_method=reference_set_select_method,
+              num_of_samples_in_reference_set=num_of_samples_in_reference_set,
               scenario_id=scenario_id))
 }
 
@@ -106,12 +110,15 @@ run_caller <- function(parameters, cov_table){
     calls <- run_wrapper_CODEXCOV(parameters$K_from,
                                   parameters$K_to,
                                   parameters$lmax,
+                                  parameters$reference_set_select_method,
+                                  parameters$num_of_samples_in_reference_set,
                                   cov_table
     )
     calls
   } else if (parameters$caller == "exomedepth"){
-    calls <- run_wrapper_EXOMEDEPTHCOV(cov_table
-    )
+    calls <- run_wrapper_EXOMEDEPTHCOV(parameters$reference_set_select_method,
+                                       parameters$num_of_samples_in_reference_set,
+                                       cov_table)
     calls
   } else if(parameters$caller == "xhmm") {
   }

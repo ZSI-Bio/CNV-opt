@@ -31,7 +31,7 @@ test_that("basic test for reading test parameters",{
   parameters <- dbGetQuery(conn_psql, "select * from test_parameters")
   expect_equal(nrow(parameters), 20)
   read_parameters_result <- read_parameters("test_parameters", parameters[1,"id"], conn_psql)
-  expect_equal(length(read_parameters_result), 14)
+  expect_equal(length(read_parameters_result), 16)
   expect_equal(read_parameters_result$caller, parameters[1,"caller"])
   expect_equal(read_parameters_result$cov_table, parameters[1,"cov_table"])
   expect_equal(read_parameters_result$mapp_thresh, parameters[1,"mapp_thresh"])
@@ -45,6 +45,8 @@ test_that("basic test for reading test parameters",{
   expect_equal(read_parameters_result$K_to, parameters[1,"k_to"])
   expect_equal(read_parameters_result$lmax, parameters[1,"lmax"])
   expect_equal(read_parameters_result$chr, parameters[1,"chr"])
+  expect_equal(read_parameters_result$reference_set_select_method, parameters[1,"reference_set_select_method"])
+  expect_equal(read_parameters_result$num_of_samples_in_reference_set, parameters[1,"num_of_samples_in_reference_set"])
 })
 
 context("Testing read_coverage_table function")
@@ -82,7 +84,9 @@ test_that("basic test for run_caller function, without calls",{
                      gc_thresh_to="100",
                      K_from="1",
                      K_to="3",
-                     lmax="200")
+                     lmax="200",
+                     reference_set_select_method="codex",
+                     num_of_samples_in_reference_set="0")
   cov_table <- as.data.frame(matrix(data=c("NA12044",6,"2",17211,173310,151.636363636364,
                                            "NA11829",4,"2",16712,167190,100,
                                            "NA07051",7,"2",30275,304310,155.929936305732,
