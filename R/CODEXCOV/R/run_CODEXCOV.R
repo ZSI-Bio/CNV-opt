@@ -9,6 +9,8 @@
 run_CODEXCOV <- function(K_from,
                          K_to,
                          lmax,
+                         reference_set_select_method,
+                         num_of_samples_in_reference_set,
                          cov_table){
   
   sampname <- unique(cov_table[,"sample_name"])
