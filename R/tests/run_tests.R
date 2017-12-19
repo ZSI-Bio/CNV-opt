@@ -7,6 +7,7 @@ if (length(which(installed.packages()[,1] == "CODEX")) == 0){
 if (length(which(installed.packages()[,1] == "ExomeDepth")) == 0){install.packages("ExomeDepth",repos="https://cloud.r-project.org/")}
 
 if (length(which(installed.packages()[,1] == "TARGET.QC")) > 0){remove.packages("TARGET.QC")}
+if (length(which(installed.packages()[,1] == "REFERENCE.SAMPLE.SET.SELECTOR")) > 0){remove.packages("REFERENCE.SAMPLE.SET.SELECTOR")}
 if (length(which(installed.packages()[,1] == "CODEXCOV")) > 0){remove.packages("CODEXCOV")}
 if (length(which(installed.packages()[,1] == "EXOMEDEPTHCOV")) > 0){remove.packages("EXOMEDEPTHCOV")}
 if (length(which(installed.packages()[,1] == "CNVCALLER.RUNNER")) > 0){remove.packages("CNVCALLER.RUNNER")}
@@ -14,6 +15,7 @@ if (length(which(installed.packages()[,1] == "CNVCALLER.EVALUATOR")) > 0){remove
 
 setwd('tests/')
 devtools::install('../TARGET.QC')
+devtools::install('../REFERENCE.SAMPLE.SET.SELECTOR')
 devtools::install('../CODEXCOV')
 devtools::install('../EXOMEDEPTHCOV')
 devtools::install('../CNVCALLER.RUNNER')

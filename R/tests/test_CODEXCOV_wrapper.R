@@ -7,6 +7,8 @@ test_that("basic test for run_wrapper_CODEXCOV function, without calls",{
   K_from <- "1"
   K_to <- "3"
   lmax <- "200"
+  reference_set_select_method <- "codex"
+  num_of_samples_in_reference_set <- "0"
   cov_table <- as.data.frame(matrix(data=c("NA12044",6,"2",17211,173310,151.636363636364,
                                            "NA11829",4,"2",16712,167190,100,
                                            "NA07051",7,"2",30275,304310,155.929936305732,
@@ -67,6 +69,8 @@ test_that("basic test for run_wrapper_CODEXCOV function, without calls",{
   calls <- run_wrapper_CODEXCOV(K_from,
                                 K_to,
                                 lmax,
+                                reference_set_select_method,
+                                num_of_samples_in_reference_set,
                                 cov_table)
   expect_equal(length(calls), 0)
 })

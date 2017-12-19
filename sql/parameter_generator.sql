@@ -17,7 +17,9 @@ select cast(row_number() over () as integer ) as id,
   k_from ,
   k_to ,
   lmax,
-  chr
+  chr,
+  reference_set_select_method,
+  num_of_samples_in_reference_set
 from test_params_bck par, (select cast (generate_series(1,22) as text ) as chr
 union
 select 'X'

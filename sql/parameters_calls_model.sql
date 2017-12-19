@@ -15,7 +15,9 @@ CREATE TABLE IF NOT EXISTS CNV.PARAMETERS (
     gc_thresh_to TEXT,
     K_from TEXT,
     K_to TEXT,
-    lmax TEXT
+    lmax TEXT,
+    reference_set_select_method TEXT,
+    num_of_samples_in_reference_set TEXT
 );
 
 CREATE TABLE IF NOT EXISTS CNV.CALLS (
