@@ -1,0 +1,22 @@
+Package: CANOESCOV
+Title: CANOES Package With Interface To External Coverage File
+Version: 0.0.1
+Authors@R: c(
+    person("Tomasz", "Gambin", email = "tgambin@gmail.com", role = c("aut", "cre")),
+    person("Marek", "Wiewiórka", email = "marek.wiewiorka@gmail.com", role = c("aut")),
+    person("Wiktor", "Kuśmirek", email = "kusmirekwiktor@gmail.com", role = c("aut")))
+Description: An extended implementation of the CANOES package in R. It extends 
+    original implementation by using external coverage file, which should
+    speed up calculations for running application with multiple sets of input
+    parameters.
+Depends:
+    R (>= 3.2.3),
+    devtools (>= 1.13.2),
+    DBI (== 0.7),
+    optparse (== 1.4.4),
+    IRanges (>= 2.0.0),
+    REFERENCE.SAMPLE.SET.SELECTOR (>= 0.0.1)
+License: GPL-3
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 6.0.1.9000
