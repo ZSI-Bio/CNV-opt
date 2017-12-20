@@ -1,8 +1,10 @@
 library(ExomeDepth)
 library(methods)
 
-run_EXOMEDEPTHCOV <- function(cov_table){
-  
+run_EXOMEDEPTHCOV <- function(reference_set_select_method,
+                              num_of_samples_in_reference_set,
+                              cov_table){
+
   sampname <- unique(cov_table[,"sample_name"])
   targets <- cov_table[,c("target_id", "chr", "pos_min", "pos_max")]
   targets <- targets[!duplicated(targets[,"target_id"]),]
@@ -26,13 +28,14 @@ run_EXOMEDEPTHCOV <- function(cov_table){
       for (i in 1:nrow(Y)) {
         target_length <- c(target_length, width(ref[i]))
       }
-      reference_set <- select.reference.set (test.counts = Y[,actual_sample_id],
-                                             reference.counts = Y[,-actual_sample_id],
-                                             bin.length = target_length,
-                                             n.bins.reduced = 10000)
+      reference_samples <- run_REFERENCE.SAMPLE.SET.SELECTOR(actual_sample,
+                                                             Y,
+                                                             reference_set_select_method,
+                                                             num_of_samples_in_reference_set,
+                                                             target_length)
 
       ## ----construct.ref-------------------------------------------------------
-      my.matrix <- as.matrix(Y[,reference_set$reference.choice])
+      my.matrix <- as.matrix(Y[,reference_samples])
       my.reference.selected <- apply(X = my.matrix, 
                                      MAR = 1, 
                                      FUN = sum)

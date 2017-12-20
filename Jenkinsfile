@@ -18,6 +18,7 @@ pipeline {
                              steps {
                                  echo 'Building R package....'
                                  sh "cd R && R CMD build TARGET.QC/ && curl -v --user ${NEXUS_USER}:${NEXUS_PASS} --upload-file TARGET.QC_0.0.1.tar.gz http://zsibio.ii.pw.edu.pl/nexus/repository/r-zsibio/src/contrib/TARGET.QC_0.0.1.tar.gz"
+                                 sh "cd R && R CMD build REFERENCE.SAMPLE.SET.SELECTOR/ && curl -v --user ${NEXUS_USER}:${NEXUS_PASS} --upload-file REFERENCE.SAMPLE.SET.SELECTOR_0.0.1.tar.gz http://zsibio.ii.pw.edu.pl/nexus/repository/r-zsibio/src/contrib/REFERENCE.SAMPLE.SET.SELECTOR_0.0.1.tar.gz"
                                  sh "cd R && R CMD build CODEXCOV/ && curl -v --user ${NEXUS_USER}:${NEXUS_PASS} --upload-file CODEXCOV_0.0.1.tar.gz http://zsibio.ii.pw.edu.pl/nexus/repository/r-zsibio/src/contrib/CODEXCOV_0.0.1.tar.gz"
                                  sh "cd R && R CMD build EXOMEDEPTHCOV/ && curl -v --user ${NEXUS_USER}:${NEXUS_PASS} --upload-file EXOMEDEPTHCOV_0.0.1.tar.gz http://zsibio.ii.pw.edu.pl/nexus/repository/r-zsibio/src/contrib/EXOMEDEPTHCOV_0.0.1.tar.gz"
                                  sh "cd R && R CMD build CANOESCOV/ && curl -v --user ${NEXUS_USER}:${NEXUS_PASS} --upload-file CANOESCOV_0.0.1.tar.gz http://zsibio.ii.pw.edu.pl/nexus/repository/r-zsibio/src/contrib/CANOESCOV_0.0.1.tar.gz"
