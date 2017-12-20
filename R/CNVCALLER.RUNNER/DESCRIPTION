@@ -11,6 +11,7 @@ Depends:
     TARGET.QC (>= 0.0.1),
     CODEXCOV (>= 0.0.1),
     EXOMEDEPTHCOV (>= 0.0.1),
+    CANOESCOV (>= 0.0.1),
     devtools (>= 1.13.2),
     DBI (== 0.7),
     optparse (== 1.4.4)

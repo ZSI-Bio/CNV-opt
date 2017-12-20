@@ -9,6 +9,7 @@ if (length(which(installed.packages()[,1] == "ExomeDepth")) == 0){install.packag
 if (length(which(installed.packages()[,1] == "TARGET.QC")) > 0){remove.packages("TARGET.QC")}
 if (length(which(installed.packages()[,1] == "CODEXCOV")) > 0){remove.packages("CODEXCOV")}
 if (length(which(installed.packages()[,1] == "EXOMEDEPTHCOV")) > 0){remove.packages("EXOMEDEPTHCOV")}
+if (length(which(installed.packages()[,1] == "CANOESCOV")) > 0){remove.packages("CANOESCOV")}
 if (length(which(installed.packages()[,1] == "CNVCALLER.RUNNER")) > 0){remove.packages("CNVCALLER.RUNNER")}
 if (length(which(installed.packages()[,1] == "CNVCALLER.EVALUATOR")) > 0){remove.packages("CNVCALLER.EVALUATOR")}
 
@@ -16,6 +17,7 @@ setwd('tests/')
 devtools::install('../TARGET.QC')
 devtools::install('../CODEXCOV')
 devtools::install('../EXOMEDEPTHCOV')
+devtools::install('../CANOESCOV')
 devtools::install('../CNVCALLER.RUNNER')
 devtools::install('../CNVCALLER.EVALUATOR')
 

@@ -1,4 +1,5 @@
 library(methods)
+library(CODEX)
 
 run_CANOESCOV <- function(reference_set_select_method,
                           num_of_samples_in_reference_set,
@@ -11,7 +12,6 @@ run_CANOESCOV <- function(reference_set_select_method,
   
   calls <- data.frame(matrix(nrow=0, ncol=13))
   chrs <- c(1:22, "X", "Y", paste0("chr",c(1:22, "X", "Y")))
-  library(IRanges)
   for(chr in chrs) {
     targets_for_chr <- targets[targets[,"chr"] == chr,]
     ref <- IRanges(start = targets_for_chr[,"pos_min"], end = targets_for_chr[,"pos_max"])
@@ -19,60 +19,41 @@ run_CANOESCOV <- function(reference_set_select_method,
       next()
     }
     Y <- coverageObj1(cov_table, sampname, targets_for_chr, chr)$Y
+    Y <- cbind(rep(chr, nrow(Y)), start(ref), end(ref), Y)
 
-    for (actual_sample_id in 1:length(sampname)) {
-      actual_sample <- sampname[actual_sample_id]
-      ## ----reference.selection-------------------------------------------------
-      target_length <- c()
-      for (i in 1:nrow(Y)) {
-        target_length <- c(target_length, width(ref[i]))
-      }
-      reference_samples <- run_REFERENCE.SAMPLE.SET.SELECTOR(actual_sample,
-                                                             Y,
-                                                             reference_set_select_method,
-                                                             num_of_samples_in_reference_set,
-                                                             target_length)
+    write.table(Y, file=paste('cov_', chr, '.tsv', sep=""), quote=FALSE, sep="\t", col.names = F, row.names = F)
+    canoes.reads <- read.table(paste('cov_', chr, '.tsv', sep=""))
 
-      ## ----construct.ref-------------------------------------------------------
-      my.matrix <- as.matrix(Y[,reference_samples])
-      my.reference.selected <- apply(X = my.matrix, 
-                                     MAR = 1, 
-                                     FUN = sum)
-
-      ## ----build.complete------------------------------------------------------
-      all.exons <- new('ExomeDepth',
-                       test = Y[,actual_sample_id],
-                       reference = my.reference.selected,
-                       formula = 'cbind(test, reference) ~ 1')
-
-      ## ----call.CNVs-----------------------------------------------------------
-      all.exons <- CallCNVs(x = all.exons, 
-                            transition.probability = 10^-4, 
-                            chromosome = rep(chr, nrow(Y)), 
-                            start = start(ref), 
-                            end = end(ref), 
-                            name = rep('name', nrow(Y)))
-      print(all.exons@CNV.calls)
-      if (nrow(all.exons@CNV.calls) > 0) {
-        actual_sample_column <- data.frame(matrix(rep(actual_sample, nrow(all.exons@CNV.calls)), nrow=nrow(all.exons@CNV.calls))) 
-        callsIt <- cbind(actual_sample_column, all.exons@CNV.calls)
-        colnames(callsIt) <- c(c, colnames(all.exons@CNV.calls))
-        if (nrow(calls)==0){calls <- data.frame(matrix(nrow=0, ncol=ncol(callsIt)))} 
-        calls <- rbind(calls, callsIt)
-      }
+    # read in the data
+    gc <- getgc(chr, ref)
+    #canoes.reads <- Y #read.table(paste('cov_', chr, '.tsv', sep=""))
+    names(canoes.reads) <- c("chromosome", "start", "end", sampname)
+    colnames(canoes.reads) <- c("chromosome", "start", "end", sampname)
+    target <- seq(1, nrow(Y))
+    canoes.reads <- cbind(target, gc, canoes.reads)
+    names(canoes.reads) <- c("target", "gc", "chromosome", "start", "end", sampname)
+    colnames(canoes.reads) <- c("target", "gc", "chromosome", "start", "end", sampname)
+    write.table(as.data.frame(canoes.reads),file="canoes.reads.csv", quote=F, sep=",",row.names=T,col.names=T)
+    xcnv.list <- vector('list', length(sampname))
+    print(canoes.reads$chromosome)
+    for (i in 1:length(sampname)){
+      xcnv.list[[i]] <- CallCNVs(sampname[i], canoes.reads)
     }
+    xcnvs <- do.call('rbind', xcnv.list)
+    xcnvs
   }
+
   # unify names of output columns
-  # deletion -> del
-  # duplication -> dup
+  # DEL -> del
+  # DUP -> dup
   # generate copy_no
   if (nrow(calls) != 0) {
-    calls[calls == 'deletion'] <- 'del'
-    calls[calls == 'duplication'] <- 'dup'
+    calls[calls == 'DEL'] <- 'del'
+    calls[calls == 'DUP'] <- 'dup'
     calls[,1] <- as.character(calls[,1])
     colnames(calls)[1] <- 'sample_name'
   }
-  colnames(calls)[colnames(calls) == 'sample_name'] <- 'sample_name'
+  colnames(calls)[colnames(calls) == 'SAMPLE'] <- 'sample_name'
   colnames(calls)[colnames(calls) == 'start.p'] <- 'st_exon'
   colnames(calls)[colnames(calls) == 'end.p'] <- 'ed_exon'
   colnames(calls)[colnames(calls) == 'type'] <- 'cnv'
@@ -83,49 +64,12 @@ run_CANOESCOV <- function(reference_set_select_method,
   colnames(calls)[colnames(calls) == 'BF'] <- 'exomedepth_BF'
   colnames(calls)[colnames(calls) == 'reads.expected'] <- 'norm_cov'
   colnames(calls)[colnames(calls) == 'reads.observed'] <- 'raw_cov'
-  colnames(calls)[colnames(calls) == 'reads.ratio'] <- 'copy_no'
-  calls[colnames(calls) == 'copy_no'] <- round(calls[colnames(calls) == 'raw_cov'] / (calls[colnames(calls) == 'norm_cov'] / 2))
+  colnames(calls)[colnames(calls) == 'MLCN'] <- 'copy_no'
   calls
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  # read in the data
-  gc <- read.table("gc.txt")$V2
-  canoes.reads <- read.table("canoes.reads.txt")
-  # rename the columns of canoes.reads
-  sample.names <- paste("S", seq(1:26), sep="")
-  names(canoes.reads) <- c("chromosome", "start", "end", sample.names)
-  # create a vector of consecutive target ids
-  target <- seq(1, nrow(canoes.reads))
-  # combine the data into one data frame
-  canoes.reads <- cbind(target, gc, canoes.reads)
-  # call CNVs in each sample
-  # create a vector to hold the results for each sample
-  xcnv.list <- vector('list', length(sample.names))
-  for (i in 1:length(sample.names)){
-    xcnv.list[[i]] <- CallCNVs(sample.names[i], canoes.reads) 
-  }
-  # combine the results into one data frame
-  xcnvs <- do.call('rbind', xcnv.list)
-  # inspect the first two CNV calls
-  print(xcnvs)
 }
+
+#   SAMPLE CNV             INTERVAL     KB CHR   MID_BP    TARGETS NUM_TARG MLCN Q_SOME
+#1      S2 DEL 22:25713988-25756059 42.071  22 25735024 1132..1137        6    1 99
+#2      S3 DEL 22:24373138-24384231 11.093  22 24378684   936..942        7    0 77
+
+
