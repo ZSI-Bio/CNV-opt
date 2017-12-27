@@ -21,6 +21,7 @@ devtools::install('../CODEXCOV')
 devtools::install('../EXOMEDEPTHCOV')
 devtools::install('../CANOESCOV')
 devtools::install('../CNVCALLER.RUNNER')
+devtools::install('../EXOMEDEPTHCOV')
 devtools::install('../CNVCALLER.EVALUATOR')
 
 # withr package with version greater than 2.0.0 is not compatible with testhat (so far)

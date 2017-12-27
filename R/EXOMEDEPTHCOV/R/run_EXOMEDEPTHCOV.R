@@ -47,12 +47,12 @@ run_EXOMEDEPTHCOV <- function(reference_set_select_method,
                        formula = 'cbind(test, reference) ~ 1')
 
       ## ----call.CNVs-----------------------------------------------------------
-      all.exons <- CallCNVs(x = all.exons, 
-                            transition.probability = 10^-4, 
-                            chromosome = rep(chr, nrow(Y)), 
-                            start = start(ref), 
-                            end = end(ref), 
-                            name = rep('name', nrow(Y)))
+      all.exons <- ExomeDepth::CallCNVs(x = all.exons, 
+                                        transition.probability = 10^-4, 
+                                        chromosome = rep(chr, nrow(Y)), 
+                                        start = start(ref), 
+                                        end = end(ref), 
+                                        name = rep('name', nrow(Y)))
       print(all.exons@CNV.calls)
       if (nrow(all.exons@CNV.calls) > 0) {
         actual_sample_column <- data.frame(matrix(rep(actual_sample, nrow(all.exons@CNV.calls)), nrow=nrow(all.exons@CNV.calls))) 

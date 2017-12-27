@@ -38,7 +38,7 @@ DUPLICATION=3
 #     expected distance between targets in a CNV (integer) default is 70,000
 #   Tnum:
 #     expected number of targets in a CNV (integer) default is 6
-#   numrefs
+#   num_of_samples_in_reference_set
 #     maximum number of reference samples to use (integer) default is 30
 #     the weighted variance calculations will take a long time if too 
 #     many reference samples are used
@@ -53,7 +53,7 @@ DUPLICATION=3
 #      TARGETS: target numbers of CNV in the form start..stop
 #      NUM_TARG: how many targets are in the CNV
 #      Q_SOME: a Phred-scaled quality score for the CNV
-CallCNVs <- function(sample.name, counts, p=1e-08, Tnum=6, D=70000, numrefs=30, get.dfs=F, homdel.mean=0.2){
+CallCNVs <- function(sample.name, counts, p=1e-08, Tnum=6, D=70000, reference_set_select_method='canoes', num_of_samples_in_reference_set=30, get.dfs=F, homdel.mean=0.2, target_length){
   if (!sample.name %in% names(counts)){stop("No column for sample ", sample.name, " in counts matrix")}
   if (length(setdiff(names(counts)[1:5], c("target", "chromosome", "start", "end", "gc"))) > 0){
     stop("First five columns of counts matrix must be target, chromosome, start, end, gc")
@@ -80,9 +80,9 @@ CallCNVs <- function(sample.name, counts, p=1e-08, Tnum=6, D=70000, numrefs=30, 
   if (D <= 0){
     stop("parameter D must be positive")
   }
-  if (numrefs <= 0){
-    stop("parameter numrefs must be positive")
-  }
+  #if (numrefs <= 0){
+  #  stop("parameter numrefs must be positive")
+  #}
   sample.names <- colnames(counts)[-seq(1,5)]
   # find mean coverage of probes
   mean.counts <- mean(apply(counts[, sample.names], 2, mean))
@@ -91,11 +91,18 @@ CallCNVs <- function(sample.name, counts, p=1e-08, Tnum=6, D=70000, numrefs=30, 
         function(x, mean.counts) 
                  round(x * mean.counts / mean(x)), mean.counts)
   # calculate covariance of read count across samples
-  cov <- cor(counts[, sample.names], counts[, sample.names])
-  reference.samples <- setdiff(sample.names, sample.name)
-  covariances <- cov[sample.name, reference.samples]
-  reference.samples <- names(sort(covariances, 
-          decreasing=T)[1:min(numrefs, length(covariances))])
+  #cov <- cor(counts[, sample.names], counts[, sample.names])
+  #reference.samples <- setdiff(sample.names, sample.name)
+  #covariances <- cov[sample.name, reference.samples]
+  #reference.samples <- names(sort(covariances, 
+  #        decreasing=T)[1:min(numrefs, length(covariances))])
+  Y <- data.matrix(counts[,6:ncol(counts)])
+  library('REFERENCE.SAMPLE.SET.SELECTOR')
+  reference.samples <- run_REFERENCE.SAMPLE.SET.SELECTOR(sample.name,
+                                                         Y,
+                                                         reference_set_select_method,
+                                                         num_of_samples_in_reference_set,
+                                                         target_length)
   sample.mean.counts <- mean(counts[, sample.name])
   sample.sumcounts <- apply(counts[, reference.samples], 2, sum)
   # normalize reference samples to sample of interest
@@ -146,13 +153,13 @@ CallCNVs <- function(sample.name, counts, p=1e-08, Tnum=6, D=70000, numrefs=30, 
                          counts)
   # if there aren't too many CNVs, calculate the Q_SOME
   if (nrow(cnvs) > 0 & nrow(cnvs) <= 50){
-    qualities <- GenotypeCNVs(cnvs, sample.name, counts, p, Tnum, D, numrefs, 
-                          emission.probs=emission.probs, 
-                          distances=distances)
-    for (i in 1:nrow(cnvs)){
-      cnvs$Q_SOME[i] <- ifelse(cnvs$CNV[i]=="DEL", qualities[i, "SQDel"], 
-                               qualities[i, "SQDup"])
-    }
+    #qualities <- GenotypeCNVs(cnvs, sample.name, counts, p, Tnum, D, numrefs=30, 
+    #                      emission.probs=emission.probs, 
+    #                      distances=distances)
+    #for (i in 1:nrow(cnvs)){
+    #  cnvs$Q_SOME[i] <- ifelse(cnvs$CNV[i]=="DEL", qualities[i, "SQDel"], 
+    #                           qualities[i, "SQDup"])
+    #}
   }
   data <- as.data.frame(cbind(counts$target, counts$mean, var.estimate$var.estimate, counts[, sample.name]))
   names(data) <- c("target", "countsmean", "varestimate", "sample")
@@ -238,7 +245,7 @@ GenotypeCNVs <- function(xcnvs, sample.name, counts, p=1e-08, Tnum=6,
   cnv.intervals <- as.character(xcnvs$INTERVAL)
   # if no emission probs matrix is passed in, generate a new one
   if (is.null(emission.probs)){
-    l <- CallCNVs(sample.name, counts, p, Tnum=6, D=70000, numrefs=30, get.dfs=T)
+    l <- CANOESCOV::CallCNVs(sample.name, counts, p, Tnum=6, D=70000, numrefs=30, get.dfs=T)
     emission.probs <- l[['emission.probs']]
     distances <- l[['distances']]
   }

@@ -20,51 +20,66 @@ run_CANOESCOV <- function(reference_set_select_method,
     }
     Y <- coverageObj1(cov_table, sampname, targets_for_chr, chr)$Y
     Y <- cbind(rep(chr, nrow(Y)), start(ref), end(ref), Y)
+    target_length <- c()
+    for (i in 1:nrow(Y)) {
+      target_length <- c(target_length, width(ref[i]))
+    }
 
+    # TODO better transformation
     write.table(Y, file=paste('cov_', chr, '.tsv', sep=""), quote=FALSE, sep="\t", col.names = F, row.names = F)
     canoes.reads <- read.table(paste('cov_', chr, '.tsv', sep=""))
 
-    # read in the data
     gc <- getgc(chr, ref)
-    #canoes.reads <- Y #read.table(paste('cov_', chr, '.tsv', sep=""))
-    names(canoes.reads) <- c("chromosome", "start", "end", sampname)
-    colnames(canoes.reads) <- c("chromosome", "start", "end", sampname)
     target <- seq(1, nrow(Y))
     canoes.reads <- cbind(target, gc, canoes.reads)
+    sampname <- as.vector(sampname)
     names(canoes.reads) <- c("target", "gc", "chromosome", "start", "end", sampname)
     colnames(canoes.reads) <- c("target", "gc", "chromosome", "start", "end", sampname)
     write.table(as.data.frame(canoes.reads),file="canoes.reads.csv", quote=F, sep=",",row.names=T,col.names=T)
     xcnv.list <- vector('list', length(sampname))
-    print(canoes.reads$chromosome)
     for (i in 1:length(sampname)){
-      xcnv.list[[i]] <- CallCNVs(sampname[i], canoes.reads)
+      xcnv.list[[i]] <- CANOESCOV::CallCNVs(sample.name=sampname[i],
+                                            counts=canoes.reads,
+                                            reference_set_select_method=reference_set_select_method,
+                                            num_of_samples_in_reference_set=num_of_samples_in_reference_set,
+                                            target_length=target_length)
     }
     xcnvs <- do.call('rbind', xcnv.list)
-    xcnvs
+    if (nrow(calls)==0){calls <- matrix(nrow=0, ncol=ncol(xcnvs))} 
+    calls <- rbind(calls, xcnvs)
   }
 
-  # unify names of output columns
-  # DEL -> del
-  # DUP -> dup
-  # generate copy_no
+  # unify results format
   if (nrow(calls) != 0) {
+    calls[colnames(calls) == 'CNV'] <- as.character(unlist(calls[colnames(calls) == 'CNV']))
     calls[calls == 'DEL'] <- 'del'
     calls[calls == 'DUP'] <- 'dup'
-    calls[,1] <- as.character(calls[,1])
-    colnames(calls)[1] <- 'sample_name'
   }
   colnames(calls)[colnames(calls) == 'SAMPLE'] <- 'sample_name'
-  colnames(calls)[colnames(calls) == 'start.p'] <- 'st_exon'
-  colnames(calls)[colnames(calls) == 'end.p'] <- 'ed_exon'
-  colnames(calls)[colnames(calls) == 'type'] <- 'cnv'
-  calls <- calls[,-which(names(calls) %in% c('nexons', 'id'))]
-  colnames(calls)[colnames(calls) == 'start'] <- 'st_bp'
-  colnames(calls)[colnames(calls) == 'end'] <- 'ed_bp'
-  colnames(calls)[colnames(calls) == 'chromosome'] <- 'chr'
-  colnames(calls)[colnames(calls) == 'BF'] <- 'exomedepth_BF'
-  colnames(calls)[colnames(calls) == 'reads.expected'] <- 'norm_cov'
-  colnames(calls)[colnames(calls) == 'reads.observed'] <- 'raw_cov'
+  targets <- as.vector(calls[colnames(calls) == 'TARGETS'])
+  targets <- as.character(unlist(targets))
+  splitted_targets <- do.call(rbind, strsplit(targets, '..', fixed = TRUE))
+  calls <- cbind(calls, splitted_targets)
+  colnames(calls)[colnames(calls) == '1'] <- 'st_exon'
+  colnames(calls)[colnames(calls) == '2'] <- 'ed_exon'
+  intervals <- as.vector(calls[colnames(calls) == 'INTERVAL'])
+  intervals <- as.character(unlist(intervals))
+  splitted_intervals <- do.call(rbind, strsplit(intervals, c(':'), fixed = TRUE))
+  intervals <- as.vector(splitted_intervals[,2])
+  intervals <- as.character(unlist(intervals))
+  splitted_intervals <- do.call(rbind, strsplit(intervals, c('-'), fixed = TRUE))
+  calls <- cbind(calls, splitted_intervals)
+  colnames(calls)[colnames(calls) == '1'] <- 'st_bp'
+  colnames(calls)[colnames(calls) == '2'] <- 'ed_bp'
+  colnames(calls)[colnames(calls) == 'CNV'] <- 'cnv'
+  calls <- calls[,-which(names(calls) %in% c('KB', 'MID_BP', 'NUM_TARG', 'Q_SOME', 'TARGETS', 'INTERVAL'))]
+  colnames(calls)[colnames(calls) == 'CHR'] <- 'chr'
   colnames(calls)[colnames(calls) == 'MLCN'] <- 'copy_no'
+  calls[colnames(calls) == 'sample_name'] <- as.character(unlist(calls[colnames(calls) == 'sample_name']))
+  calls[colnames(calls) == 'st_bp'] <- as.character(unlist(calls[colnames(calls) == 'st_bp']))
+  calls[colnames(calls) == 'ed_bp'] <- as.character(unlist(calls[colnames(calls) == 'ed_bp']))
+  calls[colnames(calls) == 'st_exon'] <- as.character(unlist(calls[colnames(calls) == 'st_exon']))
+  calls[colnames(calls) == 'ed_exon'] <- as.character(unlist(calls[colnames(calls) == 'ed_exon']))
   calls
 }
 
