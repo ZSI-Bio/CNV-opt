@@ -60,19 +60,22 @@ save_calls <- function(calls, table_name, caller, scenario_id, parameters_id, co
     if (caller == "codex"){
       for(i in 1:nrow(calls)) {
         call <- calls[i,]
-        query <- paste("INSERT INTO ",
-        table_name, " (scenario_id, parameters_id, sample_name, chr, cnv, st_bp, ed_bp, st_exon, ed_exon, raw_cov, norm_cov, copy_no, codex_lratio, codex_mBIC, exomedepth_BF) VALUES (",scenario_id,",'", parameters_id, "','", call['sample_name'], "','", call['chr'], "','", call['cnv'], "','", call['st_bp'], "','", call['ed_bp'], "','", call['st_exon'], "','", call['ed_exon'], "','", call['raw_cov'], "','", call['norm_cov'], "','", call['copy_no'], "','", call['codex_lratio'], "','", call['codex_mBIC'], "','0.00');", sep="")
-        writeLines(query,"query.txt")
+        query <- paste("INSERT INTO ", table_name, " (scenario_id, parameters_id, sample_name, chr, cnv, st_bp, ed_bp, st_exon, ed_exon, raw_cov, norm_cov, copy_no, codex_lratio, codex_mBIC, exomedepth_BF) VALUES (",scenario_id,",'", parameters_id, "','", call['sample_name'], "','", call['chr'], "','", call['cnv'], "','", call['st_bp'], "','", call['ed_bp'], "','", call['st_exon'], "','", call['ed_exon'], "','", call['raw_cov'], "','", call['norm_cov'], "','", call['copy_no'], "','", call['codex_lratio'], "','", call['codex_mBIC'], "','0.00');", sep="")
         dbSendUpdate(conn, query)
       }
     } else if (caller == "exomedepth"){
       for(i in 1:nrow(calls)) {
         call <- calls[i,]
-        query <- paste("INSERT INTO ",
-        table_name, " (scenario_id, parameters_id, sample_name, chr, cnv, st_bp, ed_bp, st_exon, ed_exon, raw_cov, norm_cov, copy_no, codex_lratio, codex_mBIC, exomedepth_BF) VALUES (",scenario_id,",'", parameters_id, "','", call[1], "','", call['chr'], "','", call['cnv'], "','", call['st_bp'], "','", call['ed_bp'], "','", call['st_exon'], "','", call['ed_exon'], "','", call['raw_cov'], "','", call['norm_cov'], "','", call['copy_no'], "','0.00','0.00','", call['exomedepth_BF'], "');", sep="")
-        writeLines(query,"query.txt")
+        query <- paste("INSERT INTO ", table_name, " (scenario_id, parameters_id, sample_name, chr, cnv, st_bp, ed_bp, st_exon, ed_exon, raw_cov, norm_cov, copy_no, codex_lratio, codex_mBIC, exomedepth_BF) VALUES (",scenario_id,",'", parameters_id, "','", call[1], "','", call['chr'], "','", call['cnv'], "','", call['st_bp'], "','", call['ed_bp'], "','", call['st_exon'], "','", call['ed_exon'], "','", call['raw_cov'], "','", call['norm_cov'], "','", call['copy_no'], "','0.00','0.00','", call['exomedepth_BF'], "');", sep="")
         dbSendUpdate(conn, query)
-    }
+      }
+    } else if (caller == "canoes"){
+      for(i in 1:nrow(calls)) {
+        call <- calls[i,]
+        query <- paste("INSERT INTO ", table_name, " (scenario_id, parameters_id, sample_name, chr, cnv, st_bp, ed_bp, st_exon, ed_exon, raw_cov, norm_cov, copy_no, codex_lratio, codex_mBIC, exomedepth_BF) VALUES (",scenario_id,",'", parameters_id, "','", call['sample_name'], "','", call['chr'], "','", call['cnv'], "','", call['st_bp'], "','", call['ed_bp'], "','", call['st_exon'], "','", call['ed_exon'], "','0','0','", call['copy_no'], "','0.00','0.00','0.00');", sep="")
+        #writeLines(query,"query.txt")
+        dbSendUpdate(conn, query)
+      }
     } else if(caller == "xhmm") {
     }
   }
@@ -82,7 +85,7 @@ read_coverage_table <- function(cov_table, conn,chr){
   query <- paste("select sample_name,target_id,chr,pos_min,pos_max,read_count from ", cov_table," where chr='",chr,"'", sep="")
   print(query)
   ds <- dbGetQuery(conn, query)
-  # map names of columns: from coverage table to CODEXCOV and EXOMEDEPTHCOV packages
+  # map names of columns: from coverage table to CODEXCOV, EXOMEDEPTHCOV and CANOESCOV packages
   colnames(ds)[colnames(ds) == 'sample_name'] <- 'sample_name'
   colnames(ds)[colnames(ds) == 'target_id'] <- 'target_id'
   colnames(ds)[colnames(ds) == 'chr'] <- 'chr'
@@ -119,6 +122,11 @@ run_caller <- function(parameters, cov_table){
     calls <- run_wrapper_EXOMEDEPTHCOV(parameters$reference_set_select_method,
                                        parameters$num_of_samples_in_reference_set,
                                        cov_table)
+    calls
+  } else if (parameters$caller == "canoes"){
+    calls <- run_wrapper_CANOESCOV(parameters$reference_set_select_method,
+                                   parameters$num_of_samples_in_reference_set,
+                                   cov_table)
     calls
   } else if(parameters$caller == "xhmm") {
   }
