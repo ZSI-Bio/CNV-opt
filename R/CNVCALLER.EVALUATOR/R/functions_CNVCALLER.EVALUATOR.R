@@ -11,8 +11,8 @@ build_intersection_matrix <- function(calls, refs){
                                                 calls[i,"ed_bp"], 
                                                 refs[j,"st_bp"], 
                                                 refs[j,"ed_bp"])
-          call_length <- calls[i,"ed_bp"] - calls[i,"st_bp"]
-          ref_length <- refs[j,"ed_bp"] - refs[j,"st_bp"]
+          call_length <- strtoi(calls[i,"ed_bp"]) - strtoi(calls[i,"st_bp"])
+          ref_length <- strtoi(refs[j,"ed_bp"]) - strtoi(refs[j,"st_bp"])
           overlap_factor <- overlap_length / ((call_length + ref_length) / 2) * 100
           intersection_matrix[i,j] <- round(overlap_factor, 2)
         }
@@ -77,7 +77,7 @@ calc_cnv_frequency <- function(cnv, calls){
 }
 
 calc_overlap_length <- function(min1, max1, min2, max2){
-  overlap_length <- max(0, min(max1, max2) - max(min1, min2))
+  overlap_length <- max(0, min(strtoi(max1), strtoi(max2)) - max(strtoi(min1), strtoi(min2)))
   overlap_length
 }
 

@@ -4,6 +4,7 @@ library(devtools)
 library('CNVCALLER.EVALUATOR')
 library(optparse)
 library(RJDBC)
+library(stringr)
 
 option_list <- list(
   make_option("--paramsTabName", default="public.evaluation_parameters",
