@@ -12,7 +12,7 @@ Description: An extended implementation of the CANOES package in R. It extends
 Depends:
     R (>= 3.2.3),
     devtools (>= 1.13.2),
-    DBI (== 0.7),
+    DBI (== 0.8),
     optparse (== 1.4.4),
     IRanges (>= 2.0.0),
     plyr (>= 1.8.4),
