@@ -2,6 +2,13 @@ pipeline {
     agent any
        stages {
 
+        stage('Building Docker images') {
+                    steps {
+                        echo 'Building Docker images....'
+                        sh './build.sh'
+                    }
+                }
+
         stage('Test R code') {
                     steps {
                         echo 'Testing R code....'
@@ -52,6 +59,14 @@ pipeline {
                             }
 
                 }
+
+        stage('Building Docker images') {
+                    steps {
+                        echo 'Building Docker images....'
+                        sh './build.sh'
+                    }
+                }
+
          stage('Publish to Nexus snapshots and copying assembly fat jar to the edge server') {
                    when {
                          branch 'master'
