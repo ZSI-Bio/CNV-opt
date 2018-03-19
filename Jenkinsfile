@@ -60,7 +60,7 @@ pipeline {
 
                 }
 
-        stage('Building Docker images') {
+        stage('Build Docker images') {
                     steps {
                         echo 'Building Docker images....'
                         sh './build.sh'
