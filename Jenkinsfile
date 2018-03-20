@@ -29,6 +29,7 @@ pipeline {
                                  sh "cd R && R CMD build CODEXCOV/ && curl -v --user ${NEXUS_USER}:${NEXUS_PASS} --upload-file CODEXCOV_0.0.1.tar.gz http://zsibio.ii.pw.edu.pl/nexus/repository/r-zsibio/src/contrib/CODEXCOV_0.0.1.tar.gz"
                                  sh "cd R && R CMD build EXOMEDEPTHCOV/ && curl -v --user ${NEXUS_USER}:${NEXUS_PASS} --upload-file EXOMEDEPTHCOV_0.0.1.tar.gz http://zsibio.ii.pw.edu.pl/nexus/repository/r-zsibio/src/contrib/EXOMEDEPTHCOV_0.0.1.tar.gz"
                                  sh "cd R && R CMD build CANOESCOV/ && curl -v --user ${NEXUS_USER}:${NEXUS_PASS} --upload-file CANOESCOV_0.0.1.tar.gz http://zsibio.ii.pw.edu.pl/nexus/repository/r-zsibio/src/contrib/CANOESCOV_0.0.1.tar.gz"
+                                 sh "cd R && R CMD build CANOES/ && curl -v --user ${NEXUS_USER}:${NEXUS_PASS} --upload-file CANOES_0.0.1.tar.gz http://zsibio.ii.pw.edu.pl/nexus/repository/r-zsibio/src/contrib/CANOES_0.0.1.tar.gz"
                                  sh "cd R && R CMD build CNVCALLER.RUNNER/ && curl -v --user ${NEXUS_USER}:${NEXUS_PASS} --upload-file CNVCALLER.RUNNER_0.0.1.tar.gz http://zsibio.ii.pw.edu.pl/nexus/repository/r-zsibio/src/contrib/CNVCALLER.RUNNER_0.0.1.tar.gz"
                                  sh "cd R && R CMD build CNVCALLER.EVALUATOR/ && curl -v --user ${NEXUS_USER}:${NEXUS_PASS} --upload-file CNVCALLER.EVALUATOR_0.0.1.tar.gz http://zsibio.ii.pw.edu.pl/nexus/repository/r-zsibio/src/contrib/CNVCALLER.EVALUATOR_0.0.1.tar.gz"
                              }
