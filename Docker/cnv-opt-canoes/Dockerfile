@@ -15,3 +15,4 @@ RUN Rscript -e "install.packages('nnls', repos = 'http://cran.us.r-project.org')
 RUN Rscript -e "install.packages('Hmisc', repos = 'http://cran.us.r-project.org')"
 RUN Rscript -e "install.packages('mgcv', repos = 'http://cran.us.r-project.org')"
 RUN Rscript -e "install.packages('plyr', repos = 'http://cran.us.r-project.org')"
+RUN Rscript -e "install.packages('CANOES', repos = 'http://zsibio.ii.pw.edu.pl/nexus/repository/r-all')"
