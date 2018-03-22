@@ -13,8 +13,6 @@ run_TARGET.QC <- function(mapp_thresh,
   #length_thresh_to <- 2000
   #gc_thresh_from <- 20
   #gc_thresh_to <- 80
-  #K_from <- 1
-  #K_to <- 9
   #lmax <- 200
   sampname <- unique(cov_table[,"sample_name"])
   targets <- cov_table[,c("target_id", "chr", "pos_min", "pos_max")]
