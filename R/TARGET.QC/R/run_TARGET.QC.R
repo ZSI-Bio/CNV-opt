@@ -52,8 +52,7 @@ run_TARGET.QC <- function(mapp_thresh,
   cov_table_qc[,"pos_max"] <- strtoi(cov_table_qc[,"pos_max"])
   cov_table_qc[,"target_id"] <- strtoi(cov_table_qc[,"target_id"])
   cov_table_qc[,"read_count"] <- strtoi(cov_table_qc[,"read_count"])
-  cov_table_qc <- cbind(cov_table_qc[,"chr"], cov_table_qc[,"sample_name"], cov_table_qc[,"pos_min"], cov_table_qc[,"pos_max"], cov_table_qc[,"read_count"], cov_table_qc[,"target_id"])
-  colnames(cov_table_qc) <- c("chr", "sample_name", "pos_min", "pos_max", "read_count", "target_id")
+  colnames(cov_table_qc) <- c("sample_name", "target_id", "chr", "pos_min", "pos_max", "read_count")
   write.csv(cov_table_qc, output_cov_table, row.names=F, quote=F)
 }
 
