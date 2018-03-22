@@ -9,7 +9,7 @@ pipeline {
                     }
                 }
 
-        stage('Test R code') {
+        /*stage('Test R code') {
                     steps {
                         echo 'Testing R code....'
                         sh 'docker run -i --rm --network="host" -e CNV_OPT_PSQL_USER="cnv-opt" -e CNV_OPT_PSQL_PASSWORD="zsibio321" -e CNV_OPT_PSQL_DRV_URL="http://zsibio.ii.pw.edu.pl/nexus/repository/zsi-bio-raw/common/jdbc/postgresql-42.1.1.jar" -e CNV_OPT_PSQL_CONN_URL="jdbc:postgresql://cdh00.ii.pw.edu.pl:15432/cnv-opt" -w="/tmp" -v $(pwd | sed "s|/var/jenkins_home|/data/home/jenkins|g")/R:/tmp zsibio.ii.pw.edu.pl:50009/zsi-bio-toolset Rscript tests/run_tests.R'
@@ -19,7 +19,7 @@ pipeline {
                         junit '**R/tests/*.xml'
                       }
                     }
-         }
+         }*/
 
          stage('Build R package') {
                              steps {
