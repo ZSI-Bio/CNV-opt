@@ -5,7 +5,8 @@ run_TARGET.QC <- function(mapp_thresh,
                           length_thresh_to,
                           gc_thresh_from,
                           gc_thresh_to,
-                          cov_table){
+                          input_cov_table,
+                          output_cov_table){
   #mapp_thresh <- 0.9
   #cov_thresh_from <- 20
   #cov_thresh_to <- 4000
@@ -14,6 +15,7 @@ run_TARGET.QC <- function(mapp_thresh,
   #gc_thresh_from <- 20
   #gc_thresh_to <- 80
   #lmax <- 200
+  cov_table <- read.csv(input_cov_table)
   sampname <- unique(cov_table[,"sample_name"])
   targets <- cov_table[,c("target_id", "chr", "pos_min", "pos_max")]
   targets <- targets[!duplicated(targets[,"target_id"]),]
@@ -50,7 +52,7 @@ run_TARGET.QC <- function(mapp_thresh,
   cov_table_qc[,"pos_max"] <- strtoi(cov_table_qc[,"pos_max"])
   cov_table_qc[,"target_id"] <- strtoi(cov_table_qc[,"target_id"])
   cov_table_qc[,"read_count"] <- strtoi(cov_table_qc[,"read_count"])
-  cov_table_qc
+  write.csv(cov_table_qc, output_cov_table)
 }
 
 #  sample_name target_id chr  pos_min  pos_max read_count
