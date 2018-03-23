@@ -1,6 +1,6 @@
-run_REFERENCE.SAMPLE.SET.SELECTOR <- function(input_cov_table,
-                                              select_method,
+run_REFERENCE.SAMPLE.SET.SELECTOR <- function(select_method,
                                               num_refs,
+                                              input_cov_table,
                                               output_reference_file){
 
   cov_table <- read.csv(input_cov_table)
