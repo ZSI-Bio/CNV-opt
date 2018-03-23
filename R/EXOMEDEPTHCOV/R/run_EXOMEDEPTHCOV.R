@@ -1,15 +1,17 @@
 library(ExomeDepth)
 library(methods)
 
-run_EXOMEDEPTHCOV <- function(reference_set_select_method,
-                              num_of_samples_in_reference_set,
-                              cov_table){
+run_EXOMEDEPTHCOV <- function(input_cov_table,
+                              reference_sample_set_file,
+                              output_calls_file){
 
+  con <- file(reference_sample_set_file, open='r')
+  reference_sample_set <- readLines(con)
+  cov_table <- read.csv(input_cov_table)
   sampname <- unique(cov_table[,"sample_name"])
   targets <- cov_table[,c("target_id", "chr", "pos_min", "pos_max")]
   targets <- targets[!duplicated(targets[,"target_id"]),]
   targets <- targets[with(targets, order(target_id)), ]
-  
   calls <- data.frame(matrix(nrow=0, ncol=13))
   chrs <- c(1:22, "X", "Y", paste0("chr",c(1:22, "X", "Y")))
   library(IRanges)
@@ -19,20 +21,16 @@ run_EXOMEDEPTHCOV <- function(reference_set_select_method,
     if (length(ref) == 0) {    # 0 elements for specified chromosome in bed
       next()
     }
-    Y <- coverageObj1(cov_table, sampname, targets_for_chr, chr)$Y
+    Y <- coverageObj1(cov_table, sampname, targets_for_chr)$Y
 
-    for (actual_sample_id in 1:length(sampname)) {
-      actual_sample <- sampname[actual_sample_id]
-      ## ----reference.selection-------------------------------------------------
-      target_length <- c()
-      for (i in 1:nrow(Y)) {
-        target_length <- c(target_length, width(ref[i]))
+    for (i in 1:length(reference_sample_set)) {
+      if (reference_sample_set[[i]] == '') {
+        next()
       }
-      reference_samples <- run_REFERENCE.SAMPLE.SET.SELECTOR(actual_sample,
-                                                             Y,
-                                                             reference_set_select_method,
-                                                             num_of_samples_in_reference_set,
-                                                             target_length)
+      samples <- unlist(strsplit(reference_sample_set[[i]], ','))
+      print(samples)
+      actual_sample <- samples[1]
+      reference_samples <- samples[-1]
 
       ## ----construct.ref-------------------------------------------------------
       my.matrix <- as.matrix(Y[,reference_samples])
@@ -42,7 +40,7 @@ run_EXOMEDEPTHCOV <- function(reference_set_select_method,
 
       ## ----build.complete------------------------------------------------------
       all.exons <- new('ExomeDepth',
-                       test = Y[,actual_sample_id],
+                       test = Y[,actual_sample],
                        reference = my.reference.selected,
                        formula = 'cbind(test, reference) ~ 1')
 
@@ -86,5 +84,5 @@ run_EXOMEDEPTHCOV <- function(reference_set_select_method,
   colnames(calls)[colnames(calls) == 'reads.observed'] <- 'raw_cov'
   colnames(calls)[colnames(calls) == 'reads.ratio'] <- 'copy_no'
   calls[colnames(calls) == 'copy_no'] <- round(calls[colnames(calls) == 'raw_cov'] / (calls[colnames(calls) == 'norm_cov'] / 2))
-  calls
+  write.csv(calls, output_calls_file, row.names=F)
 }
