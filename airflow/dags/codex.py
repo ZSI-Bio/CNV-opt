@@ -36,11 +36,19 @@ select_method = 'exomedepth' # "canoes", "codex" or "exomedepth"
 num_refs = '30'
 reference_sample_set_file = 'reference_sample_set.csv'
 
+### codex parameters
+k_from = '1'
+k_to = '3'
+lmax = '200'
+output_calls_file = 'calls.csv'
+
 run_codex_caller_cmd= " \
 docker pull biodatageeks/cnv-opt-target-qc; \
 docker run --rm -v /tmp:/tmp -w=\"/tmp\" biodatageeks/cnv-opt-target-qc Rscript -e \"library(\'TARGET.QC\');run_TARGET.QC(" + mapp_thresh + "," + cov_thresh_from + "," + cov_thresh_to + "," + length_thresh_from + "," + length_thresh_to + "," + gc_thresh_from + "," + gc_thresh_to + ",'" + raw_cov_table + "','" + qc_cov_table + "')\"; \
 docker pull biodatageeks/cnv-opt-reference-sample-set-selector; \
 docker run --rm -v /tmp:/tmp -w=\"/tmp\" biodatageeks/cnv-opt-reference-sample-set-selector Rscript -e \"library(\'REFERENCE.SAMPLE.SET.SELECTOR\');run_REFERENCE.SAMPLE.SET.SELECTOR('" + select_method + "'," + num_refs + ",'" + qc_cov_table + "','" + reference_sample_set_file + "')\"; \
+docker pull biodatageeks/cnv-opt-codexcov; \
+docker run --rm -v /tmp:/tmp -w=\"/tmp\" biodatageeks/cnv-opt-codexcov Rscript -e \"library(\'CODEXCOV\');run_CODEXCOV(" + k_from + "," + k_to + "," + lmax + ",'" + qc_cov_table + "','" + reference_sample_set_file + "','" + output_calls_file + "')\"; \
 "
 
 run_codex_caller_task= BashOperator (
