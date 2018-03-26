@@ -50,7 +50,7 @@ run_CODEXCOV <- function(K_from,
       samples <- unlist(strsplit(reference_sample_set[[i]], ','))
       actual_sample <- samples[1]
       reference_samples <- samples[-1]
-      samples <- samples[order(samples[,1]),]
+      samples <- sort(samples)
       Y_subset <- Y[,samples]
 
       ###################################################
