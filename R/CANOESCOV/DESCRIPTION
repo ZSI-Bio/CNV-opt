@@ -18,8 +18,7 @@ Depends:
     plyr (>= 1.8.4),
     nnls (>= 1.4.0),
     Hmisc (>= 4.0.0),
-    mgcv (>= 1.8.0),
-    REFERENCE.SAMPLE.SET.SELECTOR (>= 0.0.1)
+    mgcv (>= 1.8.0)
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
