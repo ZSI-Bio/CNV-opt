@@ -1,5 +1,5 @@
 library(methods)
-library(CODEX)
+#library(CODEX)
 
 run_CANOESCOV <- function(input_cov_table,
                           reference_sample_set_file,
