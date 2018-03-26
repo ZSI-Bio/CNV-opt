@@ -14,8 +14,6 @@ coverageObj1 <- function(cov_table, sampname, targets_for_chr, chr){
 
 # from CODEX package
 getgc <- function(chr, ref) {
-  library(GenomeInfoDb)
-  library(BSgenome.Hsapiens.UCSC.hg19)
   if (chr == "X" | chr == "x" | chr == "chrX" | chr == "chrx") {
     chrtemp <- 23
   } else if (chr == "Y" | chr == "y" | chr == "chrY" | chr == "chry") {

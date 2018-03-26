@@ -2,13 +2,6 @@ pipeline {
     agent any
        stages {
 
-        stage('Building Docker images') {
-                    steps {
-                        echo 'Building Docker images....'
-                        sh './build.sh'
-                    }
-                }
-
         /*stage('Test R code') {
                     steps {
                         echo 'Testing R code....'

@@ -1,5 +1,10 @@
 library(methods)
-#library(CODEX)
+library(IRanges)
+library(BSgenome.Hsapiens.UCSC.hg19)
+library(Biostrings)
+library(Rsamtools)
+library(GenomeInfoDb)
+library(S4Vectors)
 
 run_CANOESCOV <- function(input_cov_table,
                           reference_sample_set_file,
