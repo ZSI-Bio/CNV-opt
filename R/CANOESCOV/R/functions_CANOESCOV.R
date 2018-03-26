@@ -68,6 +68,12 @@ getgc <- function(chr, ref) {
 #      NUM_TARG: how many targets are in the CNV
 #      Q_SOME: a Phred-scaled quality score for the CNV
 CallCNVs <- function(sample.name, reference.samples, counts, p=1e-08, Tnum=6, D=70000, get.dfs=F, homdel.mean=0.2){
+  library(IRanges)
+  library(BSgenome.Hsapiens.UCSC.hg19)
+  library(Biostrings)
+  library(Rsamtools)
+  library(GenomeInfoDb)
+  library(S4Vectors)
   if (!sample.name %in% names(counts)){stop("No column for sample ", sample.name, " in counts matrix")}
   if (length(setdiff(names(counts)[1:5], c("target", "chromosome", "start", "end", "gc"))) > 0){
     stop("First five columns of counts matrix must be target, chromosome, start, end, gc")
