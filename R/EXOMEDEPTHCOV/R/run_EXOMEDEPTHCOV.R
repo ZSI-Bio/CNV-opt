@@ -28,7 +28,6 @@ run_EXOMEDEPTHCOV <- function(input_cov_table,
         next()
       }
       samples <- unlist(strsplit(reference_sample_set[[i]], ','))
-      print(samples)
       actual_sample <- samples[1]
       reference_samples <- samples[-1]
 
