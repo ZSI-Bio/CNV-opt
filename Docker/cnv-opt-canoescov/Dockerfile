@@ -7,5 +7,6 @@ RUN Rscript -e "source('https://bioconductor.org/biocLite.R');biocLite('Biostrin
 RUN Rscript -e "source('https://bioconductor.org/biocLite.R');biocLite('Rsamtools')"
 RUN Rscript -e "source('https://bioconductor.org/biocLite.R');biocLite('GenomeInfoDb')"
 RUN Rscript -e "source('https://bioconductor.org/biocLite.R');biocLite('S4Vectors')"
+RUN Rscript -e "source('https://bioconductor.org/biocLite.R');biocLite('CODEX')"
 
 RUN Rscript -e "install.packages('CANOESCOV', repos = 'http://zsibio.ii.pw.edu.pl/nexus/repository/r-all')"
