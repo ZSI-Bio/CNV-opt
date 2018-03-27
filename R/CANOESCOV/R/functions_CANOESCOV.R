@@ -74,6 +74,7 @@ CallCNVs <- function(sample.name, reference.samples, counts, p=1e-08, Tnum=6, D=
   library(Rsamtools)
   library(GenomeInfoDb)
   library(S4Vectors)
+  library(CANOES)
   if (!sample.name %in% names(counts)){stop("No column for sample ", sample.name, " in counts matrix")}
   if (length(setdiff(names(counts)[1:5], c("target", "chromosome", "start", "end", "gc"))) > 0){
     stop("First five columns of counts matrix must be target, chromosome, start, end, gc")
