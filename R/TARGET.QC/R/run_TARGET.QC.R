@@ -19,6 +19,8 @@ run_TARGET.QC <- function(mapp_thresh,
   Y <- read.csv(input_cov_table)
   sampname <- colnames(Y)
   targets <- read.delim(input_bed)
+  rownames(Y) <- 1:nrow(Y)
+  rownames(targets) <- 1:nrow(targets)
   ref <- IRanges(start = targets[,"st_bp"], end = targets[,"ed_bp"])
   gcmapp1_result <- gcmapp1(targets[1,"chr"], ref)
   gc <- gcmapp1_result$gc
@@ -31,6 +33,6 @@ run_TARGET.QC <- function(mapp_thresh,
   ref_qc <- qcObj1_result$ref_qc
   colnames(Y_qc) <- sampname_qc
   write.csv(Y_qc, output_cov_table, row.names=F, quote=F)
-  write.csv(targets[rownames(ref_qc),], output_bed, row.names=F, quote=F)
+  write.csv(targets[rownames(Y_qc),], output_bed, row.names=F, quote=F)
 }
 
