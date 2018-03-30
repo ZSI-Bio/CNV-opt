@@ -6,7 +6,9 @@ run_TARGET.QC <- function(mapp_thresh,
                           gc_thresh_from,
                           gc_thresh_to,
                           input_cov_table,
-                          output_cov_table){
+                          output_cov_table,
+                          input_bed,
+                          output_bed){
   #mapp_thresh <- 0.9
   #cov_thresh_from <- 20
   #cov_thresh_to <- 4000
@@ -14,45 +16,21 @@ run_TARGET.QC <- function(mapp_thresh,
   #length_thresh_to <- 2000
   #gc_thresh_from <- 20
   #gc_thresh_to <- 80
-  #lmax <- 200
-  cov_table <- read.csv(input_cov_table)
-  sampname <- unique(cov_table[,"sample_name"])
-  targets <- cov_table[,c("target_id", "chr", "pos_min", "pos_max")]
-  targets <- targets[!duplicated(targets[,"target_id"]),]
-  targets <- targets[with(targets, order(target_id)), ]
-  cov_table_qc <- matrix(nrow=0, ncol=6)
-  colnames(cov_table_qc) <- colnames(cov_table)
-
-  chrs <- c(1:22, "X", "Y", paste0("chr",c(1:22, "X", "Y")))
-  for(chr in chrs) {
-    targets_for_chr <- targets[targets[,"chr"] == chr,]
-    ref <- IRanges(start = targets_for_chr[,"pos_min"], end = targets_for_chr[,"pos_max"])
-    if (length(ref) == 0) {    # 0 elements for specified chromosome in bed
-      next()
-    }
-    Y <- coverageObj1(cov_table, sampname, targets_for_chr, chr)$Y
-    gcmapp1_result <- gcmapp1(chr, ref)
-    gc <- gcmapp1_result$gc
-    mapp <- gcmapp1_result$mapp
-
-    qcObj1_result <- qcObj1(Y, sampname, chr, ref, mapp, gc, cov_thresh = c(cov_thresh_from, cov_thresh_to), 
-                        length_thresh = c(length_thresh_from, length_thresh_to), mapp_thresh, 
-                        gc_thresh = c(gc_thresh_from, gc_thresh_to))
-    Y_qc <- qcObj1_result$Y_qc
-    sampname_qc <- qcObj1_result$sampname_qc
-    ref_qc <- qcObj1_result$ref_qc
-    colnames(Y_qc) <- sampname_qc
-    for(sample in colnames(Y_qc)) {
-      new_cov_table_qc_rows <- cbind(sample, rownames(Y_qc), chr, start(ref_qc), end(ref_qc), Y_qc[,sample])
-      cov_table_qc <- rbind(cov_table_qc, new_cov_table_qc_rows)
-    }
-  }
-  cov_table_qc <- as.data.frame(cov_table_qc)
-  cov_table_qc[,"pos_min"] <- strtoi(cov_table_qc[,"pos_min"])
-  cov_table_qc[,"pos_max"] <- strtoi(cov_table_qc[,"pos_max"])
-  cov_table_qc[,"target_id"] <- strtoi(cov_table_qc[,"target_id"])
-  cov_table_qc[,"read_count"] <- strtoi(cov_table_qc[,"read_count"])
-  colnames(cov_table_qc) <- c("sample_name", "target_id", "chr", "pos_min", "pos_max", "read_count")
-  write.csv(cov_table_qc, output_cov_table, row.names=F, quote=F)
+  Y <- read.csv(input_cov_table)
+  sampname <- colnames(Y)
+  targets <- read.delim(input_bed)
+  ref <- IRanges(start = targets[,"st_bp"], end = targets[,"ed_bp"])
+  gcmapp1_result <- gcmapp1(targets[1,"chr"], ref)
+  gc <- gcmapp1_result$gc
+  mapp <- gcmapp1_result$mapp
+  qcObj1_result <- qcObj1(Y, sampname, targets[1,"chr"], ref, mapp, gc, cov_thresh = c(cov_thresh_from, cov_thresh_to), 
+                          length_thresh = c(length_thresh_from, length_thresh_to), mapp_thresh, 
+                          gc_thresh = c(gc_thresh_from, gc_thresh_to))
+  Y_qc <- qcObj1_result$Y_qc
+  sampname_qc <- qcObj1_result$sampname_qc
+  ref_qc <- qcObj1_result$ref_qc
+  colnames(Y_qc) <- sampname_qc
+  write.csv(Y_qc, output_cov_table, row.names=F, quote=F)
+  write.csv(ref_qc, output_bed, row.names=F, quote=F)
 }
 
