@@ -4,7 +4,7 @@ run_REFERENCE.SAMPLE.SET.SELECTOR <- function(select_method,
                                               input_bed,
                                               output_reference_file){
 
-  Y <- read.csv(input_cov_table)
+  Y <- data.matrix(read.csv(input_cov_table))
   sampname <- colnames(Y)
   targets <- read.delim(input_bed)
   target_length <- targets[,"st_bp"] - targets[,"ed_bp"]
