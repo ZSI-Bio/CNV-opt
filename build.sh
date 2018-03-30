@@ -36,11 +36,11 @@ do
     cd $dir
     if [[ ${image} == "biodatageeks/cnv-opt-reference-sample-set-selector" ]] || [[ ${image} == "biodatageeks/cnv-opt-codexcov" ]]; then
       echo "Rebuild of ${image} image forced..."
-      docker build --build-arg CACHE_DATE=$(date +%Y-%m-%d:%H:%M:%S) -t $image:$version .
-      docker build --build-arg CACHE_DATE=$(date +%Y-%m-%d:%H:%M:%S) -t $image:latest .
+      docker build --no-cache --build-arg CACHE_DATE=$(date +%Y-%m-%d:%H:%M:%S) -t $image:$version .
+      docker build --no-cache --build-arg CACHE_DATE=$(date +%Y-%m-%d:%H:%M:%S) -t $image:latest .
     else
-      docker build --no-cache -t $image:$version .
-      docker build --no-cache -t $image:latest .
+      docker build -t $image:$version .
+      docker build -t $image:latest .
     fi
     if [[ ${BUILD_MODE} != "local" ]]; then
       docker push docker.io/$image:latest
