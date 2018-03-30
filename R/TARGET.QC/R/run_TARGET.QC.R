@@ -31,6 +31,6 @@ run_TARGET.QC <- function(mapp_thresh,
   ref_qc <- qcObj1_result$ref_qc
   colnames(Y_qc) <- sampname_qc
   write.csv(Y_qc, output_cov_table, row.names=F, quote=F)
-  write.csv(ref[rownames(ref_qc),], output_bed, row.names=F, quote=F)
+  write.csv(targets[rownames(ref_qc),], output_bed, row.names=F, quote=F)
 }
 
