@@ -12,6 +12,7 @@ run_REFERENCE.SAMPLE.SET.SELECTOR <- function(select_method,
 
   for(i in 1:length(sampname)) {
     investigated_sample <- as.character(sampname[i])
+    print(paste("Processing ", investigated_sample, " sample ...", sep=""))
     if(select_method == "canoes") {
       reference_samples_for_investigated_sample <- canoes_method(investigated_sample, Y, num_refs)$reference_samples
       reference_samples[[i]] <- c(investigated_sample, reference_samples_for_investigated_sample)
