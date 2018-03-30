@@ -35,7 +35,7 @@ do
   if [ $diffTs -lt $MAX_COMMIT_TS_DIFF ]; then
     cd $dir
     if [[ ${image} == "biodatageeks/cnv-opt-reference-sample-set-selector" ]] || [[ ${image} == "biodatageeks/cnv-opt-codexcov" ]]; then
-      echo "Rebuilf of ${image} image forced..."
+      echo "Rebuild of ${image} image forced..."
       docker build --build-arg CACHE_DATE=$(date +%Y-%m-%d:%H:%M:%S) -t $image:$version .
       docker build --build-arg CACHE_DATE=$(date +%Y-%m-%d:%H:%M:%S) -t $image:latest .
     else
