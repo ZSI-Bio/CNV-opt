@@ -17,7 +17,6 @@ run_CODEXCOV <- function(K_from,
   con <- file(reference_sample_set_file, open='r')
   reference_sample_set <- readLines(con)
   Y <- read.csv(input_cov_table)
-  sampname <- colnames(Y)
   targets <- read.delim(input_bed)
   rownames(Y) <- 1:nrow(Y)
   rownames(targets) <- 1:nrow(targets)
