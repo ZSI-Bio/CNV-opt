@@ -14,8 +14,6 @@ run_EXOMEDEPTHCOV <- function(input_cov_table,
   rownames(Y) <- 1:nrow(Y)
   rownames(targets) <- 1:nrow(targets)
   calls <- data.frame(matrix(nrow=0, ncol=13))
-  library(IRanges)
-  ref <- IRanges(start = targets[,"st_bp"], end = targets[,"ed_bp"])
 
   for (i in 1:length(reference_sample_set)) {
     if (reference_sample_set[[i]] == '') {
@@ -40,9 +38,9 @@ run_EXOMEDEPTHCOV <- function(input_cov_table,
     ## ----call.CNVs-----------------------------------------------------------
     all.exons <- ExomeDepth::CallCNVs(x = all.exons, 
                                       transition.probability = 10^-4, 
-                                      chromosome = rep(targets[1,'chr'], nrow(Y)), 
-                                      start = start(ref), 
-                                      end = end(ref), 
+                                      chromosome = targets[,"chr"], 
+                                      start = targets[,"st_bp"], 
+                                      end = targets[,"ed_bp"], 
                                       name = rep('name', nrow(Y)))
     print(all.exons@CNV.calls)
     if (nrow(all.exons@CNV.calls) > 0) {
