@@ -1,15 +1,13 @@
 run_REFERENCE.SAMPLE.SET.SELECTOR <- function(select_method,
                                               num_refs,
                                               input_cov_table,
+                                              input_bed,
                                               output_reference_file){
 
-  cov_table <- read.csv(input_cov_table)
-  sampname <- unique(cov_table[,"sample_name"])
-  targets <- cov_table[,c("target_id", "chr", "pos_min", "pos_max")]
-  targets <- targets[!duplicated(targets[,"target_id"]),]
-  targets <- targets[with(targets, order(target_id)), ]
-  target_length <- targets[,"pos_max"] - targets[,"pos_min"]
-  Y <- coverageObj1(cov_table, sampname, targets)$Y
+  Y <- read.csv(input_cov_table)
+  sampname <- colnames(Y)
+  targets <- read.delim(input_bed)
+  target_length <- targets[,"st_bp"] - targets[,"ed_bp"]
   reference_samples <- list()
 
   for(i in 1:length(sampname)) {
