@@ -38,7 +38,7 @@ run_CODEXCOV <- function(K_from,
     actual_sample <- samples[1]
     reference_samples <- samples[-1]
     samples <- sort(samples)
-    Y_subset <- Y[,samples]
+    Y_subset <- as.matrix(Y[,samples])
 
     ###################################################
     ### code chunk number 7: normObj1
