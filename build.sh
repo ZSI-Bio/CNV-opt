@@ -34,14 +34,14 @@ do
   diffTs=`echo "$(date +%s) - $(git log -n 1 --pretty=format:%at ${dir})" | bc`
   if [ $diffTs -lt $MAX_COMMIT_TS_DIFF ]; then
     cd $dir
-    if [[ ${image} == "biodatageeks/cnv-opt-codexcov" ]]; then
-      echo "Rebuild of ${image} image forced..."
-      docker build --no-cache --build-arg CACHE_DATE=$(date +%Y-%m-%d:%H:%M:%S) -t $image:$version .
-      docker build --no-cache --build-arg CACHE_DATE=$(date +%Y-%m-%d:%H:%M:%S) -t $image:latest .
-    else
+    #if [[ ${image} == "biodatageeks/cnv-opt-codexcov" ]]; then
+    #  echo "Rebuild of ${image} image forced..."
+    #  docker build --no-cache --build-arg CACHE_DATE=$(date +%Y-%m-%d:%H:%M:%S) -t $image:$version .
+    #  docker build --no-cache --build-arg CACHE_DATE=$(date +%Y-%m-%d:%H:%M:%S) -t $image:latest .
+    #else
       docker build -t $image:$version .
       docker build -t $image:latest .
-    fi
+    #fi
     if [[ ${BUILD_MODE} != "local" ]]; then
       docker push docker.io/$image:latest
       docker push docker.io/$image:$version
