@@ -3,5 +3,8 @@ MAINTAINER biodatageeks <team@biodatageeks.ii.pw.edu.pl>
 
 ARG CACHE_DATE=unknown
 
+RUN Rscript -e "source('https://bioconductor.org/biocLite.R');biocLite('GenomeInfoDb')"
+RUN Rscript -e "source('https://bioconductor.org/biocLite.R');biocLite('BSgenome.Hsapiens.UCSC.hg19')"
+
 RUN Rscript -e "install.packages('EXOMECOPYCOV', repos = 'http://zsibio.ii.pw.edu.pl/nexus/repository/r-all')"
 

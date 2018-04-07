@@ -11,4 +11,5 @@ RUN apt-get update && \
     apt-get upgrade -y && \
     apt-get install -y r-base libssl-dev libssh2-1-dev libxml2-dev libcurl4-openssl-dev libpq-dev
 
-RUN Rscript -e "source('https://bioconductor.org/biocLite.R');biocLite('IRanges');biocLite('exomeCopy')"
+RUN Rscript -e "source('https://bioconductor.org/biocLite.R');biocLite('IRanges')"
+RUN Rscript -e "source('https://bioconductor.org/biocLite.R');biocLite('exomeCopy')"
