@@ -12,8 +12,9 @@ RUN apt-get update && \
     apt-get install -y r-base libssl-dev libssh2-1-dev libxml2-dev libcurl4-openssl-dev libpq-dev wget
 
 RUN Rscript -e "source('https://bioconductor.org/biocLite.R');biocLite('IRanges')"
+RUN Rscript -e "source('https://bioconductor.org/biocLite.R');biocLite('GenomicRanges')"
+RUN Rscript -e "source('https://bioconductor.org/biocLite.R');biocLite('Rsamtools')"
+RUN Rscript -e "source('https://bioconductor.org/biocLite.R');biocLite('GenomeInfoDb')"
 
 RUN wget http://bioconductor.org/packages/3.5/bioc/src/contrib/exomeCopy_1.22.0.tar.gz
 RUN Rscript -e "install.packages('exomeCopy_1.22.0.tar.gz', repos = NULL, type='source')"
-
-RUN Rscript -e "source('https://bioconductor.org/biocLite.R');biocLite('exomeCopy')"
