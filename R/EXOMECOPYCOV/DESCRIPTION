@@ -15,7 +15,7 @@ Depends:
     DBI (== 0.8),
     optparse (== 1.4.4),
     IRanges (>= 2.0.0),
-    exomeCopy (== 1.24)
+    exomeCopy (== 1.22)
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
