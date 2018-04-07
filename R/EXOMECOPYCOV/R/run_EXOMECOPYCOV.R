@@ -9,7 +9,7 @@ run_EXOMECOPYCOV <- function(input_cov_table,
   con <- file(reference_sample_set_file, open='r')
   reference_sample_set <- readLines(con)
   Y <- read.csv(input_cov_table)
-  sampname <- colnames(Y)
+  sample.names <- colnames(Y)
   targets <- read.delim(input_bed)
   rownames(Y) <- 1:nrow(Y)
   rownames(targets) <- 1:nrow(targets)
@@ -18,7 +18,6 @@ run_EXOMECOPYCOV <- function(input_cov_table,
   if (length(ref) == 0) {    # 0 elements for specified chromosome in bed
     next()
   }
-  sample.names <- sampname[,1]
   target <- GRanges(seqname = chr, IRanges(start = start(ref) + 1, end = end(ref)))
   gc <- getgc(chr, ref)
 
