@@ -30,3 +30,10 @@ exomedepth_method <- function(investigated_sample, Y, num_refs, target_length){
   } 
   return(list(reference_samples=reference_samples))
 }
+
+random_method <- function(investigated_sample, Y, num_refs){
+  samples <- colnames(Y)
+  reference_samples <- setdiff(samples, investigated_sample)
+  reference_samples <- reference_samples[sample(1:length(reference_samples), num_refs, replace=F)]
+  return(list(reference_samples=reference_samples))
+}

@@ -25,6 +25,9 @@ run_REFERENCE.SAMPLE.SET.SELECTOR <- function(select_method,
     } else if(select_method == "clamms") {
       #reference_samples_for_investigated_sample <- clamms_method(investigated_sample, Y, num_refs)$reference_samples
       #reference_samples[[i]] <- c(investigated_sample, reference_samples_for_investigated_sample)
+    } else if(select_method == "random") {
+      reference_samples_for_investigated_sample <- random_method(investigated_sample, Y, num_refs, target_length)$reference_samples
+      reference_samples[[i]] <- c(investigated_sample, reference_samples_for_investigated_sample)
     }
   }
   resultant_string <- ''
