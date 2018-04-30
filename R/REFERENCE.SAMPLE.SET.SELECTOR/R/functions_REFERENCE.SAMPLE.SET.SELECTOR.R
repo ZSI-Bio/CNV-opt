@@ -12,6 +12,17 @@ canoes_method <- function(investigated_sample, Y, num_refs){
   return(list(reference_samples=reference_samples))
 }
 
+canoes_cov_thresh_method <- function(investigated_sample, Y, cov_thresh){
+  samples <- colnames(Y)
+  cov <- cor(Y[, samples], Y[, samples])
+  reference_samples <- setdiff(samples, investigated_sample)
+  covariances <- cov[investigated_sample, reference_samples]
+  num_refs <- sum(covariances > cov_thresh)
+  reference_samples <- names(sort(covariances, 
+          decreasing=T)[1:num_refs])
+  return(list(reference_samples=reference_samples))
+}
+
 exomedepth_method <- function(investigated_sample, Y, num_refs, target_length){
   library(ExomeDepth)
   samples <- colnames(Y)
