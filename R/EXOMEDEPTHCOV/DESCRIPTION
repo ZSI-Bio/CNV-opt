@@ -12,7 +12,7 @@ Description: An extended implementation of the ExomeDepth package in R. It exten
 Depends:
     R (>= 3.2.3),
     devtools (>= 1.13.2),
-    DBI (== 0.8),
+    DBI (>= 0.8),
     optparse (== 1.4.4),
     IRanges (>= 2.0.0),
     ExomeDepth (>= 1.1.10),
