@@ -40,7 +40,7 @@ run_EXOMECOPYCOV <- function(input_cov_table,
     rdata[["log.bg"]] <- log(rdata$bg + .1) 
     rdata[["width"]] <- width(ref)
 
-    lapply(seqlevels(target), function(seq.name) {
+    fit.list <- lapply(seqlevels(target), function(seq.name) {
       print(paste("Processing sample: ", actual_sample, sep=""))
       exomeCopy(rdata, actual_sample, X.names = c("log.bg", "gc", "gc.sq", "width"), S = 0:4, d = 2)
     })
