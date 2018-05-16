@@ -8,6 +8,7 @@ RUN pwd
 RUN pwd
 RUN pwd
 RUN pwd
+RUN pwd
 
 RUN Rscript -e "install.packages('EXOMECOPYCOV', repos = 'http://zsibio.ii.pw.edu.pl/nexus/repository/r-all')"
 

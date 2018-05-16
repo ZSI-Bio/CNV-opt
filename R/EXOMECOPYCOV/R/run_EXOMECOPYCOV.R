@@ -20,7 +20,8 @@ run_EXOMECOPYCOV <- function(input_cov_table,
   target <- GRanges(seqname = chr, IRanges(start = start(ref) + 1, end = end(ref)))
   gc <- getgc(chr, ref)
 
-  rdata_org <- RangedData(IRanges(start=start(ref), end=end(ref)), space=rep(chr,nrow(Y)), universe="hg19", gc=gc, gc.sq=gc^2)  
+  rdata_org <- RangedData(IRanges(start=start(ref), end=end(ref)), space=rep(chr,nrow(Y)), universe="hg19", gc=gc, gc.sq=gc^2) 
+  finalcall <- matrix(nrow=0, ncol=13)
 
   for (i in 1:length(reference_sample_set)) {
     if (reference_sample_set[[i]] == '') {
@@ -48,9 +49,11 @@ run_EXOMECOPYCOV <- function(input_cov_table,
       })
     })
     compiled.segments <- compileCopyCountSegments(fit.list)
-    print(compiled.segments)
+    finalcallIt <- unify_calls_format(compiled.segments, chr)$calls
+    if (nrow(finalcall)==0){finalcall <- matrix(nrow=0, ncol=ncol(finalcallIt))}
+    finalcall <- rbind(finalcall, finalcallIt)
+    print(finalcallIt)
 
   }
-  calls <- unify_calls_format(compiled.segments, chr)$calls
-  write.csv(calls, output_calls_file, row.names=F)
+  write.csv(finalcall, output_calls_file, row.names=F)
 }
