@@ -40,7 +40,7 @@ run_EXOMECOPYCOV <- function(input_cov_table,
     rdata[["log.bg"]] <- log(rdata$bg + .1) 
     rdata[["width"]] <- width(ref)
 
-    sample.name <- c(actual_sample)
+    samples <- c(actual_sample)
     fit.list <- lapply(samples, function(sample.name) {
       lapply(seqlevels(target), function(seq.name) {
         print(paste("Processing sample: ", sample.name, sep=""))
