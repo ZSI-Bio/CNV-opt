@@ -1,8 +1,6 @@
 FROM biodatageeks/cnv-opt-exomecopy
 MAINTAINER biodatageeks <team@biodatageeks.ii.pw.edu.pl>
 
-ARG CACHE_DATE=unknown
-
 RUN Rscript -e "source('https://bioconductor.org/biocLite.R');biocLite('GenomeInfoDb')"
 RUN Rscript -e "source('https://bioconductor.org/biocLite.R');biocLite('BSgenome.Hsapiens.UCSC.hg19')"
 
