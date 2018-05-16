@@ -40,9 +40,12 @@ run_EXOMECOPYCOV <- function(input_cov_table,
     rdata[["log.bg"]] <- log(rdata$bg + .1) 
     rdata[["width"]] <- width(ref)
 
-    fit.list <- lapply(seqlevels(target), function(seq.name) {
-      print(paste("Processing sample: ", actual_sample, sep=""))
-      exomeCopy(rdata, actual_sample, X.names = c("log.bg", "gc", "gc.sq", "width"), S = 0:4, d = 2)
+    sample.name <- c(actual_sample)
+    fit.list <- lapply(samples, function(sample.name) {
+      lapply(seqlevels(target), function(seq.name) {
+        print(paste("Processing sample: ", sample.name, sep=""))
+        exomeCopy(rdata, sample.name, X.names = c("log.bg", "gc", "gc.sq", "width"), S = 0:4, d = 2)
+      })
     })
     compiled.segments <- compileCopyCountSegments(fit.list)
     print(compiled.segments)
