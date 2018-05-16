@@ -9,7 +9,6 @@ run_EXOMECOPYCOV <- function(input_cov_table,
   con <- file(reference_sample_set_file, open='r')
   reference_sample_set <- readLines(con)
   Y <- read.csv(input_cov_table)
-  sample.names <- colnames(Y)
   targets <- read.delim(input_bed)
   rownames(Y) <- 1:nrow(Y)
   rownames(targets) <- 1:nrow(targets)
@@ -21,23 +20,34 @@ run_EXOMECOPYCOV <- function(input_cov_table,
   target <- GRanges(seqname = chr, IRanges(start = start(ref) + 1, end = end(ref)))
   gc <- getgc(chr, ref)
 
-  rdata <- RangedData(IRanges(start=start(ref), end=end(ref)), space=rep(chr,nrow(Y)), universe="hg19", gc=gc, gc.sq=gc^2)  
+  rdata_org <- RangedData(IRanges(start=start(ref), end=end(ref)), space=rep(chr,nrow(Y)), universe="hg19", gc=gc, gc.sq=gc^2)  
 
-  for(sample.name in sample.names) {
-    rdata[[sample.name]] <- Y[,sample.name]
-  }
+  for (i in 1:length(reference_sample_set)) {
+    if (reference_sample_set[[i]] == '') {
+      next()
+    }
+    samples <- unlist(strsplit(reference_sample_set[[i]], ','))
+    actual_sample <- samples[1]
+    reference_samples <- samples[-1]
+    samples <- sort(samples)
+    rdata <- rdata_org
 
-  rdata[["bg"]] <- generateBackground(sample.names, rdata, median)
-  rdata[["log.bg"]] <- log(rdata$bg + .1) 
-  rdata[["width"]] <- width(ref)
+    for(sample.name in samples) {
+      rdata[[sample.name]] <- Y[,sample.name]
+    }
 
-  fit.list <- lapply(sample.names, function(sample.name) {
+    rdata[["bg"]] <- generateBackground(samples, rdata, median)
+    rdata[["log.bg"]] <- log(rdata$bg + .1) 
+    rdata[["width"]] <- width(ref)
+
     lapply(seqlevels(target), function(seq.name) {
-      print(paste("Processing sample: ", sample.name, sep=""))
-      exomeCopy(rdata, sample.name, X.names = c("log.bg", "gc", "gc.sq", "width"), S = 0:4, d = 2)
+      print(paste("Processing sample: ", actual_sample, sep=""))
+      exomeCopy(rdata, actual_sample, X.names = c("log.bg", "gc", "gc.sq", "width"), S = 0:4, d = 2)
     })
-  })
-  compiled.segments <- compileCopyCountSegments(fit.list)
+    compiled.segments <- compileCopyCountSegments(fit.list)
+    print(compiled.segments)
+
+  }
   calls <- unify_calls_format(compiled.segments, chr)$calls
   write.csv(calls, output_calls_file, row.names=F)
 }
