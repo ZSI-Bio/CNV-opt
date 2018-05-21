@@ -32,6 +32,9 @@ run_REFERENCE.SAMPLE.SET.SELECTOR <- function(select_method,
     } else if(select_method == "canoes_cov_thresh") {
       reference_samples_for_investigated_sample <- canoes_cov_thresh_method(investigated_sample, Y, cov_thresh)$reference_samples
       reference_samples[[i]] <- c(investigated_sample, reference_samples_for_investigated_sample)
+    } else if(select_method == "kmeans") {
+      reference_samples_for_investigated_sample <- kmeans_method(investigated_sample, Y, num_refs)$reference_samples
+      reference_samples[[i]] <- c(investigated_sample, reference_samples_for_investigated_sample)
     }
   }
   resultant_string <- ''

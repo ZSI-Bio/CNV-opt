@@ -48,3 +48,33 @@ random_method <- function(investigated_sample, Y, num_refs){
   reference_samples <- reference_samples[sample(1:length(reference_samples), num_refs, replace=F)]
   return(list(reference_samples=reference_samples))
 }
+
+kmeans_method <- function(investigated_sample, Y, number_of_clusters){
+  samples <- colnames(Y)
+  cov <- cor(Y[, samples], Y[, samples])
+  d <- cov
+  for(i in 1:nrow(d)) {
+    d[i,] <- cov[samples[i], samples]
+  }
+  d <- 1-d
+  c <- c()
+  for(i in 1:ncol(d)-1) {
+    c <- c(c, d[(i+1):nrow(d),i])
+  }
+  d <- dist(d)
+  for(i in 1:length(d)) {
+    d[i] <- c[i]
+  }
+  km1 <- kmeans(d, number_of_clusters, nstart=100)
+  cluster_id <- km1$cluster[investigated_sample]
+  reference_samples <- c()
+  list_index <- 1
+  for(i in km1$cluster) {
+    if(i == cluster_id) {
+      reference_samples <- c(reference_samples, sampname_qc[list_index])
+    }
+    list_index <- list_index + 1
+  }
+  reference_samples <- setdiff(reference_samples, investigated_sample)
+  return(list(reference_samples=reference_samples))
+}
