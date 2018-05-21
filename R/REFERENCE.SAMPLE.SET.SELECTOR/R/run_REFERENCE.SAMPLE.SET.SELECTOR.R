@@ -11,7 +11,7 @@ run_REFERENCE.SAMPLE.SET.SELECTOR <- function(select_method,
   target_length <- targets[,"st_bp"] - targets[,"ed_bp"]
   reference_samples <- list()
   if(select_method == "kmeans") {
-    kmeans_clusters <- kmeans_select_groups(Y, num_refs)
+    kmeans_clusters <- kmeans_select_groups(Y, num_refs)$clusters
   }
 
   for(i in 1:length(sampname)) {
