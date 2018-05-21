@@ -66,18 +66,18 @@ kmeans_select_groups <- function(Y, number_of_clusters){
     d[i] <- c[i]
   }
   km1 <- kmeans(d, number_of_clusters, nstart=100)
-  return(list(clusters=km1$cluster))
+  return(list(clusters=km1))
 }
 
 kmeans_method <- function(investigated_sample, Y, kmeans_clusters){
   print(kmeans_clusters)
   samples <- colnames(Y)
   print(samples)
-  cluster_id <- kmeans_clusters[investigated_sample]
+  cluster_id <- kmeans_clusters$cluster[investigated_sample]
   print(cluster_id)
   reference_samples <- c()
   list_index <- 1
-  for(i in kmeans_clusters) {
+  for(i in kmeans_clusters$cluster) {
     if(i == cluster_id) {
       reference_samples <- c(reference_samples, samples[list_index])
     }
