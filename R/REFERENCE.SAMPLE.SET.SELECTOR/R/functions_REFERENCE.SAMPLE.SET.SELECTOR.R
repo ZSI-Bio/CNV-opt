@@ -71,7 +71,7 @@ kmeans_method <- function(investigated_sample, Y, number_of_clusters){
   list_index <- 1
   for(i in km1$cluster) {
     if(i == cluster_id) {
-      reference_samples <- c(reference_samples, sampname_qc[list_index])
+      reference_samples <- c(reference_samples, samples[list_index])
     }
     list_index <- list_index + 1
   }
