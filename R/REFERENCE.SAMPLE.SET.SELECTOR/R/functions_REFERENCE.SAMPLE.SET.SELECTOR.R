@@ -49,7 +49,7 @@ random_method <- function(investigated_sample, Y, num_refs){
   return(list(reference_samples=reference_samples))
 }
 
-kmeans_method <- function(investigated_sample, Y, number_of_clusters){
+kmeans_select_groups <- function(Y, number_of_clusters){
   samples <- colnames(Y)
   cov <- cor(Y[, samples], Y[, samples])
   d <- cov
@@ -66,10 +66,15 @@ kmeans_method <- function(investigated_sample, Y, number_of_clusters){
     d[i] <- c[i]
   }
   km1 <- kmeans(d, number_of_clusters, nstart=100)
-  cluster_id <- km1$cluster[investigated_sample]
+  return(list(clusters=km1$cluster))
+}
+
+kmeans_method <- function(investigated_sample, Y, kmeans_clusters){
+  samples <- colnames(Y)
+  cluster_id <- kmeans_clusters[investigated_sample]
   reference_samples <- c()
   list_index <- 1
-  for(i in km1$cluster) {
+  for(i in kmeans_clusters) {
     if(i == cluster_id) {
       reference_samples <- c(reference_samples, samples[list_index])
     }
