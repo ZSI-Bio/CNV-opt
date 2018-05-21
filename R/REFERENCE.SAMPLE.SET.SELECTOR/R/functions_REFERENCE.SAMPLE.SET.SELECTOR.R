@@ -73,6 +73,7 @@ kmeans_method <- function(investigated_sample, Y, kmeans_clusters){
   print(kmeans_clusters)
   samples <- colnames(Y)
   print(samples)
+  print(kmeans_clusters$cluster)
   cluster_id <- kmeans_clusters$cluster[investigated_sample]
   print(cluster_id)
   reference_samples <- c()
