@@ -26,6 +26,7 @@ pipeline {
                                  sh "cd R && R CMD build CANOES/ && curl -v --user ${NEXUS_USER}:${NEXUS_PASS} --upload-file CANOES_0.0.1.tar.gz http://zsibio.ii.pw.edu.pl/nexus/repository/r-zsibio/src/contrib/CANOES_0.0.1.tar.gz"
                                  sh "cd R && R CMD build CNVCALLER.RUNNER/ && curl -v --user ${NEXUS_USER}:${NEXUS_PASS} --upload-file CNVCALLER.RUNNER_0.0.1.tar.gz http://zsibio.ii.pw.edu.pl/nexus/repository/r-zsibio/src/contrib/CNVCALLER.RUNNER_0.0.1.tar.gz"
                                  sh "cd R && R CMD build CNVCALLER.EVALUATOR/ && curl -v --user ${NEXUS_USER}:${NEXUS_PASS} --upload-file CNVCALLER.EVALUATOR_0.0.1.tar.gz http://zsibio.ii.pw.edu.pl/nexus/repository/r-zsibio/src/contrib/CNVCALLER.EVALUATOR_0.0.1.tar.gz"
+                                 sh "cd R && R CMD build CNV.SIMULATOR/ && curl -v --user ${NEXUS_USER}:${NEXUS_PASS} --upload-file CNV.SIMULATOR_0.0.1.tar.gz http://zsibio.ii.pw.edu.pl/nexus/repository/r-zsibio/src/contrib/CNV.SIMULATOR_0.0.1.tar.gz"
                              }
 
                   }

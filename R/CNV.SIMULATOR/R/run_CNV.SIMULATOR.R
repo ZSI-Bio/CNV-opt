@@ -1,32 +1,37 @@
-Test <- function(){
-  # read in the data
-  gc <- read.table("gc.txt")$V2
-  canoes.reads <- read.table("canoes.reads.txt")
-  # rename the columns of canoes.reads
-  sample.names <- paste("S", seq(1:26), sep="")
-  names(canoes.reads) <- c("chromosome", "start", "end", sample.names)
-  # create a vector of consecutive target ids
-  target <- seq(1, nrow(canoes.reads))
-  # combine the data into one data frame
-  canoes.reads <- cbind(target, gc, canoes.reads)
-  # call CNVs in each sample
-  # create a vector to hold the results for each sample
-  xcnv.list <- vector('list', length(sample.names))
-  for (i in 1:length(sample.names)){
-    xcnv.list[[i]] <- CallCNVs(sample.names[i], canoes.reads) 
-  }
-  # combine the results into one data frame
-  xcnvs <- do.call('rbind', xcnv.list)
-  # inspect the first two CNV calls
-  print(head(xcnvs, 2))
-  # plot all the CNV calls to a pdf
-  pdf("CNVplots.pdf")
-  for (i in 1:nrow(xcnvs)){
-     PlotCNV(canoes.reads, xcnvs[i, "SAMPLE"], xcnvs[i, "TARGETS"])
-  }
-  dev.off()
-  # genotype all the CNVs calls made above in sample S2
-  genotyping.S2 <- GenotypeCNVs(xcnvs, "S2", canoes.reads)
-  # inspect the genotype scores for the first two CNV calls
-  print(head(genotyping.S2, 2))
+run_CNV.SIMULATOR <- function(calls,
+                              refs,
+                              parameters){
+
+#  TP <- 0
+#  FP <- 0
+#  TN <- 0
+#  FN <- 0
+#  num_of_original_samples_in_refs <- length(unique(refs[,"sample_name"]))
+#  chromosomes <- c(1:22, "X", "Y", paste0("chr",c(1:22, "X", "Y")))
+#  for(chromosome in chromosomes) {
+#    print(paste("Processing chr: ", chromosome, sep=""))
+#    calls_for_chr <- subset(calls, chr == chromosome)
+#    refs_for_chr <- subset(refs, chr == chromosome)
+#    if (nrow(calls_for_chr) == 0 && nrow(refs_for_chr) == 0) {  # TODO
+#      next()
+#    }
+#    intersection_matrix <- build_intersection_matrix(calls_for_chr, refs_for_chr)
+#    intersection_matrix <- filter_intersection_matrix_by_overlap_factor(intersection_matrix, parameters$min_overlap_factor)
+#    targets <- refs_for_chr[,c("chr", "st_bp", "ed_bp")]
+#    num_of_original_targets_in_refs <- nrow(targets[!duplicated(targets[,c("chr", "st_bp", "ed_bp")]),])
+#    confusion_matrix <- calc_confusion_matrix(intersection_matrix, num_of_original_targets_in_refs, num_of_original_samples_in_refs)
+#    TP <- TP + confusion_matrix$TP
+#    FP <- FP + confusion_matrix$FP
+#    TN <- TN + confusion_matrix$TN
+#    FN <- FN + confusion_matrix$FN
+#  }
+#  quality_statistics <- calc_quality_statistics(TP, FP, TN, FN)
+#  return(list(TP=TP,
+#              FP=FP,
+#              TN=TN,
+#              FN=FN,
+#              sensitivity=round(quality_statistics$sensitivity, digits=3), 
+#              specificity=round(quality_statistics$specificity, digits=3), 
+#              precision=round(quality_statistics$precision, digits=3), 
+#              accuracy=round(quality_statistics$accuracy, digits=3)))
 }

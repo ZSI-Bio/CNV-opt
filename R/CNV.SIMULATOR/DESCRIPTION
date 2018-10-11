@@ -1,11 +1,11 @@
-Package: CANOES
-Title: CANOES Package
+Package: CNV.SIMULATOR
+Title: CNV.SIMULATOR A Package To Generate Artificial CNVs
 Version: 0.0.1
 Authors@R: c(
     person("Tomasz", "Gambin", email = "tgambin@gmail.com", role = c("aut", "cre")),
     person("Marek", "Wiewiórka", email = "marek.wiewiorka@gmail.com", role = c("aut")),
     person("Wiktor", "Kuśmirek", email = "kusmirekwiktor@gmail.com", role = c("aut")))
-Description: An implementation of the CANOES package in R.
+Description: An package to generate artificial CNVs.
 Depends:
     R (>= 3.2.3),
     plyr (>= 1.8.4),
