@@ -1,37 +1,39 @@
-run_CNV.SIMULATOR <- function(calls,
-                              refs,
-                              parameters){
+run_CNV.SIMULATOR <- function(input_cov_table,
+                              input_bed,
+                              input_males,
+                              input_females,
+                              output_cov_table,
+                              output_generated_cnvs,
+                              min_number_of_cnvs_per_sample,
+                              min_number_of_regions,
+                              max_number_of_regions,
+                              simulation_mode){
 
-#  TP <- 0
-#  FP <- 0
-#  TN <- 0
-#  FN <- 0
-#  num_of_original_samples_in_refs <- length(unique(refs[,"sample_name"]))
-#  chromosomes <- c(1:22, "X", "Y", paste0("chr",c(1:22, "X", "Y")))
-#  for(chromosome in chromosomes) {
-#    print(paste("Processing chr: ", chromosome, sep=""))
-#    calls_for_chr <- subset(calls, chr == chromosome)
-#    refs_for_chr <- subset(refs, chr == chromosome)
-#    if (nrow(calls_for_chr) == 0 && nrow(refs_for_chr) == 0) {  # TODO
-#      next()
-#    }
-#    intersection_matrix <- build_intersection_matrix(calls_for_chr, refs_for_chr)
-#    intersection_matrix <- filter_intersection_matrix_by_overlap_factor(intersection_matrix, parameters$min_overlap_factor)
-#    targets <- refs_for_chr[,c("chr", "st_bp", "ed_bp")]
-#    num_of_original_targets_in_refs <- nrow(targets[!duplicated(targets[,c("chr", "st_bp", "ed_bp")]),])
-#    confusion_matrix <- calc_confusion_matrix(intersection_matrix, num_of_original_targets_in_refs, num_of_original_samples_in_refs)
-#    TP <- TP + confusion_matrix$TP
-#    FP <- FP + confusion_matrix$FP
-#    TN <- TN + confusion_matrix$TN
-#    FN <- FN + confusion_matrix$FN
-#  }
-#  quality_statistics <- calc_quality_statistics(TP, FP, TN, FN)
-#  return(list(TP=TP,
-#              FP=FP,
-#              TN=TN,
-#              FN=FN,
-#              sensitivity=round(quality_statistics$sensitivity, digits=3), 
-#              specificity=round(quality_statistics$specificity, digits=3), 
-#              precision=round(quality_statistics$precision, digits=3), 
-#              accuracy=round(quality_statistics$accuracy, digits=3)))
+
+  Y <- read.csv(input_cov_table)
+  sampname <- colnames(Y)
+  targets <- read.delim(input_bed)
+  males <- read.delim(input_males)
+  females <- read.delim(input_females)
+  generated_cnvs <- matrix(nrow=0, ncol=4) 
+  if (simulation_mode == "downsample") {
+    downsample_factor <- 0.5
+    for (sample in sampname) {
+      print(paste("Generating arficial CNVs in sample: ", sample, sep=""))
+      for (i in 1:min_number_of_cnvs_per_sample) {
+        cnv_length <- floor(runif(1, min=min_number_of_regions, max=max_number_of_regions))
+        cnv_start <- floor(runif(1, min=1, max=nrow(targets)))
+        for (j in cnv_start:cnv_start+cnv_length) {
+          Y[j,sample] <- floor(Y[j,sample]*downsample_factor)
+        }
+        generated_cnvs <- rbind(generated_cnvs, matrix(c(sample, targets[1,cnv_start], targets[2,cnv_start], targets[3,cnv_start+cnv_length]), nrow = 1))
+      }
+    }
+  } else if (simulation_mode == "replace") {
+  # TODO
+  } else {
+  # TODO
+  }
+  write.csv(Y, output_cov_table, row.names=F, quote=F)
+  write.csv(generated_cnvs, output_generated_cnvs, row.names=F, quote=F)
 }
