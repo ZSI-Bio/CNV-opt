@@ -26,7 +26,8 @@ run_CNV.SIMULATOR <- function(input_cov_table,
         for (j in cnv_start:cnv_start+cnv_length) {
           Y[j,sample] <- floor(Y[j,sample]*downsample_factor)
         }
-        generated_cnvs <- rbind(generated_cnvs, matrix(c(sample, targets[1,cnv_start], targets[2,cnv_start], targets[3,cnv_start+cnv_length]), nrow = 1))
+        print(paste(sample, targets[1,cnv_start], targets[2,cnv_start], targets[3,cnv_start+cnv_length], sep=" "))
+        # generated_cnvs <- rbind(generated_cnvs, matrix(c(sample, targets[1,cnv_start], targets[2,cnv_start], targets[3,cnv_start+cnv_length]), nrow = 1))
       }
     }
   } else if (simulation_mode == "replace") {
@@ -35,5 +36,5 @@ run_CNV.SIMULATOR <- function(input_cov_table,
   # TODO
   }
   write.csv(Y, output_cov_table, row.names=F, quote=F)
-  write.csv(generated_cnvs, output_generated_cnvs, row.names=F, quote=F)
+  # write.csv(generated_cnvs, output_generated_cnvs, row.names=F, quote=F)
 }
