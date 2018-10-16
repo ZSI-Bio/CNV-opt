@@ -31,7 +31,7 @@ pipeline {
 
                   }
 
-        stage('Test Scala code') {
+        /*stage('Test Scala code') {
                     steps {
                         slackSend botUser: true, channel: '#development', message: 'started ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)', teamDomain: 'zsibio.slack.com'
                         echo 'Testing Scala code....'
@@ -42,7 +42,7 @@ pipeline {
                         junit '**/target/test-reports/*.xml'
                       }
                     }
-                }
+                }*/
 
          stage('Package scala code') {
                             steps {
