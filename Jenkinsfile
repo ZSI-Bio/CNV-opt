@@ -31,17 +31,17 @@ pipeline {
 
                   }
 
-        /*stage('Test Scala code') {
+        stage('Test Scala code') {
                     steps {
-                        slackSend botUser: true, channel: '#development', message: 'started ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)', teamDomain: 'zsibio.slack.com'
+                        // slackSend botUser: true, channel: '#development', message: 'started ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)', teamDomain: 'zsibio.slack.com'
                         echo 'Testing Scala code....'
-                        sh "${tool name: 'sbt-0.13.15', type: 'org.jvnet.hudson.plugins.SbtPluginBuilder$SbtInstallation'}/bin/sbt test"
+                        // sh "${tool name: 'sbt-0.13.15', type: 'org.jvnet.hudson.plugins.SbtPluginBuilder$SbtInstallation'}/bin/sbt test"
                     }
-                    post {
-                      always {
-                        junit '**/target/test-reports/*.xml'
-                      }
-                    }
+                    // post {
+                      // always {
+                        // junit '**/target/test-reports/*.xml'
+                      // }
+                    // }
                 }
 
          stage('Package scala code') {
@@ -54,7 +54,7 @@ pipeline {
 
                             }
 
-                }*/
+                }
 
         stage('Build Docker images') {
                     steps {
