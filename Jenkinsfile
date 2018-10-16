@@ -42,7 +42,7 @@ pipeline {
                         junit '**/target/test-reports/*.xml'
                       }
                     }
-                }*/
+                }
 
          stage('Package scala code') {
                             steps {
@@ -54,7 +54,7 @@ pipeline {
 
                             }
 
-                }
+                }*/
 
         stage('Build Docker images') {
                     steps {
