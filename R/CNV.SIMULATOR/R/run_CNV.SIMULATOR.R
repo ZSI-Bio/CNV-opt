@@ -15,8 +15,8 @@ run_CNV.SIMULATOR <- function(input_cov_table,
   targets <- read.delim(input_bed)
   males <- as.character(unlist(read.table(input_males, sep = ",")))
   females <- as.character(unlist(read.table(input_females, sep = ",")))
-  generated_cnvs <- matrix(nrow=0, ncol=4)
-  colnames(generated_cnvs) <- c('sample','chr','st_bp','ed_bp')
+  generated_cnvs <- matrix(nrow=0, ncol=6)
+  colnames(generated_cnvs) <- c('sample_name','cnv','chr','st_bp','ed_bp','copy_no')
   if (simulation_mode == "downsample") {
     downsample_factor <- 0.5
     for (sample in sampname) {
@@ -28,7 +28,7 @@ run_CNV.SIMULATOR <- function(input_cov_table,
           Y[j,sample] <- floor(Y[j,sample]*downsample_factor)
         }
         print(paste(sample, targets[cnv_start,1], targets[cnv_start,2], targets[cnv_start+cnv_length,3], sep=" "))
-        generated_cnvs <- rbind(generated_cnvs, matrix(c(sample, targets[cnv_start,1], targets[cnv_start,2], targets[cnv_start+cnv_length,3]), nrow = 1))
+        generated_cnvs <- rbind(generated_cnvs, matrix(c(sample, 'del', targets[cnv_start,1], targets[cnv_start,2], targets[cnv_start+cnv_length,3], '1'), nrow = 1))
       }
     }
   } else if (simulation_mode == "replace") {
@@ -36,7 +36,10 @@ run_CNV.SIMULATOR <- function(input_cov_table,
     Y_females <- Y[,females]
     for (female in females) {
       print(paste("Generating arficial CNVs in sample: ", female, sep=""))
-      male <- males[floor(runif(1, min=1, max=length(males)))]
+      cov <- cor(Y[,female], Y[,males])
+      covariances <- cov[1,males]
+      male <- names(sort(covariances, decreasing=T)[1:min(1, length(covariances))])
+      #male <- males[floor(runif(1, min=1, max=length(males)))]  # random male sample - in Ximmer tool
       for (i in 1:number_of_cnvs_per_sample) {
         cnv_length <- floor(runif(1, min=min_number_of_regions, max=max_number_of_regions))
         cnv_start <- floor(runif(1, min=1, max=nrow(targets)))
@@ -45,7 +48,7 @@ run_CNV.SIMULATOR <- function(input_cov_table,
           Y[j,female] <- Y[j,male]
         }
         print(paste(female, targets[cnv_start,1], targets[cnv_start,2], targets[cnv_start+cnv_length,3], sep=" "))
-        generated_cnvs <- rbind(generated_cnvs, matrix(c(female, targets[cnv_start,1], targets[cnv_start,2], targets[cnv_start+cnv_length,3]), nrow = 1))
+        generated_cnvs <- rbind(generated_cnvs, matrix(c(female, 'del', targets[cnv_start,1], targets[cnv_start,2], targets[cnv_start+cnv_length,3], '1'), nrow = 1))
       }
     }
     write.csv(Y_males, paste(output_cov_table, ".males", sep=""), row.names=F, quote=F)
