@@ -28,9 +28,11 @@ run_CNV.SIMULATOR <- function(input_cov_table,
           Y[j,sample] <- floor(Y[j,sample]*downsample_factor)
         }
         print(paste(sample, targets[cnv_start,1], targets[cnv_start,2], targets[cnv_start+cnv_length,3], sep=" "))
-        generated_cnvs <- rbind(generated_cnvs, matrix(c(sample, 'del', targets[cnv_start,1], targets[cnv_start,2], targets[cnv_start+cnv_length,3], '1'), nrow = 1))
+        generated_cnvs <- rbind(generated_cnvs, matrix(c(sample, 'del', as.character(targets[cnv_start,1]), targets[cnv_start,2], targets[cnv_start+cnv_length,3], '1'), nrow = 1))
       }
     }
+    write.csv(Y[,males], paste(output_cov_table, ".males", sep=""), row.names=F, quote=F)
+    write.csv(Y[,females], paste(output_cov_table, ".females", sep=""), row.names=F, quote=F)
   } else if (simulation_mode == "replace") {
     Y_males <- Y[,males]
     Y_females <- Y[,females]
@@ -48,7 +50,7 @@ run_CNV.SIMULATOR <- function(input_cov_table,
           Y[j,female] <- Y[j,male]
         }
         print(paste(female, targets[cnv_start,1], targets[cnv_start,2], targets[cnv_start+cnv_length,3], sep=" "))
-        generated_cnvs <- rbind(generated_cnvs, matrix(c(female, 'del', targets[cnv_start,1], targets[cnv_start,2], targets[cnv_start+cnv_length,3], '1'), nrow = 1))
+        generated_cnvs <- rbind(generated_cnvs, matrix(c(female, 'del', as.character(targets[cnv_start,1]), targets[cnv_start,2], targets[cnv_start+cnv_length,3], '1'), nrow = 1))
       }
     }
     write.csv(Y_males, paste(output_cov_table, ".males", sep=""), row.names=F, quote=F)
