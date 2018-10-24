@@ -12,14 +12,13 @@ Description: An extended implementation of the CANOES package in R. It extends
 Depends:
     R (>= 3.2.3),
     devtools (>= 1.13.2),
-    DBI (== 0.8),
+    DBI (>= 0.8),
     optparse (== 1.4.4),
     IRanges (>= 2.0.0),
     plyr (>= 1.8.4),
     nnls (>= 1.4.0),
     Hmisc (>= 4.0.0),
-    mgcv (>= 1.8.0),
-    REFERENCE.SAMPLE.SET.SELECTOR (>= 0.0.1)
+    mgcv (>= 1.8.0)
 License: GPL-3
 Encoding: UTF-8
 LazyData: true

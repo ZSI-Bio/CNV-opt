@@ -1,20 +1,21 @@
-Package: CNVCALLER.RUNNER
-Title: CNVCALLER.RUNNER  A Wrapper Package To Run CNV Callers
+Package: EXOMECOPYCOV
+Title: EXOMECOPY Package With Interface To External Coverage File
 Version: 0.0.1
 Authors@R: c(
     person("Tomasz", "Gambin", email = "tgambin@gmail.com", role = c("aut", "cre")),
     person("Marek", "Wiewiórka", email = "marek.wiewiorka@gmail.com", role = c("aut")),
     person("Wiktor", "Kuśmirek", email = "kusmirekwiktor@gmail.com", role = c("aut")))
-Description: A wrapper package to run CNV callers.
+Description: An extended implementation of the exomeCopy package in R. It extends 
+    original implementation by using external coverage file, which should
+    speed up calculations for running application with multiple sets of input
+    parameters.
 Depends:
     R (>= 3.2.3),
-    TARGET.QC (>= 0.0.1),
-    CODEXCOV (>= 0.0.1),
-    EXOMEDEPTHCOV (>= 0.0.1),
-    CANOESCOV (>= 0.0.1),
     devtools (>= 1.13.2),
     DBI (>= 0.8),
-    optparse (== 1.4.4)
+    optparse (== 1.4.4),
+    IRanges (>= 2.0.0),
+    exomeCopy (== 1.22)
 License: GPL-3
 Encoding: UTF-8
 LazyData: true

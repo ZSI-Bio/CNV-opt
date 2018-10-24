@@ -1,66 +1,54 @@
 library(ExomeDepth)
 library(methods)
 
-run_EXOMEDEPTHCOV <- function(reference_set_select_method,
-                              num_of_samples_in_reference_set,
-                              cov_table){
+run_EXOMEDEPTHCOV <- function(input_cov_table,
+                              input_bed,
+                              reference_sample_set_file,
+                              output_calls_file){
 
-  sampname <- unique(cov_table[,"sample_name"])
-  targets <- cov_table[,c("target_id", "chr", "pos_min", "pos_max")]
-  targets <- targets[!duplicated(targets[,"target_id"]),]
-  targets <- targets[with(targets, order(target_id)), ]
-  
+  con <- file(reference_sample_set_file, open='r')
+  reference_sample_set <- readLines(con)
+  Y <- read.csv(input_cov_table)
+  sampname <- colnames(Y)
+  targets <- read.delim(input_bed)
+  rownames(Y) <- 1:nrow(Y)
+  rownames(targets) <- 1:nrow(targets)
   calls <- data.frame(matrix(nrow=0, ncol=13))
-  chrs <- c(1:22, "X", "Y", paste0("chr",c(1:22, "X", "Y")))
-  library(IRanges)
-  for(chr in chrs) {
-    targets_for_chr <- targets[targets[,"chr"] == chr,]
-    ref <- IRanges(start = targets_for_chr[,"pos_min"], end = targets_for_chr[,"pos_max"])
-    if (length(ref) == 0) {    # 0 elements for specified chromosome in bed
+
+  for (i in 1:length(reference_sample_set)) {
+    if (reference_sample_set[[i]] == '') {
       next()
     }
-    Y <- coverageObj1(cov_table, sampname, targets_for_chr, chr)$Y
+    samples <- unlist(strsplit(reference_sample_set[[i]], ','))
+    actual_sample <- samples[1]
+    reference_samples <- samples[-1]
 
-    for (actual_sample_id in 1:length(sampname)) {
-      actual_sample <- sampname[actual_sample_id]
-      ## ----reference.selection-------------------------------------------------
-      target_length <- c()
-      for (i in 1:nrow(Y)) {
-        target_length <- c(target_length, width(ref[i]))
-      }
-      reference_samples <- run_REFERENCE.SAMPLE.SET.SELECTOR(actual_sample,
-                                                             Y,
-                                                             reference_set_select_method,
-                                                             num_of_samples_in_reference_set,
-                                                             target_length)
+    ## ----construct.ref-------------------------------------------------------
+    my.matrix <- as.matrix(Y[,reference_samples])
+    my.reference.selected <- apply(X = my.matrix, 
+                                   MAR = 1, 
+                                   FUN = sum)
 
-      ## ----construct.ref-------------------------------------------------------
-      my.matrix <- as.matrix(Y[,reference_samples])
-      my.reference.selected <- apply(X = my.matrix, 
-                                     MAR = 1, 
-                                     FUN = sum)
+    ## ----build.complete------------------------------------------------------
+    all.exons <- new('ExomeDepth',
+                     test = Y[,actual_sample],
+                     reference = my.reference.selected,
+                     formula = 'cbind(test, reference) ~ 1')
 
-      ## ----build.complete------------------------------------------------------
-      all.exons <- new('ExomeDepth',
-                       test = Y[,actual_sample_id],
-                       reference = my.reference.selected,
-                       formula = 'cbind(test, reference) ~ 1')
-
-      ## ----call.CNVs-----------------------------------------------------------
-      all.exons <- ExomeDepth::CallCNVs(x = all.exons, 
-                                        transition.probability = 10^-4, 
-                                        chromosome = rep(chr, nrow(Y)), 
-                                        start = start(ref), 
-                                        end = end(ref), 
-                                        name = rep('name', nrow(Y)))
-      print(all.exons@CNV.calls)
-      if (nrow(all.exons@CNV.calls) > 0) {
-        actual_sample_column <- data.frame(matrix(rep(actual_sample, nrow(all.exons@CNV.calls)), nrow=nrow(all.exons@CNV.calls))) 
-        callsIt <- cbind(actual_sample_column, all.exons@CNV.calls)
-        colnames(callsIt) <- c(c, colnames(all.exons@CNV.calls))
-        if (nrow(calls)==0){calls <- data.frame(matrix(nrow=0, ncol=ncol(callsIt)))} 
-        calls <- rbind(calls, callsIt)
-      }
+    ## ----call.CNVs-----------------------------------------------------------
+    all.exons <- ExomeDepth::CallCNVs(x = all.exons, 
+                                      transition.probability = 10^-4, 
+                                      chromosome = targets[,"chr"], 
+                                      start = targets[,"st_bp"], 
+                                      end = targets[,"ed_bp"], 
+                                      name = rep('name', nrow(Y)))
+    print(all.exons@CNV.calls)
+    if (nrow(all.exons@CNV.calls) > 0) {
+      actual_sample_column <- data.frame(matrix(rep(actual_sample, nrow(all.exons@CNV.calls)), nrow=nrow(all.exons@CNV.calls))) 
+      callsIt <- cbind(actual_sample_column, all.exons@CNV.calls)
+      colnames(callsIt) <- c(c, colnames(all.exons@CNV.calls))
+      if (nrow(calls)==0){calls <- data.frame(matrix(nrow=0, ncol=ncol(callsIt)))} 
+      calls <- rbind(calls, callsIt)
     }
   }
   # unify names of output columns
@@ -86,5 +74,5 @@ run_EXOMEDEPTHCOV <- function(reference_set_select_method,
   colnames(calls)[colnames(calls) == 'reads.observed'] <- 'raw_cov'
   colnames(calls)[colnames(calls) == 'reads.ratio'] <- 'copy_no'
   calls[colnames(calls) == 'copy_no'] <- round(calls[colnames(calls) == 'raw_cov'] / (calls[colnames(calls) == 'norm_cov'] / 2))
-  calls
+  write.csv(calls, output_calls_file, row.names=F)
 }

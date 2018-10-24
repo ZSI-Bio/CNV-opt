@@ -12,10 +12,9 @@ Description: An extended implementation of the CODEX package in R. It extends
 Depends:
     R (>= 3.2.3),
     devtools (>= 1.13.2),
-    DBI (== 0.8),
+    DBI (>= 0.8),
     optparse (== 1.4.4),
-    CODEX (>= 1.8.0),
-    REFERENCE.SAMPLE.SET.SELECTOR (>= 0.0.1)
+    CODEX (>= 1.8.0)
 License: GPL-3
 Encoding: UTF-8
 LazyData: true

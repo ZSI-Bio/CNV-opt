@@ -9,7 +9,7 @@ Description: A package to evaluate CNV callers results.
 Depends:
     R (>= 3.2.3),
     devtools (>= 1.13.2),
-    DBI (== 0.8),
+    DBI (>= 0.8),
     optparse (== 1.4.4)
 License: GPL-3
 Encoding: UTF-8
